@@ -1,8 +1,10 @@
 #include "main.hpp"
 
 int main() {
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
+    sf::RenderWindow window = 
+        sf::RenderWindow(sf::VideoMode({1280u, 720u}), "CMake SFML Project");
     window.setFramerateLimit(144);
+    sf::Texture t("./img/default.png");
 
     while (window.isOpen()) {
         while (const std::optional event = window.pollEvent()) {
@@ -12,6 +14,7 @@ int main() {
         }
 
         window.clear();
+        window.draw(Card(t).getSprite());
         window.display();
     }
 }

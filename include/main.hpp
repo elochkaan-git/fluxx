@@ -1,6 +1,4 @@
-#ifndef MAIN_HPP
-#define MAIN_HPP
+#pragma once
 
 #include <SFML/Graphics.hpp>
-
-#endif
+#include "card.hpp"
