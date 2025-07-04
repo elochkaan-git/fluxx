@@ -6,8 +6,17 @@
  *  Размеры и текстура взяты просто для тестирования и примера
  */
 Card::Card(sf::Texture& t) 
-    : sprite(t, {{10u, 50u}, {60u, 100u}}) {}
+    : sprite(t, {{10u, 50u}, {60u, 100u}}){
+    }
 
-sf::Sprite Card::getSprite() {
-    return this->sprite;
+sf::Sprite Card::getSprite() const{
+    return sprite;
+}
+
+const std::string& Card::getDescription() const{
+    return description;
+}
+
+const std::string& Card::getName() const{
+    return name;
 }
