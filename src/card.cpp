@@ -4,7 +4,7 @@
 Card::Card(sf::Texture& t) :
     sprite(t, {{10, 10}, {50, 60}}) {}
 
-sf::Sprite Card::getSprite() {
+sf::Sprite Card::getSprite() const {
     return this->sprite;
 }
 

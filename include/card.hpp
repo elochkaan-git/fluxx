@@ -13,10 +13,15 @@ class Card
 {
 protected:
     sf::Sprite sprite;
+    std::string description = "Place holder";
+    std::string name = "Default";
 
 public:
     Card(sf::Texture& t);
-    sf::Sprite getSprite();
+    sf::Sprite getSprite() const;
+    const std::string& getDescription() const;
+    const std::string& getName() const;
+    
 };
 
 
