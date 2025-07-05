@@ -1,17 +1,11 @@
-#include "main.hpp"
+#include "card.hpp"
+#include "player.hpp"
+#include "state.hpp"
+#include <SFML/Graphics/Texture.hpp>
+#include <vector>
 
 int main() {
-    auto window = sf::RenderWindow(sf::VideoMode({1920u, 1080u}), "CMake SFML Project");
-    window.setFramerateLimit(144);
-
-    while (window.isOpen()) {
-        while (const std::optional event = window.pollEvent()) {
-            if (event->is<sf::Event::Closed>()) {
-                window.close();
-            }
-        }
-
-        window.clear();
-        window.display();
-    }
+    sf::Texture t("./img/default.png");
+    std::vector<Player*> players = {new Player(), new Player()};
+    State state(players);
 }
