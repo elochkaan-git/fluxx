@@ -14,12 +14,18 @@ bool runExample(tgui::BackendGui& gui)
     }
 }
 
+void update(unsigned short int numOfPlayers)
+{
+    std::vector<Player*> players(numOfPlayers, new Player());
+    State state(players);
+
+
+    for(Player* p : players) delete p;
+}
+
 int main()
 {
     sf::Texture t("./img/default.png");
-    std::vector<Player*> players = {new Player(), new Player()};
-    State state(players);
-
     auto window = sf::RenderWindow(sf::VideoMode({800u, 600u}), "Fluxx", sf::Style::Titlebar | sf::Style::Close);
     tgui::Gui gui{window};
     if (runExample(std::ref(gui)))

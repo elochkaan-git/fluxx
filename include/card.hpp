@@ -29,15 +29,12 @@ class CardAction : protected Card
 {
 public:
     void (*action)(State* state);
-    CardAction(sf::Texture& t, std::string);
+    CardAction(sf::Texture& t, std::string action);
 };
 
 
 class CardTheme : protected Card
 {
-protected:
-    std::string theme = "default";
-
 public:
     CardTheme(sf::Texture& t, std::string theme);
 };
@@ -46,7 +43,6 @@ public:
 class CardGoal : protected Card
 {
 protected:
-    std::string goal = "default";
     std::vector<std::pair<std::string, std::string>> themes = {{"", ""}};
     bool isNumOfThemes = false, isNumOfCards = false;
 
