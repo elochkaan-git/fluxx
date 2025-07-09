@@ -1,0 +1,53 @@
+{
+    "themes" : {
+        "category" : "theme",
+        "description" : "bla-bla-bla",
+        "cards" : [
+            {
+                "name" : "Coockie",
+                "imgPath" : "./resources/img/default.png"
+            }
+        ]
+    },
+
+    "actions" : {
+        "category" : "action",
+        "description" : "bla-bla-bla",
+        "cards" : [
+            {
+                "name" : "Туда-сюда",
+                "imgPath" : "./resources/img/default.png",
+                "action" : "makeThis"
+            }
+        ]
+    },
+
+    "goals" : {
+        "category" : "goal",
+        "description" : "bla-bla-bla",
+        "cards" : [
+            {
+                "name" : "Полет мысли",
+                "imgPath" : "./resources/img/default.png",
+                "themes" : [
+                    { "name" : "Ракета"},
+                    { "name" : "Мозг" }
+                ]
+            }
+        ]
+    },
+
+    "rules" : {
+        "category" : "rule",
+        "description" : "bla-bla-bla",
+        "cards" : [
+            {
+                "name" : "Предел руки 0",
+                "imgPath" : "./resources/img/default.png",
+                "rulesParams" : {
+                    "handLimit" : 0
+                }
+            }
+        ]
+    }
+}
