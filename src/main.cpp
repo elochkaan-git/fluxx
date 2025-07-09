@@ -27,7 +27,6 @@ void update(unsigned short int numOfPlayers)
 
 int main()
 {
-    sf::Texture t("./img/default.png");
     auto window = sf::RenderWindow(sf::VideoMode({800u, 600u}), "Fluxx", sf::Style::Titlebar | sf::Style::Close);
     tgui::Gui gui{window};
     if (runExample(std::ref(gui)))
