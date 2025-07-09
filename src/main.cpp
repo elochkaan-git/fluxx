@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "core.hpp"
 
 bool runExample(tgui::BackendGui& gui)
 {
@@ -16,7 +17,8 @@ bool runExample(tgui::BackendGui& gui)
 
 void update(unsigned short int numOfPlayers)
 {
-    std::vector<Player*> players(numOfPlayers, new Player());
+    std::vector<Player*> players(numOfPlayers);
+    for(Player* p : players) p = new Player();
     State state(players);
 
 
