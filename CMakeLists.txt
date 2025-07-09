@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 project(CMakeSFMLProject LANGUAGES CXX)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 include(FetchContent)
 FetchContent_Declare(SFML
@@ -11,6 +11,12 @@ FetchContent_Declare(SFML
     EXCLUDE_FROM_ALL
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
+
+# Включение библиотеки для парсинга json-файлов
+FetchContent_Declare(json 
+    URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 
 # Set properties that will be used while building TGUI
 set(BUILD_SHARED_LIBS OFF)      # Determines whether TGUI build a static or dynamic/shared library
@@ -22,12 +28,9 @@ FetchContent_Declare(
   GIT_TAG v1.10.0  # Change this to wanted version
 )
 FetchContent_MakeAvailable(TGUI)
-
-
-
+    
 include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 add_executable(main ${SOURCES})
 target_compile_features(main PRIVATE cxx_std_17)
-# target_link_libraries(main PRIVATE SFML::Graphics)
-target_link_libraries(main PRIVATE TGUI::TGUI)
+target_link_libraries(main PRIVATE SFML::Graphics TGUI::TGUI nlohmann_json::nlohmann_json)
