@@ -1,21 +1,52 @@
 #include "state.hpp"
-#include <filesystem>
-#include <iostream>
+#include "card.hpp"
+#include <SFML/Graphics/Texture.hpp>
+#include <memory>
+#include <nlohmann/json.hpp>
+#include <fstream>
 
-std::vector<std::variant<CardAction*, CardGoal*, CardRule*, CardTheme*>> loadImages()
+using json = nlohmann::json;
+
+void loadImages(State* state)
 {
-    std::vector<std::variant<CardAction*, CardGoal*, CardRule*, CardTheme*>> result(99);
-    for(const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator("./resources/img"))
+    std::vector<Cards> result(99);
+    std::ifstream f("../../config/cards.json");
+    json data = json::parse(f);
+    
+    for(const auto& e : data)
     {
-        if(entry.path().filename() == "default.png") std::cout << "WORL!!";
+        if(e["category"] == "theme")
+        {
+            for(const auto& c : e["cards"])
+            {
+                state->addCardTheme(c["name"], c["imgPath"]);
+            }
+        }
     }
+
+    f.close();
 }
 
 State::State(std::vector<Player*>& players) {
     this->players = players;
-    this->deck = loadImages();
+    params.play = 1;
+    params.take = 1;
+        
+    loadImages(this);
 }
 
-std::variant<CardAction*, CardGoal*, CardRule*, CardTheme*> State::getCard() {
-    return this->deck[this->currentCardID++];
+const Cards State::getCard() {
+    return deck[currentCardID++];
+}
+
+const RulesParams* State::getRules() const
+{
+    return &this->params;
+}
+
+void State::addCardTheme(std::string name, std::string imgPath)
+{   
+    sf::Texture temp(imgPath);
+    auto ptr = std::make_shared<CardTheme>(temp, name);
+    this->deck.push_back(ptr);
 }
