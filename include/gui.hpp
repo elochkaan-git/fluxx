@@ -2,7 +2,9 @@
 
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Backend/SFML-Graphics.hpp>
+#include <fstream>
 
-bool runExample(tgui::BackendGui& gui);
-void loadMainMenu(tgui::BackendGui& gui);
-void loadGameSelect(tgui::BackendGui& gui);
+bool runExample(tgui::Gui& gui);
+void loadMainMenu(tgui::Gui& gui);
+void loadGameSelect(tgui::Gui& gui);
+void loadSettings(tgui::Gui& gui);
