@@ -5,6 +5,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <variant>
 
 
 class State;
@@ -13,7 +14,6 @@ class Card
 {
 protected:
     sf::Sprite sprite;
-    std::string description = "Place holder";
     std::string name = "Default";
 
 public:
@@ -72,3 +72,5 @@ protected:
 public:
     CardRule(sf::Texture& t, RulesParams& params);
 };
+
+using Cards = std::variant<std::shared_ptr<CardAction>, std::shared_ptr<CardGoal>, std::shared_ptr<CardRule>, std::shared_ptr<CardTheme>>;
