@@ -1,10 +1,13 @@
 #ifndef MAIN_HPP
 #define MAIN_HPP
 
+#include <vector>
+#include <cstdlib>
 
-#include <TGUI/TGUI.hpp>
-#include <TGUI/Backend/SFML-Graphics.hpp>
-void loadMainMenu(tgui::BackendGui& gui);
-void loadGameSelect(tgui::BackendGui& gui);
+#include "card.hpp"
+#include "player.hpp"
+#include "state.hpp"
+#include "gui.hpp"
+
 
 #endif
