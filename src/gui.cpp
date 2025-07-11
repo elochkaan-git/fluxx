@@ -23,7 +23,7 @@ void loadMainMenu(tgui::Gui& gui)
     gui.removeAllWidgets();
     updateTextSize(gui);
     
-    tgui::Theme theme{"./build/bin/themes/Black.txt"};
+    tgui::Theme theme{"./bin/themes/Black.txt"};
 
     auto picture = tgui::Picture::create("./resources/img/main_cover.png");
     picture->setPosition({"3%", 30});
@@ -68,7 +68,7 @@ void loadGameSelect(tgui::Gui& gui)
     gui.removeAllWidgets();
     updateTextSize(gui);
 
-    tgui::Theme theme{"./build/bin/themes/Black.txt"};
+    tgui::Theme theme{"./bin/themes/Black.txt"};
 
     unsigned int standart_h = 60, standart_w = 200, text_s=30;
 
@@ -88,7 +88,7 @@ void loadSettings(tgui::Gui& gui)
     gui.removeAllWidgets();
     updateTextSize(gui);
 
-    tgui::Theme theme{"./build/bin/themes/Black.txt"};
+    tgui::Theme theme{"./bin/themes/Black.txt"};
     unsigned int standart_h = 40, standart_w = 200, text_s=25;
 
     auto backButton = tgui::Button::create("Back");
