@@ -4,8 +4,9 @@
         "description" : "bla-bla-bla",
         "cards" : [
             {
-                "name" : "Coockie",
-                "imgPath" : "./resources/img/default.png"
+                "name" : "Печенька",
+                "imgPath" : "./resources/img/default.png",
+                "theme" : "coockie"
             }
         ]
     },
@@ -15,7 +16,7 @@
         "description" : "bla-bla-bla",
         "cards" : [
             {
-                "name" : "Туда-сюда",
+                "name" : "Тяни-таскай",
                 "imgPath" : "./resources/img/default.png",
                 "action" : "makeThis"
             }
@@ -30,8 +31,7 @@
                 "name" : "Полет мысли",
                 "imgPath" : "./resources/img/default.png",
                 "themes" : [
-                    { "name" : "Ракета"},
-                    { "name" : "Мозг" }
+                    "Ракета", "Мозг"
                 ]
             }
         ]

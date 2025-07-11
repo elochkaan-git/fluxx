@@ -17,6 +17,9 @@ private:
 public:
     State(std::vector<Player*>& players);
     const Cards getCard();
-    void addCardTheme(std::string name, std::string imgPath);
+    void addCardTheme(std::string name, std::string imgPath, std::string theme);
+    void addCardAction(std::string name, std::string imgPath, std::string action);
+    void addCardGoal(std::string name, std::string imgPath, std::vector<std::string>& themes, bool isNumOfThemes, bool isNumOfCards);
+    void addCardRule(std::string name, std::string imgPath, RulesParams& params);
     const RulesParams* getRules() const;
 };
