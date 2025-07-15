@@ -3,6 +3,17 @@
 void updateTextSize(tgui::Gui& gui);
 void updateWindowSize(tgui::Gui& gui, int id);
 
+const std::vector<sf::Vector2u> SUPPORTED_RESOLUTIONS = {
+    {800, 600},    // HD
+    {1024, 768},   // XGA
+    {1280, 720},   // 720p
+    {1366, 768},   // Common laptop
+    {1600, 900},   // HD+
+    {1920, 1080}   // Full HD
+    // {2560, 1440},  // 2K
+    // {3840, 2160}   // 4K
+};
+
 bool runExample(tgui::Gui& gui)
 {
     try
@@ -24,27 +35,32 @@ void loadMainMenu(tgui::Gui& gui)
     updateTextSize(gui);
     
     tgui::Theme theme{"./bin/themes/Black.txt"};
+    sf::Vector2f availableSize = gui.getView().getSize();
 
     auto picture = tgui::Picture::create("./resources/img/main_cover.png");
-    picture->setPosition({"3%", 30});
+    picture->setPosition({"3%", "5%"});
+    sf::Vector2f pictureSize = picture->getSize();
+    
+
+    float scaleY = availableSize.y / pictureSize.y;
+    float scale = scaleY - 0.1f;
+    picture->setSize({pictureSize.x * scale, pictureSize.y * scale});
     gui.add(picture);
 
-    unsigned int standart_h = 60, standart_w = 200, text_s=30;
+    const sf::Vector2<tgui::String> buttonSize{"22%", "8%"};
 
     auto settingsButton = tgui::Button::create("Settings");
     settingsButton->setRenderer(theme.getRenderer("Button"));
-    settingsButton->setSize({standart_w, standart_h});
-    settingsButton->setTextSize(text_s);
+    settingsButton->setSize({buttonSize.x, buttonSize.y});
     settingsButton->setOrigin({0.5f, 0.5f});
-    settingsButton->setPosition({"80%", "50%"});
+    settingsButton->setPosition({"75%", "50%"});
     gui.add(settingsButton, "Settings");
 
     settingsButton->onPress(&loadSettings, std::ref(gui));
 
     auto playButton = tgui::Button::create("Play");
     playButton->setRenderer(theme.getRenderer("Button"));
-    playButton->setSize({standart_w, standart_h});
-    playButton->setTextSize(text_s);
+    playButton->setSize({buttonSize.x, buttonSize.y});
     playButton->setOrigin({0.5f, 0.5f});
     playButton->setPosition({"Settings.x", "Settings.top - 10 - height"});
     gui.add(playButton);
@@ -53,8 +69,7 @@ void loadMainMenu(tgui::Gui& gui)
 
     auto exitButton = tgui::Button::create("Quit");
     exitButton->setRenderer(theme.getRenderer("Button"));
-    exitButton->setSize({standart_w, standart_h});
-    exitButton->setTextSize(text_s);
+    exitButton->setSize({buttonSize.x, buttonSize.y});
     exitButton->setOrigin({0.5f, 0.5f});
     exitButton->setPosition({"Settings.x", "Settings.bottom + 10 + height"});
     gui.add(exitButton);
@@ -70,11 +85,11 @@ void loadGameSelect(tgui::Gui& gui)
 
     tgui::Theme theme{"./bin/themes/Black.txt"};
 
-    unsigned int standart_h = 60, standart_w = 200, text_s=30;
+    const sf::Vector2<tgui::String> buttonSize{"22%", "8%"};
 
     auto backButton = tgui::Button::create("Back");
     backButton->setRenderer(theme.getRenderer("Button"));
-    backButton->setSize({standart_w, standart_h});
+    backButton->setSize({buttonSize.x, buttonSize.y});
     // backButton->setTextSize(text_s);
     backButton->setOrigin({0.5f, 0.5f});
     backButton->setPosition({"50%", "50%"});
@@ -86,14 +101,14 @@ void loadGameSelect(tgui::Gui& gui)
 void loadSettings(tgui::Gui& gui)
 {
     gui.removeAllWidgets();
-    updateTextSize(gui);
+    // updateTextSize(gui);
 
     tgui::Theme theme{"./bin/themes/Black.txt"};
-    unsigned int standart_h = 40, standart_w = 200, text_s=25;
+    const sf::Vector2<tgui::String> buttonSize{"22%", "8%"};
 
     auto backButton = tgui::Button::create("Back");
     backButton->setRenderer(theme.getRenderer("Button"));
-    backButton->setSize({standart_w, standart_h});
+    backButton->setSize({buttonSize.x, buttonSize.y});
     // backButton->setTextSize(text_s);
     backButton->setOrigin({0.5f, 0.5f});
     backButton->setPosition({"50%", "80%"});
@@ -106,38 +121,35 @@ void loadSettings(tgui::Gui& gui)
     resolutionLable->setText("Resolution:");
     resolutionLable->setOrigin(0.5f, 0.5f);
     resolutionLable->setPosition({"20%","10%"});
-    // resolutionLable->setTextSize(text_s);
     gui.add(resolutionLable, "ResolutionLable");
 
     auto resolutionBox = tgui::ComboBox::create();
     resolutionBox->setRenderer(theme.getRenderer("ComboBox"));
-    resolutionBox->setSize(standart_w, standart_h);
+    resolutionBox->setSize({buttonSize.x, buttonSize.y});
     resolutionBox->setOrigin(0.5f, 0.5f);
     resolutionBox->setPosition({"75%", "ResolutionLable.y"});
     
-    resolutionBox->addItem("1920x1080");
-    resolutionBox->addItem("1680x1050");
-    resolutionBox->addItem("1600x900");
-    resolutionBox->addItem("1536x864");
-    resolutionBox->addItem("1440x900");
-    resolutionBox->addItem("1366x768");
-    resolutionBox->addItem("1280x1024");
-    resolutionBox->addItem("1280x800");
-    resolutionBox->addItem("1024x768");
-    resolutionBox->addItem("800x600");
-
+    {
+        tgui::String res_string;
+        for(const auto resolution: SUPPORTED_RESOLUTIONS){
+            res_string = std::to_string(resolution.x);
+            res_string.append("x");
+            res_string.append(std::to_string(resolution.y));
+            resolutionBox->addItem(res_string);
+        }
+    }
     std::ifstream settings_f;
-    settings_f.open("settings.txt");
+    settings_f.open("./config/settings.txt");
     tgui::String buf;
     settings_f >> buf;
-    std::cout << buf;
     settings_f.close();
     resolutionBox->setSelectedItem(buf);
 
     resolutionBox->onItemSelect([&gui](int id) {
-    updateWindowSize(gui, id);
+        updateWindowSize(gui, id);
     });
     gui.add(resolutionBox);
+
 }
 
 void updateTextSize(tgui::Gui& gui)
@@ -150,42 +162,8 @@ void updateTextSize(tgui::Gui& gui)
 void updateWindowSize(tgui::Gui& gui, int id)
 {
     std::ofstream settings;
-    settings.open("settings.txt",std::ios::trunc);
-    switch (id)
-    {
-    case 0:
-        gui.getWindow()->setSize({1920, 1080});
-        break;
-    case 1:
-        gui.getWindow()->setSize({1680, 1050});
-        break;
-    case 2:
-        gui.getWindow()->setSize({1600, 900});
-        break;
-    case 3:
-        gui.getWindow()->setSize({1536, 864});
-        break;
-    case 4:
-        gui.getWindow()->setSize({1440, 900});
-        break;
-    case 5:
-        gui.getWindow()->setSize({1366, 768});
-        break;
-    case 6:
-        gui.getWindow()->setSize({1280, 1024});
-        break;
-    case 7:
-        gui.getWindow()->setSize({1280, 800});
-        break;
-    case 8:
-        gui.getWindow()->setSize({1024, 768});
-        break;
-    case 9:
-        gui.getWindow()->setSize({800, 600});
-        break;
-    }
-    auto size = gui.getWindow()->getSize();
-    settings << size.x << 'x' << size.y << '\n';
+    settings.open("./config/settings.txt",std::ios::trunc);
+    gui.getWindow()->setSize(SUPPORTED_RESOLUTIONS[id]);
+    settings << SUPPORTED_RESOLUTIONS[id].x << 'x' << SUPPORTED_RESOLUTIONS[id].y << '\n';
     updateTextSize(gui);
-    loadSettings(gui);
 }

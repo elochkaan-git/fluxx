@@ -1,9 +1,15 @@
 #include "gui.hpp"
 #include "core.hpp"
+#include <stdio.h>
 
 int main()
 {
-    auto window = sf::RenderWindow(sf::VideoMode({800u, 600u}), "Fluxx", sf::Style::Titlebar | sf::Style::Close);
+    FILE* settings = fopen("./config/settings.txt", "r");
+    sf::Vector2u resolution;
+    fscanf(settings, "%ux%u", &resolution.x, &resolution.y);
+    fclose(settings);
+    
+    auto window = sf::RenderWindow(sf::VideoMode(resolution), "Fluxx", sf::Style::Titlebar | sf::Style::Close);
     tgui::Gui gui{window};
     if (runExample(std::ref(gui)))
         gui.mainLoop(sf::Color::Black);
