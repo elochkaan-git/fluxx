@@ -6,3 +6,4 @@ out
 .vs
 .vscode
 tests
+config/settings.txt

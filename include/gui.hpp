@@ -8,3 +8,4 @@ bool runExample(tgui::Gui& gui);
 void loadMainMenu(tgui::Gui& gui);
 void loadGameSelect(tgui::Gui& gui);
 void loadSettings(tgui::Gui& gui);
+void loadGameCreate(tgui::Gui& gui);

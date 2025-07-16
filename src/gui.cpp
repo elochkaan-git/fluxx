@@ -32,9 +32,7 @@ bool runExample(tgui::Gui& gui)
 void loadMainMenu(tgui::Gui& gui)
 {
     gui.removeAllWidgets();
-    updateTextSize(gui);
     
-    tgui::Theme theme{"./bin/themes/Black.txt"};
     sf::Vector2f availableSize = gui.getView().getSize();
 
     auto picture = tgui::Picture::create("./resources/img/main_cover.png");
@@ -50,7 +48,6 @@ void loadMainMenu(tgui::Gui& gui)
     const sf::Vector2<tgui::String> buttonSize{"22%", "8%"};
 
     auto settingsButton = tgui::Button::create("Settings");
-    settingsButton->setRenderer(theme.getRenderer("Button"));
     settingsButton->setSize({buttonSize.x, buttonSize.y});
     settingsButton->setOrigin({0.5f, 0.5f});
     settingsButton->setPosition({"75%", "50%"});
@@ -59,7 +56,6 @@ void loadMainMenu(tgui::Gui& gui)
     settingsButton->onPress(&loadSettings, std::ref(gui));
 
     auto playButton = tgui::Button::create("Play");
-    playButton->setRenderer(theme.getRenderer("Button"));
     playButton->setSize({buttonSize.x, buttonSize.y});
     playButton->setOrigin({0.5f, 0.5f});
     playButton->setPosition({"Settings.x", "Settings.top - 10 - height"});
@@ -68,7 +64,6 @@ void loadMainMenu(tgui::Gui& gui)
     playButton->onPress(&loadGameSelect, std::ref(gui));
 
     auto exitButton = tgui::Button::create("Quit");
-    exitButton->setRenderer(theme.getRenderer("Button"));
     exitButton->setSize({buttonSize.x, buttonSize.y});
     exitButton->setOrigin({0.5f, 0.5f});
     exitButton->setPosition({"Settings.x", "Settings.bottom + 10 + height"});
@@ -81,21 +76,39 @@ void loadMainMenu(tgui::Gui& gui)
 void loadGameSelect(tgui::Gui& gui)
 {
     gui.removeAllWidgets();
-    updateTextSize(gui);
 
-    tgui::Theme theme{"./bin/themes/Black.txt"};
 
-    const sf::Vector2<tgui::String> buttonSize{"22%", "8%"};
+    const sf::Vector2<tgui::String> buttonSize{"30%", "8%"};
 
     auto backButton = tgui::Button::create("Back");
-    backButton->setRenderer(theme.getRenderer("Button"));
     backButton->setSize({buttonSize.x, buttonSize.y});
-    // backButton->setTextSize(text_s);
     backButton->setOrigin({0.5f, 0.5f});
-    backButton->setPosition({"50%", "50%"});
-    gui.add(backButton);
+    backButton->setPosition({"50%", "75%"});
+    gui.add(backButton, "Back");
 
     backButton->onPress(&loadMainMenu, std::ref(gui));
+
+    auto createGButton = tgui::Button::create("Create game");
+    createGButton->setSize({buttonSize.x, buttonSize.y});
+    createGButton->setOrigin({0.5f, 0.5f});
+    createGButton->setPosition({"Back.x", "Back.top - height - 20"});
+    gui.add(createGButton, "Create");
+
+    createGButton->onClick(&loadGameCreate, std::ref(gui));
+
+    auto joinGButton = tgui::Button::create("Join game");
+    joinGButton->setSize({buttonSize.x, buttonSize.y});
+    joinGButton->setOrigin({0.5f, 0.5f});
+    joinGButton->setPosition({"Create.x", "Create.top - height - 20"});
+    gui.add(joinGButton, "Join");
+
+    auto ipEditBox = tgui::EditBox::create();
+    ipEditBox->setSize({buttonSize.x, buttonSize.y});
+    ipEditBox->setOrigin({0.5f, 0.5f});
+    ipEditBox->setDefaultText("Enter host's ip");
+    ipEditBox->setPosition({"Join.x", "Join.top - height - 20"});
+    gui.add(ipEditBox);
+
 }
 
 void loadSettings(tgui::Gui& gui)
@@ -103,13 +116,10 @@ void loadSettings(tgui::Gui& gui)
     gui.removeAllWidgets();
     // updateTextSize(gui);
 
-    tgui::Theme theme{"./bin/themes/Black.txt"};
     const sf::Vector2<tgui::String> buttonSize{"22%", "8%"};
 
     auto backButton = tgui::Button::create("Back");
-    backButton->setRenderer(theme.getRenderer("Button"));
     backButton->setSize({buttonSize.x, buttonSize.y});
-    // backButton->setTextSize(text_s);
     backButton->setOrigin({0.5f, 0.5f});
     backButton->setPosition({"50%", "80%"});
     gui.add(backButton);
@@ -117,14 +127,12 @@ void loadSettings(tgui::Gui& gui)
     backButton->onPress(&loadMainMenu, std::ref(gui));
 
     auto resolutionLable = tgui::Label::create("Resolution");
-    resolutionLable->setRenderer(theme.getRenderer("Label"));
     resolutionLable->setText("Resolution:");
     resolutionLable->setOrigin(0.5f, 0.5f);
     resolutionLable->setPosition({"20%","10%"});
     gui.add(resolutionLable, "ResolutionLable");
 
     auto resolutionBox = tgui::ComboBox::create();
-    resolutionBox->setRenderer(theme.getRenderer("ComboBox"));
     resolutionBox->setSize({buttonSize.x, buttonSize.y});
     resolutionBox->setOrigin(0.5f, 0.5f);
     resolutionBox->setPosition({"75%", "ResolutionLable.y"});
@@ -167,3 +175,41 @@ void updateWindowSize(tgui::Gui& gui, int id)
     settings << SUPPORTED_RESOLUTIONS[id].x << 'x' << SUPPORTED_RESOLUTIONS[id].y << '\n';
     updateTextSize(gui);
 }
+
+void loadGameCreate(tgui::Gui& gui)
+{
+    gui.removeAllWidgets();
+
+    const sf::Vector2<tgui::String> buttonSize{"30%", "8%"};
+
+    auto backButton = tgui::Button::create("Back");
+    backButton->setSize({buttonSize.x, buttonSize.y});
+    backButton->setOrigin({0.5f, 0.5f});
+    backButton->setPosition({"50%", "75%"});
+    gui.add(backButton, "Back");
+
+    backButton->onPress(&loadGameSelect, std::ref(gui));
+
+    auto createGButton = tgui::Button::create("Create lobby!");
+    createGButton->setSize({buttonSize.x, buttonSize.y});
+    createGButton->setOrigin({0.5f, 0.5f});
+    createGButton->setPosition({"Back.x", "Back.top - height - 20"});
+    gui.add(createGButton, "createB");
+
+    auto numberOfPlayers = tgui::EditBoxSlider::create(2, 4, 2, 0, 1);
+    numberOfPlayers->setTextAlignment(tgui::HorizontalAlignment::Center);
+    numberOfPlayers->setSize({buttonSize.x, buttonSize.y});
+    numberOfPlayers->setOrigin(0.5f, 0.5f);
+    numberOfPlayers->setPosition({"createB.x", "createB.top - height - 20"});
+    gui.add(numberOfPlayers, "Slider");
+
+    auto label = tgui::Label::create("numofp");
+    label->setText("Number of players:");
+    label->setOrigin(0.5f,0.5f);
+    label->setPosition({"Slider.x", "Slider.top - height - 20"});
+    gui.add(label);
+
+    
+}
+
+
