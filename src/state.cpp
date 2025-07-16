@@ -1,5 +1,6 @@
 #include "state.hpp"
 #include "card.hpp"
+#include "player.hpp"
 #include <SFML/Graphics/Texture.hpp>
 #include <memory>
 #include <nlohmann/json.hpp>
@@ -7,13 +8,14 @@
 #include <string>
 #include <algorithm>
 #include <random>
+#include <vector>
 
 using json = nlohmann::json;
 
-void loadImages(State* state)
+void loadCards(State* state)
 {   
     std::vector<Cards> result(99);
-    std::ifstream f("../config/cards.json");
+    std::ifstream f("../config/cards_debug.json");
     json data = json::parse(f);
     
     for(const auto& e : data)
@@ -25,19 +27,32 @@ void loadImages(State* state)
                 state->addCardTheme(c["name"], c["imgPath"], c["theme"]);
             }
         }
+        else if(e["category"] == "goal")
+        {
+            std::vector<std::shared_ptr<CardTheme>> temp;
+            temp.reserve(4);
+
+            for(const auto& c : e["cards"])
+            {   
+                for(const std::string& theme : c["themes"])
+                {
+                    for(Cards card : state->getDeck())
+                    {
+                        if(std::get<std::shared_ptr<CardTheme>>(card)->getName() == theme)
+                        {
+                            temp.push_back(std::get<std::shared_ptr<CardTheme>>(card));
+                        }
+                    }
+                }
+                //TODO: Добавить обработку целей "Количество карт 10" и "Количество тем 5"
+                state->addCardGoal(c["name"], c["imgPath"], temp, false, false);
+            }
+        }
         else if(e["category"] == "action")
         {
             for(const auto& c : e["cards"])
             {
                 state->addCardAction(c["name"], c["imgPath"], c["action"]);
-            }
-        }
-        else if(e["category"] == "goal")
-        {
-            for(const auto& c : e["cards"])
-            {   
-                std::vector<std::string> temp = c["themes"];
-                state->addCardGoal(c["name"], c["imgPath"], temp, false, false);
             }
         }
         else if(e["category"] == "rule")
@@ -69,20 +84,20 @@ void loadImages(State* state)
     f.close();
 }
 
-State::State(std::vector<Player*>& players) 
+State::State(std::vector<Player*>& players) : goals(0)
 {
     this->players = players;
     params.play = 1;
     params.take = 1;
         
-    loadImages(this);
+    loadCards(this);
 
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(deck.begin(), deck.end(), g);
 }
 
-const Cards State::getCard() 
+Cards State::getCard() 
 {
     return deck[currentCardID++];
 }
@@ -106,7 +121,7 @@ void State::addCardAction(std::string name, std::string imgPath, std::string act
     this->deck.push_back(ptr);
 }
 
-void State::addCardGoal(std::string name, std::string imgPath, std::vector<std::string>& themes, bool isNumOfThemes, bool isNumOfCards)
+void State::addCardGoal(std::string name, std::string imgPath, std::vector<std::shared_ptr<CardTheme>>& themes, bool isNumOfThemes, bool isNumOfCards)
 {   
     sf::Texture temp(imgPath);
     auto ptr = std::make_shared<CardGoal>(name, temp, themes, isNumOfThemes, isNumOfCards);
@@ -118,4 +133,50 @@ void State::addCardRule(std::string name, std::string imgPath, RulesParams& para
     sf::Texture temp(imgPath);
     auto ptr = std::make_shared<CardRule>(name, temp, params);
     this->deck.push_back(ptr);
+}
+
+void State::setGoal(std::shared_ptr<CardGoal> goal)
+{   
+    unsigned short int numberOfGoals = goals.size();
+    if(params.duplet && numberOfGoals == 2)
+    {
+        // Реализовать метод, который возвращает указатель на выбранную тему
+        // Она будет заменена на предоставленную
+    }
+    else if(params.duplet && numberOfGoals < 2)
+    {
+        goals.push_back(goal);
+    }
+    else if(numberOfGoals == 1)
+    {
+        goals[0] = goal;
+    }
+    else
+    {
+        goals.push_back(goal);
+    }
+}
+
+void State::checkWinner()
+{   
+    unsigned short int count = 0;
+    for(std::shared_ptr<CardGoal> goal : goals)
+    {   
+        std::vector<std::shared_ptr<CardTheme>> temp = goal->getThemes();
+        for(Player* p : players)
+        {
+            for(std::shared_ptr<CardTheme> card : p->getThemes())
+            {
+                if(std::find(temp.begin(), temp.end(), card) != temp.end()) count++;
+            }
+            if(count >= 2) return; // TODO: РЕАЛИЗОВАТЬ ВЫЗОВ ДЕМОНСТРАЦИИ ПОБЕДИТЕЛЯ
+            count = 0;
+        }
+    }
+
+}
+
+const std::vector<Cards>& State::getDeck() const
+{
+    return this->deck;
 }
