@@ -1,28 +1,28 @@
 {
-    "themes" : {
-        "category" : "1theme",
+    "1themes" : {
+        "category" : "theme",
         "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Ракета",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "../resources/img/default.png",
                 "theme" : "coockie"
             },
             {
                 "name" : "Мозг",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "../resources/img/default.png",
                 "theme" : "coockie"
             }
         ]
     },
 
-    "goals" : {
-        "category" : "2goal",
+    "2goals" : {
+        "category" : "goal",
         "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Полет мысли",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "../resources/img/default.png",
                 "themes" : [
                     "Ракета", "Мозг"
                 ]
@@ -30,32 +30,32 @@
         ]
     },
 
-    "actions" : {
-        "category" : "3action",
+    "3actions" : {
+        "category" : "action",
         "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Тяни-таскай",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "../resources/img/default.png",
                 "action" : "makeThis"
             }
         ]
     },
 
-    "rules" : {
-        "category" : "4rule",
+    "4rules" : {
+        "category" : "rule",
         "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Предел руки 0",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "../resources/img/default.png",
                 "rulesParams" : {
                     "handLimit" : 0
                 }
             },
             {
                 "name" : "Сыграй 3",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "../resources/img/default.png",
                 "rulesParams" : {
                     "play" : 3
                 }
