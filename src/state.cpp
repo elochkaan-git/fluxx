@@ -5,13 +5,15 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <string>
+#include <algorithm>
+#include <random>
 
 using json = nlohmann::json;
 
 void loadImages(State* state)
 {   
     std::vector<Cards> result(99);
-    std::ifstream f("./config/cards.json");
+    std::ifstream f("../config/cards.json");
     json data = json::parse(f);
     
     for(const auto& e : data)
@@ -43,7 +45,21 @@ void loadImages(State* state)
             for(const auto& c : e["cards"])
             {   
                 RulesParams temp;
-                if(c["rulesParams"]["handLimit"] != -1) temp.themeLimit = c["rulesParams"]["handLimit"];
+                if(c["rulesParams"].contains("handLimit")) temp.handLimit             = c["rulesParams"]["handLimit"];
+                else if(c["rulesParams"].contains("themeLimit")) temp.themeLimit      = c["rulesParams"]["themeLimit"];
+                else if(c["rulesParams"].contains("play")) temp.play                  = c["rulesParams"]["play"];
+                else if(c["rulesParams"].contains("take")) temp.take                  = c["rulesParams"]["take"];
+                else if(c["rulesParams"].contains("castling")) temp.castling          = c["rulesParams"]["castling"];
+                else if(c["rulesParams"].contains("blindGame")) temp.blindGame        = c["rulesParams"]["blindGame"];
+                else if(c["rulesParams"].contains("duplet")) temp.duplet              = c["rulesParams"]["duplet"];
+                else if(c["rulesParams"].contains("withoutHands")) temp.withoutHands  = c["rulesParams"]["withoutHands"];
+                else if(c["rulesParams"].contains("enough")) temp.enough              = c["rulesParams"]["enough"];
+                else if(c["rulesParams"].contains("rich")) temp.rich                  = c["rulesParams"]["rich"];
+                else if(c["rulesParams"].contains("random")) temp.random              = c["rulesParams"]["random"];
+                else if(c["rulesParams"].contains("poverty")) temp.poverty            = c["rulesParams"]["povetry"];
+                else if(c["rulesParams"].contains("utilize")) temp.utilize            = c["rulesParams"]["utilize"];
+                else if(c["rulesParams"].contains("dance")) temp.dance                = c["rulesParams"]["dance"];
+                else if(c["rulesParams"].contains("spinAndTurn")) temp.spinAndTurn    = c["rulesParams"]["spinAndTurn"];
 
                 state->addCardRule(c["name"], c["imgPath"], temp);
             }
@@ -53,15 +69,21 @@ void loadImages(State* state)
     f.close();
 }
 
-State::State(std::vector<Player*>& players) {
+State::State(std::vector<Player*>& players) 
+{
     this->players = players;
     params.play = 1;
     params.take = 1;
         
     loadImages(this);
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(deck.begin(), deck.end(), g);
 }
 
-const Cards State::getCard() {
+const Cards State::getCard() 
+{
     return deck[currentCardID++];
 }
 

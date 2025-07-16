@@ -47,6 +47,13 @@
                 "rulesParams" : {
                     "handLimit" : 0
                 }
+            },
+            {
+                "name" : "Сыграй 3",
+                "imgPath" : "../resources/img/default.png",
+                "rulesParams" : {
+                    "play" : 3
+                }
             }
         ]
     }
