@@ -6,4 +6,5 @@
 #include "player.hpp"
 #include "state.hpp"
 
-void update(unsigned short int numOfPlayers);
+void
+update(unsigned short int numOfPlayers);

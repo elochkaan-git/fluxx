@@ -4,43 +4,47 @@
 #include <memory>
 #include <vector>
 
-Player::Player() : hand(0), tableThemes(0) {}
-
-void Player::takeCards(State& state)
+Player::Player()
+  : hand(0)
+  , tableThemes(0)
 {
-    if(isFirstTurn)
-    { 
-        for(unsigned short int i = 0; i < 3; ++i) 
-        {
+}
+
+void
+Player::takeCards(State& state)
+{
+    if (isFirstTurn) {
+        for (unsigned short int i = 0; i < 3; ++i) {
             this->hand.push_back(state.getCard());
         }
         isFirstTurn = false;
-    }
-    else
-    {
-        for(unsigned short int i = 0; i < state.getRules()->take; ++i) 
-        {
+    } else {
+        for (unsigned short int i = 0; i < state.getRules()->take; ++i) {
             this->hand.push_back(state.getCard());
         }
     }
 }
 
-const std::vector<std::shared_ptr<CardTheme>> Player::getThemes() const
+const std::vector<std::shared_ptr<CardTheme>>
+Player::getThemes() const
 {
     return this->tableThemes;
 }
 
-const std::shared_ptr<CardGoal> Player::getCard(int id) const
-{
-    return std::get<std::shared_ptr<CardGoal>>(hand[id]);
-}
+// const std::shared_ptr<CardGoal>
+// Player::getCard(int id) const
+// {
+//     return std::get<std::shared_ptr<CardGoal>>(hand[id]);
+// }
 
-void Player::setThemes(const std::shared_ptr<CardTheme>& theme)
-{
-    tableThemes.push_back(theme);
-}
+// void
+// Player::setThemes(const std::shared_ptr<CardTheme>& theme)
+// {
+//     tableThemes.push_back(theme);
+// }
 
-const std::shared_ptr<CardTheme> Player::getCardT(int id) const
-{
-    return std::get<std::shared_ptr<CardTheme>>(hand[id]);
-}
+// const std::shared_ptr<CardTheme>
+// Player::getCardT(int id) const
+// {
+//     return std::get<std::shared_ptr<CardTheme>>(hand[id]);
+// }
