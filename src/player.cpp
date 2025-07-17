@@ -13,11 +13,11 @@ Player::Player()
 void
 Player::takeCards(State& state)
 {
-    if (isFirstTurn) {
+    if (firstTurn) {
         for (unsigned short int i = 0; i < 3; ++i) {
             this->hand.push_back(state.getCard());
         }
-        isFirstTurn = false;
+        firstTurn = false;
     } else {
         for (unsigned short int i = 0; i < state.getRules()->take; ++i) {
             this->hand.push_back(state.getCard());
@@ -29,6 +29,12 @@ const std::vector<std::shared_ptr<CardTheme>>
 Player::getThemes() const
 {
     return this->tableThemes;
+}
+
+const bool
+Player::isFirstTurn() const
+{
+    return firstTurn;
 }
 
 // const std::shared_ptr<CardGoal>

@@ -11,13 +11,14 @@ class Player
 private:
     std::vector<Cards> hand;
     std::vector<std::shared_ptr<CardTheme>> tableThemes;
-    bool isFirstTurn = true;
+    bool firstTurn = true;
 
 public:
     Player();
     void takeCards(State& state);
-    // void setThemes(const std::shared_ptr<CardTheme>& theme);
     const std::vector<std::shared_ptr<CardTheme>> getThemes() const;
+    const bool isFirstTurn() const;
+    // void setThemes(const std::shared_ptr<CardTheme>& theme);
     // const std::shared_ptr<CardGoal> getCard(int id) const;
     // const std::shared_ptr<CardTheme> getCardT(int id) const;
 };
