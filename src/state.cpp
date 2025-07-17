@@ -2,6 +2,7 @@
 #include "card.hpp"
 #include "player.hpp"
 #include <SFML/Graphics/Texture.hpp>
+#include <iostream>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <fstream>
@@ -14,7 +15,6 @@ using json = nlohmann::json;
 
 void loadCards(State* state)
 {   
-    std::vector<Cards> result(99);
     std::ifstream f("../config/cards_debug.json");
     json data = json::parse(f);
     
@@ -92,9 +92,9 @@ State::State(std::vector<Player*>& players) : goals(0)
         
     loadCards(this);
 
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(deck.begin(), deck.end(), g);
+    // std::random_device rd;
+    // std::mt19937 g(rd());
+    // std::shuffle(deck.begin(), deck.end(), g);
 }
 
 Cards State::getCard() 
@@ -169,7 +169,10 @@ void State::checkWinner()
             {
                 if(std::find(temp.begin(), temp.end(), card) != temp.end()) count++;
             }
-            if(count >= 2) return; // TODO: РЕАЛИЗОВАТЬ ВЫЗОВ ДЕМОНСТРАЦИИ ПОБЕДИТЕЛЯ
+            if(count >= 2) {
+                std::cout << "У нас есть победитель!";
+                return; // TODO: РЕАЛИЗОВАТЬ ВЫЗОВ ДЕМОНСТРАЦИИ ПОБЕДИТЕЛЯ
+            }
             count = 0;
         }
     }
