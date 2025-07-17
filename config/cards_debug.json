@@ -5,13 +5,11 @@
         "cards" : [
             {
                 "name" : "Ракета",
-                "imgPath" : "../resources/img/default.png",
-                "theme" : "coockie"
+                "imgPath" : "../resources/img/default.png"
             },
             {
                 "name" : "Мозг",
-                "imgPath" : "../resources/img/default.png",
-                "theme" : "coockie"
+                "imgPath" : "../resources/img/default.png"
             }
         ]
     },

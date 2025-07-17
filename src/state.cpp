@@ -16,7 +16,7 @@ using json = nlohmann::json;
 void
 loadCards(State* state)
 {
-    std::ifstream f("../config/cards_debug.json");
+    std::ifstream f("./config/cards.json");
     json data = json::parse(f);
 
     for (const auto& e : data) {
