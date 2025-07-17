@@ -1,0 +1,3 @@
+BasedOnStyle: Mozilla
+AccessModifierOffset: -4
+IndentWidth: 4
