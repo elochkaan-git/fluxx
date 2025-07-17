@@ -4,12 +4,41 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <memory>
 #include <string>
-#include <vector>
 #include <variant>
+#include <vector>
 
-
+// Объявление класса State для избежания цикличного включения
 class State;
 
+/**
+ * \brief Структура, содержащая параметры карт-правил
+ */
+struct RulesParams
+{
+    short int handLimit = -1;
+    short int themeLimit = -1;
+    short int play = -1;
+    short int take = -1;
+
+    bool blindGame = false;
+    bool castling = false;
+    bool dance = false;
+    bool duplet = false;
+    bool enough = false;
+    bool inflation = false;
+    bool poverty = false;
+    bool random = false;
+    bool rich = false;
+    bool spinAndTurn = false;
+    bool utilize = false;
+    bool withoutHands = false;
+};
+
+/**
+ * \brief Базовый класс карты
+ *
+ * Базовый класс карты, от которого наследуются все остальные типы карт
+ */
 class Card
 {
 protected:
@@ -23,25 +52,17 @@ public:
     // virtual void play(State* state) = 0;
 };
 
-
+/**
+ * \brief Класс карты-темы
+ */
 class CardTheme : public Card
 {
 public:
-    CardTheme(std::string name, sf::Texture& t, std::string theme);
-    bool operator ==(const CardTheme& other) const;
-    bool operator ==(const std::shared_ptr<CardTheme> other) const;
+    CardTheme(std::string name, sf::Texture& t);
+    bool operator==(const CardTheme& other) const;
+    bool operator==(const std::shared_ptr<CardTheme> other) const;
     // void play(State* state) override;
 };
-
-
-class CardAction : public Card
-{
-public:
-    void (*action)(State* state);
-    CardAction(std::string name, sf::Texture& t, std::string action);
-    // void play(State* state) override;
-};
-
 
 class CardGoal : public Card
 {
@@ -50,22 +71,21 @@ protected:
     bool isNumOfThemes = false, isNumOfCards = false;
 
 public:
-    CardGoal(std::string name, sf::Texture& t, std::vector<std::shared_ptr<CardTheme>>& themes,
-             bool isNumOfThemes, bool isNumOfCards);
+    CardGoal(std::string name,
+             sf::Texture& t,
+             std::vector<std::shared_ptr<CardTheme>>& themes,
+             bool isNumOfThemes,
+             bool isNumOfCards);
     // void play(State* state) override;
     const std::vector<std::shared_ptr<CardTheme>> getThemes() const;
 };
 
-
-struct RulesParams
+class CardAction : public Card
 {
-    short int handLimit = -1, 
-        themeLimit = -1, play = -1, take = -1;
-    bool castling = false, blindGame = false, 
-        duplet = false, withoutHands = false, enough = false,
-        rich = false, random = false, poverty = false,
-        utilize = false, dance = false, spinAndTurn = false,
-        inflation = false;
+public:
+    void (*action)(State* state);
+    CardAction(std::string name, sf::Texture& t, std::string action);
+    // void play(State* state) override;
 };
 
 class CardRule : public Card
@@ -78,4 +98,8 @@ public:
     // void play(State* state) override;
 };
 
-using Cards = std::variant<std::shared_ptr<CardAction>, std::shared_ptr<CardGoal>, std::shared_ptr<CardRule>, std::shared_ptr<CardTheme>>;
+/** Использование слово Cards вместо объемного типа */
+using Cards = std::variant<std::shared_ptr<CardAction>,
+                           std::shared_ptr<CardGoal>,
+                           std::shared_ptr<CardRule>,
+                           std::shared_ptr<CardTheme>>;

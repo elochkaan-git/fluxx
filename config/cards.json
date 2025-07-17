@@ -1,23 +1,21 @@
 {
-    "themes" : {
-        "category" : "1theme",
+    "1themes" : {
+        "category" : "theme",
         "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Ракета",
-                "imgPath" : "./resources/img/default.png",
-                "theme" : "coockie"
+                "imgPath" : "./resources/img/default.png"
             },
             {
                 "name" : "Мозг",
-                "imgPath" : "./resources/img/default.png",
-                "theme" : "coockie"
+                "imgPath" : "./resources/img/default.png"
             }
         ]
     },
 
-    "goals" : {
-        "category" : "2goal",
+    "2goals" : {
+        "category" : "goal",
         "description" : "bla-bla-bla",
         "cards" : [
             {
@@ -30,8 +28,8 @@
         ]
     },
 
-    "actions" : {
-        "category" : "3action",
+    "3actions" : {
+        "category" : "action",
         "description" : "bla-bla-bla",
         "cards" : [
             {
@@ -42,8 +40,8 @@
         ]
     },
 
-    "rules" : {
-        "category" : "4rule",
+    "4rules" : {
+        "category" : "rule",
         "description" : "bla-bla-bla",
         "cards" : [
             {

@@ -4,4 +4,4 @@
 #include <string>
 
 class State;
-extern std::map<std::string, void(*)(State*)> actions;
+extern std::map<std::string, void (*)(State*)> actions;
