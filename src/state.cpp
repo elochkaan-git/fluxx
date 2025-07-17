@@ -22,7 +22,7 @@ loadCards(State* state)
     for (const auto& e : data) {
         if (e["category"] == "theme") {
             for (const auto& c : e["cards"]) {
-                state->addCardTheme(c["name"], c["imgPath"], c["theme"]);
+                state->addCardTheme(c["name"], c["imgPath"]);
             }
         } else if (e["category"] == "goal") {
             std::vector<std::shared_ptr<CardTheme>> temp;
@@ -115,10 +115,10 @@ State::getRules() const
 }
 
 void
-State::addCardTheme(std::string name, std::string imgPath, std::string theme)
+State::addCardTheme(std::string name, std::string imgPath)
 {
     sf::Texture temp(imgPath);
-    auto ptr = std::make_shared<CardTheme>(name, temp, theme);
+    auto ptr = std::make_shared<CardTheme>(name, temp);
     this->deck.push_back(ptr);
 }
 

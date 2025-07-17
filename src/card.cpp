@@ -25,20 +25,6 @@ Card::getName() const
 }
 
 /*
- *  МЕТОДЫ КЛАССА КАРТЫ-ДЕЙСТВИЯ
- */
-CardAction::CardAction(std::string name, sf::Texture& t, std::string action)
-  : Card(name, t)
-{
-    this->action = actions[action];
-}
-
-// void CardAction::play(State* state)
-// {
-//     this->action(state);
-// }
-
-/*
  *  МЕТОДЫ КЛАССА КАРТЫ-ТЕМЫ
  */
 CardTheme::CardTheme(std::string name, sf::Texture& t)
@@ -66,6 +52,20 @@ CardTheme::operator==(const std::shared_ptr<CardTheme> other) const
         return true;
     return false;
 }
+/*
+ *  МЕТОДЫ КЛАССА КАРТЫ-ДЕЙСТВИЯ
+ */
+CardAction::CardAction(std::string name, sf::Texture& t, std::string action)
+  : Card(name, t)
+{
+    this->action = actions[action];
+}
+
+// void CardAction::play(State* state)
+// {
+//     this->action(state);
+// }
+
 
 /*
  *  МЕТОДЫ КЛАССА КАРТЫ-ЦЕЛИ

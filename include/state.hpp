@@ -20,7 +20,7 @@ public:
     State(std::vector<Player*>& players);
     Cards getCard();
     const std::vector<Cards>& getDeck() const;
-    void addCardTheme(std::string name, std::string imgPath, std::string theme);
+    void addCardTheme(std::string name, std::string imgPath);
     void addCardAction(std::string name,
                        std::string imgPath,
                        std::string action);
