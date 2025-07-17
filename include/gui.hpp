@@ -4,6 +4,8 @@
 #include <TGUI/Backend/SFML-Graphics.hpp>
 #include <fstream>
 
+#include "gamegui.hpp"
+
 bool runExample(tgui::Gui& gui);
 void loadMainMenu(tgui::Gui& gui);
 void loadGameSelect(tgui::Gui& gui);
