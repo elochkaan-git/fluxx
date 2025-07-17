@@ -167,7 +167,7 @@ State::setGoal(std::shared_ptr<CardGoal> goal)
     }
 }
 
-void
+bool
 State::checkWinner()
 {
     unsigned short int count = 0;
@@ -178,17 +178,55 @@ State::checkWinner()
                 if (std::find(temp.begin(), temp.end(), card) != temp.end())
                     count++;
             }
-            if (count >= 2) {
-                std::cout << "У нас есть победитель!";
-                return; // TODO: РЕАЛИЗОВАТЬ ВЫЗОВ ДЕМОНСТРАЦИИ ПОБЕДИТЕЛЯ
-            }
+            if (count >= 2) return true;
             count = 0;
         }
     }
+    return false;
 }
 
 const std::vector<Cards>&
 State::getDeck() const
 {
     return this->deck;
+}
+
+Player*
+State::currentPlayer()
+{
+    return players[currentPlayerID];
+}
+
+Player*
+State::nextPlayer()
+{
+    if(currentPlayerID + 1 > players.size() - 1) return players[0];
+    else return players[currentPlayerID + 1];
+}
+
+Player*
+State::nextPlayer(unsigned short int n)
+{
+    if(currentPlayerID + n > players.size() - 1) return players[currentPlayerID + n - players.size()];
+    else if(currentPlayerID + n < 0) return players[players.size() - currentPlayerID + n + 1];
+    else return players[currentPlayerID + n];
+}
+
+void
+State::nextMove()
+{
+    if(currentPlayerID + 1 > players.size() - 1) currentPlayerID = 0;
+    else currentPlayerID++;
+}
+
+const unsigned short int
+State::howManyTake() const
+{
+    return params.take;
+}
+
+const unsigned short int
+State::howManyPlay() const
+{
+    return params.play;
 }

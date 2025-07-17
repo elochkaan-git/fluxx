@@ -33,6 +33,12 @@ public:
                      std::string imgPath,
                      RulesParams& params);
     void setGoal(std::shared_ptr<CardGoal> goal);
-    void checkWinner();
+    bool checkWinner();
+    Player* currentPlayer();
+    Player* nextPlayer();
+    Player* nextPlayer(unsigned short int n);
+    void nextMove();
+    const unsigned short int howManyTake() const;
+    const unsigned short int howManyPlay() const;
     const RulesParams* getRules() const;
 };
