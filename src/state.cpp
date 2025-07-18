@@ -4,7 +4,6 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <algorithm>
 #include <fstream>
-#include <iostream>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <random>
@@ -97,9 +96,9 @@ State::State(std::vector<Player*>& players)
 
     loadCards(this);
 
-    // std::random_device rd;
-    // std::mt19937 g(rd());
-    // std::shuffle(deck.begin(), deck.end(), g);
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(deck.begin(), deck.end(), g);
 }
 
 Cards
@@ -237,4 +236,95 @@ const unsigned short int
 State::howManyPlay() const
 {
     return params.play;
+}
+
+void
+State::addRule(std::shared_ptr<CardRule> rule)
+{
+    if (rule->getName().find("Тяни") != std::string::npos) {
+        for (std::shared_ptr<CardRule>& ptr : rules) {
+            if (ptr->getName().find("Тяни") != std::string::npos) {
+                ptr = rule;
+                break;
+            }
+        }
+    } else if (rule->getName().find("Сыграй") != std::string::npos) {
+        for (std::shared_ptr<CardRule>& ptr : rules) {
+            if (ptr->getName().find("Сыграй") != std::string::npos) {
+                ptr = rule;
+                break;
+            }
+        }
+    }
+    if (rule->getName().find("Предел тем") != std::string::npos) {
+        for (std::shared_ptr<CardRule>& ptr : rules) {
+            if (ptr->getName().find("Предел тем") != std::string::npos) {
+                ptr = rule;
+                break;
+            }
+        }
+    }
+    if (rule->getName().find("Предел руки") != std::string::npos) {
+        for (std::shared_ptr<CardRule>& ptr : rules) {
+            if (ptr->getName().find("Предел руки") != std::string::npos) {
+                ptr = rule;
+                break;
+            }
+        }
+    } else {
+        rules.push_back(rule);
+    }
+
+    updateRules();
+}
+
+void
+State::updateRules()
+{
+    clearRules();
+    for (std::shared_ptr<CardRule>& ptr : rules) {
+        RulesParams ruleParams = ptr->getParams();
+        if (ruleParams.take > 1)
+            params.take = ruleParams.take;
+        else if (ruleParams.play > 1)
+            params.play = ruleParams.play;
+        else if (ruleParams.themeLimit > -1)
+            params.themeLimit = ruleParams.themeLimit;
+        else if (ruleParams.handLimit > -1)
+            params.handLimit = ruleParams.handLimit;
+
+        params.blindGame |= ruleParams.blindGame;
+        params.castling |= ruleParams.castling;
+        params.dance |= ruleParams.dance;
+        params.duplet |= ruleParams.duplet;
+        params.enough |= ruleParams.enough;
+        params.inflation |= ruleParams.inflation;
+        params.poverty |= ruleParams.poverty;
+        params.random |= ruleParams.random;
+        params.rich |= ruleParams.rich;
+        params.spinAndTurn |= ruleParams.spinAndTurn;
+        params.utilize |= ruleParams.utilize;
+        params.withoutHands |= ruleParams.withoutHands;
+    }
+}
+
+void
+State::clearRules()
+{
+    params.take = 1;
+    params.play = 1;
+    params.themeLimit = -1;
+    params.handLimit = -1;
+    params.blindGame = false;
+    params.castling = false;
+    params.dance = false;
+    params.duplet = false;
+    params.enough = false;
+    params.inflation = false;
+    params.poverty = false;
+    params.random = false;
+    params.rich = false;
+    params.spinAndTurn = false;
+    params.utilize = false;
+    params.withoutHands = false;
 }

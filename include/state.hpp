@@ -12,9 +12,11 @@ private:
     std::vector<Cards> deck, dump;
     std::vector<Player*> players;
     std::vector<std::shared_ptr<CardGoal>> goals;
+    std::vector<std::shared_ptr<CardRule>> rules;
     RulesParams params;
     unsigned char currentPlayerID = 0, currentCardID = 0;
     bool isNumOfThemes = false, isNumOfCards = false;
+    void clearRules();
 
 public:
     State(std::vector<Player*>& players);
@@ -33,6 +35,7 @@ public:
                      std::string imgPath,
                      RulesParams& params);
     void setGoal(std::shared_ptr<CardGoal> goal);
+    void addRule(std::shared_ptr<CardRule> rule);
     bool checkWinner();
     Player* currentPlayer();
     Player* nextPlayer();
@@ -41,4 +44,5 @@ public:
     const unsigned short int howManyTake() const;
     const unsigned short int howManyPlay() const;
     const RulesParams* getRules() const;
+    void updateRules();
 };

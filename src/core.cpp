@@ -21,6 +21,7 @@ update(unsigned short int numOfPlayers)
         takes = 0;
 
         while (moves < state.howManyPlay()) {
+            // TODO: Для Савелия
             // Реализовать метод, который возвращает название выбранной карты
             // или указатель std::shared_ptr на нее
             // Далее разыгрывается выбранная карта
