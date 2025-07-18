@@ -49,22 +49,26 @@ public:
     Card(std::string name, sf::Texture& t);
     const sf::Sprite& getSprite() const;
     const std::string& getName() const;
-    // virtual void play(State* state) = 0;
+    virtual void play(State* state) = 0;
 };
 
 /**
  * \brief Класс карты-темы
  */
-class CardTheme : public Card
+class CardTheme
+  : public Card
+  , std::enable_shared_from_this<CardTheme>
 {
 public:
     CardTheme(std::string name, sf::Texture& t);
     bool operator==(const CardTheme& other) const;
     bool operator==(const std::shared_ptr<CardTheme> other) const;
-    // void play(State* state) override;
+    void play(State* state) override;
 };
 
-class CardGoal : public Card
+class CardGoal
+  : public Card
+  , std::enable_shared_from_this<CardGoal>
 {
 protected:
     std::vector<std::shared_ptr<CardTheme>> themes = {};
@@ -76,26 +80,31 @@ public:
              std::vector<std::shared_ptr<CardTheme>>& themes,
              bool isNumOfThemes,
              bool isNumOfCards);
-    // void play(State* state) override;
+    void play(State* state) override;
     const std::vector<std::shared_ptr<CardTheme>> getThemes() const;
 };
 
-class CardAction : public Card
+class CardAction
+  : public Card
+  , std::enable_shared_from_this<CardAction>
 {
 public:
     void (*action)(State* state);
     CardAction(std::string name, sf::Texture& t, std::string action);
-    // void play(State* state) override;
+    void play(State* state) override;
 };
 
-class CardRule : public Card
+class CardRule
+  : public Card
+  , std::enable_shared_from_this<CardRule>
 {
 protected:
     RulesParams params;
 
 public:
     CardRule(std::string name, sf::Texture& t, RulesParams& params);
-    // void play(State* state) override;
+    void play(State* state) override;
+    const RulesParams getParams() const;
 };
 
 /** Использование слово Cards вместо объемного типа */

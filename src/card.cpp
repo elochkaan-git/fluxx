@@ -1,5 +1,7 @@
 #include "card.hpp"
 #include "actions.hpp"
+#include "player.hpp"
+#include "state.hpp"
 #include <memory>
 #include <string>
 
@@ -32,10 +34,11 @@ CardTheme::CardTheme(std::string name, sf::Texture& t)
 {
 }
 
-// void CardTheme::play(State* state)
-// {
-//     state
-// }
+void
+CardTheme::play(State* state)
+{
+    state->currentPlayer()->addTheme(shared_from_this());
+}
 
 bool
 CardTheme::operator==(const CardTheme& other) const
@@ -74,6 +77,12 @@ CardGoal::getThemes() const
     return this->themes;
 }
 
+void
+CardGoal::play(State* state)
+{
+    state->setGoal(shared_from_this());
+}
+
 /*
  *  МЕТОДЫ КЛАССА КАРТЫ-ДЕЙСТВИЯ
  */
@@ -83,10 +92,11 @@ CardAction::CardAction(std::string name, sf::Texture& t, std::string action)
     this->action = actions[action];
 }
 
-// void CardAction::play(State* state)
-// {
-//     this->action(state);
-// }
+void
+CardAction::play(State* state)
+{
+    this->action(state);
+}
 
 /*
  *  МЕТОДЫ КЛАССА КАРТЫ-ПРАВИЛА
@@ -95,4 +105,16 @@ CardRule::CardRule(std::string name, sf::Texture& t, RulesParams& params)
   : Card(name, t)
 {
     this->params = params;
+}
+
+const RulesParams
+CardRule::getParams() const
+{
+    return params;
+}
+
+void
+CardRule::play(State* state)
+{
+    state->addRule(shared_from_this());
 }
