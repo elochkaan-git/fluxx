@@ -37,6 +37,12 @@ Player::isFirstTurn() const
     return firstTurn;
 }
 
+const void
+Player::addTheme(std::shared_ptr<CardTheme> theme)
+{
+    tableThemes.push_back(theme);
+}
+
 // const std::shared_ptr<CardGoal>
 // Player::getCard(int id) const
 // {
