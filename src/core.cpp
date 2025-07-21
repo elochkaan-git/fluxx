@@ -1,4 +1,26 @@
 #include "core.hpp"
+#include <variant>
+
+struct CardVisitor {
+    State* state;
+    CardVisitor(State* state) { this->state = state; }
+
+    void operator()(CardTheme& card) {
+        card.play(state);
+    }
+
+    void operator()(CardGoal& card) {
+        card.play(state);
+    }
+
+    void operator()(CardAction& card) {
+        card.play(state);
+    }
+
+    void operator()(CardRule& card) {
+        card.play(state);
+    }
+};
 
 void
 update(unsigned short int numOfPlayers)
@@ -8,8 +30,11 @@ update(unsigned short int numOfPlayers)
         p = new Player();
     State state(players);
 
+    // const Card* t = &std::get<CardTheme>(*state.getCardById(0));
+    // t->play(&state);
+
     unsigned short int takes = 0, moves = 0;
-    while (state.checkWinner()) {
+    while (!state.checkWinner()) {
         for (Player*& p : players)
             if (p->isFirstTurn())
                 p->takeCards(state);
@@ -23,8 +48,10 @@ update(unsigned short int numOfPlayers)
         while (moves < state.howManyPlay()) {
             // TODO: Для Савелия
             // Реализовать метод, который возвращает название выбранной карты
-            // или указатель std::shared_ptr на нее
+            // или ее id на нее
             // Далее разыгрывается выбранная карта
+            Cards* temp = state.getCardById(2);
+            std::visit(CardVisitor{&state}, *temp);
             moves++;
         }
 
