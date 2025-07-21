@@ -10,6 +10,18 @@
             {
                 "name" : "Мозг",
                 "imgPath" : "../resources/img/default.png"
+            },
+            {
+                "name" : "Сон",
+                "imgPath" : "../resources/img/default.png"
+            },
+            {
+                "name" : "Вечеринка",
+                "imgPath" : "../resources/img/default.png"
+            },
+            {
+                "name" : "Молоко",
+                "imgPath" : "../resources/img/default.png"
             }
         ]
     },
