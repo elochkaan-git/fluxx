@@ -1,13 +1,14 @@
 #include "state.hpp"
 #include "card.hpp"
 #include "player.hpp"
+#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <algorithm>
 #include <fstream>
-#include <memory>
 #include <nlohmann/json.hpp>
 #include <random>
 #include <string>
+#include <variant>
 #include <vector>
 
 using json = nlohmann::json;
@@ -15,35 +16,39 @@ using json = nlohmann::json;
 void
 loadCards(State* state)
 {
-    std::ifstream f("./config/cards.json");
+    unsigned short int id = 0;
+    std::ifstream f("../config/cards_debug.json");
     json data = json::parse(f);
 
     for (const auto& e : data) {
         if (e["category"] == "theme") {
             for (const auto& c : e["cards"]) {
-                state->addCardTheme(c["name"], c["imgPath"]);
+                state->addCardTheme(id, c["name"], c["imgPath"]);
+                id++;
             }
         } else if (e["category"] == "goal") {
-            std::vector<std::shared_ptr<CardTheme>> temp;
+            std::vector<unsigned short int> temp;
             temp.reserve(4);
 
             for (const auto& c : e["cards"]) {
                 for (const std::string& theme : c["themes"]) {
-                    for (Cards card : state->getDeck()) {
-                        if (std::get<std::shared_ptr<CardTheme>>(card)
-                              ->getName() == theme) {
-                            temp.push_back(
-                              std::get<std::shared_ptr<CardTheme>>(card));
+                    for (const Cards& card : state->getDeck()) {
+                        CardTheme currentCard = std::get<CardTheme>(card);
+                        if (currentCard.getName() == theme) {
+                            temp.push_back(currentCard.getId());
                         }
                     }
                 }
                 // TODO: Добавить обработку целей "Количество карт 10" и
                 // "Количество тем 5"
-                state->addCardGoal(c["name"], c["imgPath"], temp, false, false);
+                state->addCardGoal(
+                  id, c["name"], c["imgPath"], temp, false, false);
+                id++;
             }
         } else if (e["category"] == "action") {
             for (const auto& c : e["cards"]) {
-                state->addCardAction(c["name"], c["imgPath"], c["action"]);
+                state->addCardAction(id, c["name"], c["imgPath"], c["action"]);
+                id++;
             }
         } else if (e["category"] == "rule") {
             for (const auto& c : e["cards"]) {
@@ -79,7 +84,8 @@ loadCards(State* state)
                 else if (c["rulesParams"].contains("spinAndTurn"))
                     temp.spinAndTurn = c["rulesParams"]["spinAndTurn"];
 
-                state->addCardRule(c["name"], c["imgPath"], temp);
+                state->addCardRule(id, c["name"], c["imgPath"], temp);
+                id++;
             }
         }
     }
@@ -96,9 +102,9 @@ State::State(std::vector<Player*>& players)
 
     loadCards(this);
 
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(deck.begin(), deck.end(), g);
+    // std::random_device rd;
+    // std::mt19937 g(rd());
+    // std::shuffle(deck.begin(), deck.end(), g);
 }
 
 Cards
@@ -114,55 +120,60 @@ State::getRules() const
 }
 
 void
-State::addCardTheme(std::string name, std::string imgPath)
+State::addCardTheme(unsigned short int id,
+                    std::string name,
+                    std::string imgPath)
 {
     sf::Texture temp(imgPath);
-    auto ptr = std::make_shared<CardTheme>(name, temp);
-    this->deck.push_back(ptr);
+    this->deck.push_back(CardTheme(id, name, temp));
 }
 
 void
-State::addCardAction(std::string name, std::string imgPath, std::string action)
-{
-    sf::Texture temp(imgPath);
-    auto ptr = std::make_shared<CardAction>(name, temp, action);
-    this->deck.push_back(ptr);
-}
-
-void
-State::addCardGoal(std::string name,
+State::addCardGoal(unsigned short int id,
+                   std::string name,
                    std::string imgPath,
-                   std::vector<std::shared_ptr<CardTheme>>& themes,
+                   std::vector<unsigned short int>& themes,
                    bool isNumOfThemes,
                    bool isNumOfCards)
 {
     sf::Texture temp(imgPath);
-    auto ptr = std::make_shared<CardGoal>(
-      name, temp, themes, isNumOfThemes, isNumOfCards);
-    this->deck.push_back(ptr);
+    this->deck.push_back(
+      CardGoal(id, name, temp, themes, isNumOfThemes, isNumOfCards));
 }
 
 void
-State::addCardRule(std::string name, std::string imgPath, RulesParams& params)
+State::addCardAction(unsigned short int id,
+                     std::string name,
+                     std::string imgPath,
+                     std::string action)
 {
     sf::Texture temp(imgPath);
-    auto ptr = std::make_shared<CardRule>(name, temp, params);
-    this->deck.push_back(ptr);
+    this->deck.push_back(CardAction(id, name, temp, action));
 }
 
 void
-State::setGoal(std::shared_ptr<CardGoal> goal)
+State::addCardRule(unsigned short int id,
+                   std::string name,
+                   std::string imgPath,
+                   RulesParams& params)
+{
+    sf::Texture temp(imgPath);
+    this->deck.push_back(CardRule(id, name, temp, params));
+}
+
+void
+State::setGoal(unsigned short int goalId)
 {
     unsigned short int numberOfGoals = goals.size();
     if (params.duplet && numberOfGoals == 2) {
         // Реализовать метод, который возвращает указатель на выбранную тему
         // Она будет заменена на предоставленную
     } else if (params.duplet && numberOfGoals < 2) {
-        goals.push_back(goal);
+        goals.push_back(goalId);
     } else if (numberOfGoals == 1) {
-        goals[0] = goal;
+        goals[0] = goalId;
     } else {
-        goals.push_back(goal);
+        goals.push_back(goalId);
     }
 }
 
@@ -170,10 +181,11 @@ bool
 State::checkWinner()
 {
     unsigned short int count = 0;
-    for (std::shared_ptr<CardGoal> goal : goals) {
-        std::vector<std::shared_ptr<CardTheme>> temp = goal->getThemes();
+    for (unsigned short int& goal : goals) {
+        std::vector<unsigned short int> temp =
+          std::get<CardGoal>(*getCardById(goal)).getThemes();
         for (Player* p : players) {
-            for (std::shared_ptr<CardTheme> card : p->getThemes()) {
+            for (const unsigned short int& card : p->getThemes()) {
                 if (std::find(temp.begin(), temp.end(), card) != temp.end())
                     count++;
             }
@@ -239,40 +251,52 @@ State::howManyPlay() const
 }
 
 void
-State::addRule(std::shared_ptr<CardRule> rule)
+State::addRule(unsigned short int ruleId)
 {
-    if (rule->getName().find("Тяни") != std::string::npos) {
-        for (std::shared_ptr<CardRule>& ptr : rules) {
-            if (ptr->getName().find("Тяни") != std::string::npos) {
-                ptr = rule;
+    if (std::get<CardRule>(*getCardById(ruleId)).getName().find("Тяни") !=
+        std::string::npos) {
+        for (unsigned short int& ptr : rules) {
+            if (std::get<CardRule>(*getCardById(ptr)).getName().find("Тяни") !=
+                std::string::npos) {
+                ptr = ruleId;
                 break;
             }
         }
-    } else if (rule->getName().find("Сыграй") != std::string::npos) {
-        for (std::shared_ptr<CardRule>& ptr : rules) {
-            if (ptr->getName().find("Сыграй") != std::string::npos) {
-                ptr = rule;
+    } else if (std::get<CardRule>(*getCardById(ruleId))
+                 .getName()
+                 .find("Сыграй") != std::string::npos) {
+        for (unsigned short int& ptr : rules) {
+            if (std::get<CardRule>(*getCardById(ptr))
+                  .getName()
+                  .find("Сыграй") != std::string::npos) {
+                ptr = ruleId;
                 break;
             }
         }
-    }
-    if (rule->getName().find("Предел тем") != std::string::npos) {
-        for (std::shared_ptr<CardRule>& ptr : rules) {
-            if (ptr->getName().find("Предел тем") != std::string::npos) {
-                ptr = rule;
+    } else if (std::get<CardRule>(*getCardById(ruleId))
+                 .getName()
+                 .find("Предел тем") != std::string::npos) {
+        for (unsigned short int& ptr : rules) {
+            if (std::get<CardRule>(*getCardById(ptr))
+                  .getName()
+                  .find("Предел тем") != std::string::npos) {
+                ptr = ruleId;
                 break;
             }
         }
-    }
-    if (rule->getName().find("Предел руки") != std::string::npos) {
-        for (std::shared_ptr<CardRule>& ptr : rules) {
-            if (ptr->getName().find("Предел руки") != std::string::npos) {
-                ptr = rule;
+    } else if (std::get<CardRule>(*getCardById(ruleId))
+                 .getName()
+                 .find("Предел руки") != std::string::npos) {
+        for (unsigned short int& ptr : rules) {
+            if (std::get<CardRule>(*getCardById(ptr))
+                  .getName()
+                  .find("Предел руки") != std::string::npos) {
+                ptr = ruleId;
                 break;
             }
         }
     } else {
-        rules.push_back(rule);
+        rules.push_back(ruleId);
     }
 
     updateRules();
@@ -282,8 +306,9 @@ void
 State::updateRules()
 {
     clearRules();
-    for (std::shared_ptr<CardRule>& ptr : rules) {
-        RulesParams ruleParams = ptr->getParams();
+    for (unsigned short int& ptr : rules) {
+        RulesParams ruleParams =
+          std::get<CardRule>(*getCardById(ptr)).getParams();
         if (ruleParams.take > 1)
             params.take = ruleParams.take;
         else if (ruleParams.play > 1)
@@ -327,4 +352,28 @@ State::clearRules()
     params.spinAndTurn = false;
     params.utilize = false;
     params.withoutHands = false;
+}
+
+Cards*
+State::getCardById(unsigned short int id)
+{
+    for (Cards& card : deck) {
+        if (std::holds_alternative<CardTheme>(card)) {
+            CardTheme t = std::get<CardTheme>(card);
+            if (t.getId() == id)
+                return &card;
+        } else if (std::holds_alternative<CardGoal>(card)) {
+            CardGoal t = std::get<CardGoal>(card);
+            if (t.getId() == id)
+                return &card;
+        } else if (std::holds_alternative<CardAction>(card)) {
+            CardAction t = std::get<CardAction>(card);
+            if (t.getId() == id)
+                return &card;
+        } else {
+            CardRule t = std::get<CardRule>(card);
+            if (t.getId() == id)
+                return &card;
+        }
+    }
 }

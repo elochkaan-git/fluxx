@@ -1,7 +1,7 @@
 #pragma once
 
 #include "card.hpp"
-#include <memory>
+#include <SFML/Graphics/Sprite.hpp>
 #include <vector>
 
 class Player;
@@ -11,8 +11,7 @@ class State
 private:
     std::vector<Cards> deck, dump;
     std::vector<Player*> players;
-    std::vector<std::shared_ptr<CardGoal>> goals;
-    std::vector<std::shared_ptr<CardRule>> rules;
+    std::vector<unsigned short int> goals, rules;
     RulesParams params;
     unsigned char currentPlayerID = 0, currentCardID = 0;
     bool isNumOfThemes = false, isNumOfCards = false;
@@ -21,21 +20,27 @@ private:
 public:
     State(std::vector<Player*>& players);
     Cards getCard();
+    Cards* getCardById(unsigned short int id);
     const std::vector<Cards>& getDeck() const;
-    void addCardTheme(std::string name, std::string imgPath);
-    void addCardAction(std::string name,
+    void addCardTheme(unsigned short int id,
+                      std::string name,
+                      std::string imgPath);
+    void addCardAction(unsigned short int id,
+                       std::string name,
                        std::string imgPath,
                        std::string action);
-    void addCardGoal(std::string name,
+    void addCardGoal(unsigned short int id,
+                     std::string name,
                      std::string imgPath,
-                     std::vector<std::shared_ptr<CardTheme>>& themes,
+                     std::vector<unsigned short int>& themes,
                      bool isNumOfThemes,
                      bool isNumOfCards);
-    void addCardRule(std::string name,
+    void addCardRule(unsigned short int id,
+                     std::string name,
                      std::string imgPath,
                      RulesParams& params);
-    void setGoal(std::shared_ptr<CardGoal> goal);
-    void addRule(std::shared_ptr<CardRule> rule);
+    void setGoal(unsigned short int goalId);
+    void addRule(unsigned short int ruleId);
     bool checkWinner();
     Player* currentPlayer();
     Player* nextPlayer();
