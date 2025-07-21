@@ -28,6 +28,14 @@ void initfunctionalPanel(tgui::Gui &gui){
   confirmButton->setAutoLayout(tgui::AutoLayout::Bottom);
   confirmButton->setHeight(buttonSize.y);
   confirmButton->onClick(&loadMainMenu, std::ref(gui));
+
+  auto startGameButton = tgui::Button::create("Start\ngame");
+  functionalPanel->add(startGameButton);
+  startGameButton->setSize({"100%", "16%"});
+  startGameButton->setOrigin(0.5f,0.5f);
+  startGameButton->setPosition({"50%", "50%"});
+  
+  startGameButton->onClick(&loadMainMenu, std::ref(gui));
 }
 
 void initPlayersBoardCards(tgui::Gui &gui){
@@ -105,12 +113,13 @@ void initPlayersBoardCards(tgui::Gui &gui){
 void initGoalPanel(tgui::Gui &gui){
   auto goalPanel = tgui::HorizontalWrap::create();
   goalPanel->setAutoLayout(tgui::AutoLayout::Left);
-  goalPanel->setWidth({"25%"});
+  goalPanel->setWidth({"20%"});
   goalPanel->getRenderer()->setPadding({5}); // Keep 5px on all sides as empty space
   goalPanel->getRenderer()->setSpaceBetweenWidgets(10); // Put a 10px gap beside and below widgets
   for(int i = 0; i < 6; i++){
     auto Test = tgui::Picture::create("./resources/img/default.png");
     // Test->setSize(Test->s);  
+    Test->setSize(50, 50);
     goalPanel->add(Test);
   }
   gui.add(goalPanel);
@@ -120,7 +129,7 @@ void initGoalPanel(tgui::Gui &gui){
 void initRulePanel(tgui::Gui &gui){
   auto rulePanel = tgui::HorizontalWrap::create();
   rulePanel->setAutoLayout(tgui::AutoLayout::Right);
-  rulePanel->setWidth({"25%"});
+  rulePanel->setWidth({"20%"});
   rulePanel->getRenderer()->setPadding({5}); // Keep 5px on all sides as empty space
   rulePanel->getRenderer()->setSpaceBetweenWidgets(10); // Put a 10px gap beside and below widgets
   for(int i = 0; i < 6; i++){
@@ -153,7 +162,7 @@ void loadGame(tgui::Gui &gui, int numberOfPlayers) {
   Deck->setPosition({"10%","10%"});
   Deck->setScale(0.3f);
   auto StateLabel = tgui::Label::create("Main label");
-  StateLabel->setText("Place holder");
+  StateLabel->setText("Waiting for players");
   centralPanel->add(StateLabel);
   StateLabel->setPosition({"10%","50%"});
   auto Dump = tgui::Picture::create("./resources/img/default.png");
