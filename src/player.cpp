@@ -1,11 +1,10 @@
 #include "player.hpp"
 #include "card.hpp"
 #include "state.hpp"
-#include <memory>
 #include <vector>
 
 Player::Player()
-  : hand(0)
+  : hand()
   , tableThemes(0)
 {
 }
@@ -25,7 +24,7 @@ Player::takeCards(State& state)
     }
 }
 
-const std::vector<std::shared_ptr<CardTheme>>
+const std::vector<unsigned short int>
 Player::getThemes() const
 {
     return this->tableThemes;
@@ -38,25 +37,7 @@ Player::isFirstTurn() const
 }
 
 const void
-Player::addTheme(std::shared_ptr<CardTheme> theme)
+Player::addTheme(unsigned short int theme)
 {
     tableThemes.push_back(theme);
 }
-
-// const std::shared_ptr<CardGoal>
-// Player::getCard(int id) const
-// {
-//     return std::get<std::shared_ptr<CardGoal>>(hand[id]);
-// }
-
-// void
-// Player::setThemes(const std::shared_ptr<CardTheme>& theme)
-// {
-//     tableThemes.push_back(theme);
-// }
-
-// const std::shared_ptr<CardTheme>
-// Player::getCardT(int id) const
-// {
-//     return std::get<std::shared_ptr<CardTheme>>(hand[id]);
-// }
