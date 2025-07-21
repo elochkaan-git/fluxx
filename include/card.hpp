@@ -2,7 +2,6 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <memory>
 #include <string>
 #include <variant>
 #include <vector>
@@ -14,24 +13,26 @@ class State;
  * \brief Структура, содержащая параметры карт-правил
  */
 struct RulesParams
-{
-    short int handLimit = -1;
-    short int themeLimit = -1;
-    short int play = -1;
-    short int take = -1;
+{   
+    // Значения действительны, только если > 1
+    short int handLimit = -1; // Предел руки
+    short int themeLimit = -1; // Предел тем
+    short int play = -1; // Сколько сыграть
+    short int take = -1; // Сколько взять
 
-    bool blindGame = false;
-    bool castling = false;
-    bool dance = false;
-    bool duplet = false;
-    bool enough = false;
-    bool inflation = false;
-    bool poverty = false;
-    bool random = false;
-    bool rich = false;
-    bool spinAndTurn = false;
-    bool utilize = false;
-    bool withoutHands = false;
+    // Состояния для особых карт
+    bool blindGame = false; // Игра вслепую
+    bool castling = false; // Рокировка
+    bool dance = false; // Танцуют все!
+    bool duplet = false; // Дуплет
+    bool enough = false; // С меня хватит!
+    bool inflation = false; // Инфляция
+    bool poverty = false; // Бедность не порок
+    bool random = false; // TODO дописать карты
+    bool rich = false; //
+    bool spinAndTurn = false; //
+    bool utilize = false; //
+    bool withoutHands = false; // Как без рук
 };
 
 /**
@@ -42,73 +43,79 @@ struct RulesParams
 class Card
 {
 protected:
+    unsigned short int id;
     sf::Sprite sprite;
     std::string name = "Default";
 
 public:
-    Card(std::string name, sf::Texture& t);
+    Card(unsigned short int id, std::string name, sf::Texture& t);
     const sf::Sprite& getSprite() const;
     const std::string& getName() const;
+    const unsigned short int& getId() const;
+    bool operator==(unsigned short int id);
     virtual void play(State* state) = 0;
 };
 
 /**
  * \brief Класс карты-темы
  */
-class CardTheme
-  : public Card
-  , std::enable_shared_from_this<CardTheme>
+class CardTheme : public Card
 {
 public:
-    CardTheme(std::string name, sf::Texture& t);
-    bool operator==(const CardTheme& other) const;
-    bool operator==(const std::shared_ptr<CardTheme> other) const;
+    CardTheme(unsigned short int id, std::string name, sf::Texture& t);
     void play(State* state) override;
 };
 
-class CardGoal
-  : public Card
-  , std::enable_shared_from_this<CardGoal>
+/**
+ * \brief Класс карты-цели
+ */
+class CardGoal : public Card
 {
 protected:
-    std::vector<std::shared_ptr<CardTheme>> themes = {};
+    std::vector<unsigned short int> themes = {};
     bool isNumOfThemes = false, isNumOfCards = false;
 
 public:
-    CardGoal(std::string name,
+    CardGoal(unsigned short int id,
+             std::string name,
              sf::Texture& t,
-             std::vector<std::shared_ptr<CardTheme>>& themes,
+             std::vector<unsigned short int>& themes,
              bool isNumOfThemes,
              bool isNumOfCards);
     void play(State* state) override;
-    const std::vector<std::shared_ptr<CardTheme>> getThemes() const;
+    const std::vector<unsigned short int> getThemes() const;
 };
 
-class CardAction
-  : public Card
-  , std::enable_shared_from_this<CardAction>
+/**
+ * \brief Класс карты-действия
+ */
+class CardAction : public Card
 {
 public:
     void (*action)(State* state);
-    CardAction(std::string name, sf::Texture& t, std::string action);
+    CardAction(unsigned short int id,
+               std::string name,
+               sf::Texture& t,
+               std::string action);
     void play(State* state) override;
 };
 
-class CardRule
-  : public Card
-  , std::enable_shared_from_this<CardRule>
+/**
+ * \brief Класс карты-правиляа
+ */
+class CardRule : public Card
 {
 protected:
     RulesParams params;
 
 public:
-    CardRule(std::string name, sf::Texture& t, RulesParams& params);
+    CardRule(unsigned short int id,
+             std::string name,
+             sf::Texture& t,
+             RulesParams& params);
     void play(State* state) override;
     const RulesParams getParams() const;
 };
 
 /** Использование слово Cards вместо объемного типа */
-using Cards = std::variant<std::shared_ptr<CardAction>,
-                           std::shared_ptr<CardGoal>,
-                           std::shared_ptr<CardRule>,
-                           std::shared_ptr<CardTheme>>;
+using Cards = std::variant<CardAction, CardGoal, CardRule, CardTheme>;
