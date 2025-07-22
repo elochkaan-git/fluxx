@@ -36,7 +36,7 @@ Card::getSprite() const
 
 /**
  * @brief Возвращает строку - название карты
- * 
+ *
  * @return const std::string& Название карты
  */
 const std::string&
@@ -47,7 +47,7 @@ Card::getName() const
 
 /**
  * @brief Возвращает Id карты
- * 
+ *
  * @return const unsigned short& Id карты
  */
 const unsigned short int&
@@ -59,9 +59,9 @@ Card::getId() const
 /**
  * @brief Перегрузка оператора сравнения
  *
- * Эта функция нужна для работы функций вроде std::find. Это значительно упрощает сравнение
- * карт, ведь теперь сраниваются не два объекта, а их Id
- * 
+ * Эта функция нужна для работы функций вроде std::find. Это значительно
+ * упрощает сравнение карт, ведь теперь сраниваются не два объекта, а их Id
+ *
  * @param id Id сравниваемой карты
  * @return true Если Id совпадают
  * @return false Если Id не совпадают
@@ -78,7 +78,7 @@ Card::operator==(unsigned short int id)
 
 /**
  * @brief Конструктор карты-темы. Ничем не отличается от базового конструктора
- * 
+ *
  * @param id Id карты
  * @param name Название карты
  * @param t Ссылка на текстуру для карты
@@ -90,7 +90,7 @@ CardTheme::CardTheme(unsigned short int id, std::string name, sf::Texture& t)
 
 /**
  * @brief Играет карту. Вызывать при использовании карты
- * 
+ *
  * @param state Игровое состояние
  */
 void
@@ -105,7 +105,7 @@ CardTheme::play(State* state)
 
 /**
  * @brief Конструктор карты-цели
- * 
+ *
  * @param id Id карты
  * @param name Название карты
  * @param t Ссылка на текстуру для карты
@@ -128,7 +128,7 @@ CardGoal::CardGoal(unsigned short int id,
 
 /**
  * @brief Возвращает Id карт-тем, которые входят в цель
- * 
+ *
  * @return const std::vector<unsigned short int> Набор Id карт-тем
  */
 const std::vector<unsigned short int>
@@ -139,7 +139,7 @@ CardGoal::getThemes() const
 
 /**
  * @brief Играет карту. Вызывать при использовании карты
- * 
+ *
  * @param state Игровое состояние
  */
 void
@@ -154,11 +154,12 @@ CardGoal::play(State* state)
 
 /**
  * @brief Конструктор карты-действия
- * 
+ *
  * @param id Id карты
  * @param name Название карты
  * @param t Ссылка на текстуру для карты
- * @param action Указатель на функцию, которая будет вызвана при использовании карты
+ * @param action Указатель на функцию, которая будет вызвана при использовании
+ * карты
  */
 CardAction::CardAction(unsigned short int id,
                        std::string name,
@@ -171,7 +172,7 @@ CardAction::CardAction(unsigned short int id,
 
 /**
  * @brief Играет карту. Вызывать при использовании карты
- * 
+ *
  * @param state Игровое состояние
  */
 void
@@ -186,7 +187,7 @@ CardAction::play(State* state)
 
 /**
  * @brief Конструктор карты-правила
- * 
+ *
  * @param id Id карты
  * @param name Название карты
  * @param t Ссылка на текстуру для карты
@@ -203,7 +204,7 @@ CardRule::CardRule(unsigned short int id,
 
 /**
  * @brief Возвращает параметры карты-правил
- * 
+ *
  * @return const RulesParams Параметры карты-правил
  */
 const RulesParams
@@ -214,7 +215,7 @@ CardRule::getParams() const
 
 /**
  * @brief Играет карту. Вызывать при использовании карты
- * 
+ *
  * @param state Игровое состояние
  */
 void

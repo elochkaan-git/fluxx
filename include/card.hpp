@@ -13,25 +13,25 @@ class State;
  * \brief Структура, содержащая параметры карт-правил
  */
 struct RulesParams
-{   
-    // Значения действительны, только если > 1
-    short int handLimit = -1; // Предел руки
+{
+    // Значения действительны, только если > 0
+    short int handLimit = -1;  // Предел руки
     short int themeLimit = -1; // Предел тем
-    short int play = -1; // Сколько сыграть
-    short int take = -1; // Сколько взять
+    short int play = -1;       // Сколько сыграть
+    short int take = -1;       // Сколько взять
 
     // Состояния для особых карт
-    bool blindGame = false; // Игра вслепую
-    bool castling = false; // Рокировка
-    bool dance = false; // Танцуют все!
-    bool duplet = false; // Дуплет
-    bool enough = false; // С меня хватит!
-    bool inflation = false; // Инфляция
-    bool poverty = false; // Бедность не порок
-    bool random = false; // TODO дописать карты
-    bool rich = false; //
-    bool spinAndTurn = false; //
-    bool utilize = false; //
+    bool blindGame = false;    // Игра вслепую
+    bool castling = false;     // Рокировка
+    bool dance = false;        // Танцуют все!
+    bool duplet = false;       // Дуплет
+    bool enough = false;       // С меня хватит!
+    bool inflation = false;    // Инфляция
+    bool poverty = false;      // Бедность не порок
+    bool random = false;       // Наугад
+    bool rich = false;         // Богато жить не запретишь
+    bool spinAndTurn = false;  // Кручу-верчу
+    bool utilize = false;      // Переработка
     bool withoutHands = false; // Как без рук
 };
 
@@ -119,3 +119,17 @@ public:
 
 /** Использование слово Cards вместо объемного типа */
 using Cards = std::variant<CardAction, CardGoal, CardRule, CardTheme>;
+
+struct CardVisitor
+{
+    State* state;
+    CardVisitor(State* state) { this->state = state; }
+
+    void operator()(CardTheme& card) { card.play(state); }
+
+    void operator()(CardGoal& card) { card.play(state); }
+
+    void operator()(CardAction& card) { card.play(state); }
+
+    void operator()(CardRule& card) { card.play(state); }
+};
