@@ -195,5 +195,9 @@ void loadGameCreate(tgui::Gui &gui) {
   label->setPosition({"Slider.x", "Slider.top - height - 20"});
   gui.add(label);
 
-  createGButton->onClick(&loadGame, std::ref(gui), numberOfPlayers->getValue());
+  createGButton->onClick([&gui]{
+    auto slider = gui.get<tgui::EditBoxSlider>("Slider");
+    float value = slider->getValue();
+    loadGame(gui, static_cast<int>(value));
+  });
 }
