@@ -4,22 +4,32 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <vector>
 
+// Объявление класса Player для избежания цикличных включений
 class Player;
 
+/**
+ * @brief Класс для представления игрового состояния
+ *
+ */
 class State
 {
 private:
-    std::vector<Cards> deck, dump;
-    std::vector<Player*> players;
-    std::vector<unsigned short int> goals, rules;
-    RulesParams params;
-    unsigned char currentPlayerID = 0, currentCardID = 0;
-    bool isNumOfThemes = false, isNumOfCards = false;
+    std::vector<Cards> deck, dump; // Колода и сброс
+    std::vector<Player*> players;  // Указатели на игроков
+    std::vector<unsigned short int> goals,
+      rules;            // Id активных карт-целей и карт-правил
+    RulesParams params; // Текущие правила игры
+    // Номера текущего игрока и верхней карты в колоде
+    unsigned char currentPlayerID = 0;
+    unsigned char currentCardID = 0;
+    // Дополнительные цели: количество тем и количество карт
+    bool isNumOfThemes = false;
+    bool isNumOfCards = false;
     void clearRules();
 
 public:
     State(std::vector<Player*>& players);
-    Cards getCard();
+    unsigned short int getCardFromTop();
     Cards* getCardById(unsigned short int id);
     const std::vector<Cards>& getDeck() const;
     void addCardTheme(unsigned short int id,
@@ -41,7 +51,7 @@ public:
                      RulesParams& params);
     void setGoal(unsigned short int goalId);
     void addRule(unsigned short int ruleId);
-    bool checkWinner();
+    Player* checkWinner();
     Player* currentPlayer();
     Player* nextPlayer();
     Player* nextPlayer(unsigned short int n);

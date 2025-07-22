@@ -1,8 +1,6 @@
 #include "state.hpp"
 #include "card.hpp"
 #include "player.hpp"
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
 #include <algorithm>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -13,11 +11,16 @@
 
 using json = nlohmann::json;
 
+/**
+ * @brief Функция для загрузки карт согласно файлу-конфигурации
+ *
+ * @param state Игровое состояние
+ */
 void
 loadCards(State* state)
 {
     unsigned short int id = 0;
-    std::ifstream f("../config/cards_debug.json");
+    std::ifstream f("../config/cards_debug.json"); // Загружаем конфиг
     json data = json::parse(f);
 
     for (const auto& e : data) {
@@ -27,22 +30,44 @@ loadCards(State* state)
                 id++;
             }
         } else if (e["category"] == "goal") {
-            std::vector<unsigned short int> temp;
-            temp.reserve(4);
+            std::vector<unsigned short int> themes;
+            themes.reserve(4);
+            bool isNumOfThemes = false, isNumOfCards = false;
 
+            // Проходимся по картам-целям
             for (const auto& c : e["cards"]) {
+                isNumOfThemes = false, isNumOfCards = false;
+                // Проходимся по названиям тем каждой цели из конфига
                 for (const std::string& theme : c["themes"]) {
-                    for (const Cards& card : state->getDeck()) {
-                        CardTheme currentCard = std::get<CardTheme>(card);
-                        if (currentCard.getName() == theme) {
-                            temp.push_back(currentCard.getId());
+                    if (theme == "В десяточку!") {
+                        isNumOfCards = true;
+                        break;
+                    } else if (theme == "5 тем") {
+                        isNumOfThemes = true;
+                        break;
+                    } else
+                        // Проходимся по картам из колоды
+                        for (const Cards& card : state->getDeck()) {
+                            // Если карта - это карта-тема, то...
+                            if (std::holds_alternative<CardTheme>(card)) {
+                                // ...cравниваем ее имя с темой, указанной в
+                                // цели
+                                CardTheme currentCard =
+                                  std::get<CardTheme>(card);
+                                if (currentCard.getName() == theme) {
+                                    // При соответствии добавляем Id найденной
+                                    // карты во временный массив
+                                    themes.push_back(currentCard.getId());
+                                }
+                            }
                         }
-                    }
                 }
-                // TODO: Добавить обработку целей "Количество карт 10" и
-                // "Количество тем 5"
-                state->addCardGoal(
-                  id, c["name"], c["imgPath"], temp, false, false);
+                state->addCardGoal(id,
+                                   c["name"],
+                                   c["imgPath"],
+                                   themes,
+                                   isNumOfThemes,
+                                   isNumOfCards);
                 id++;
             }
         } else if (e["category"] == "action") {
@@ -93,6 +118,11 @@ loadCards(State* state)
     f.close();
 }
 
+/**
+ * @brief Конструктор для начального игрового состояния
+ *
+ * @param players Вектор из указателей на игроков
+ */
 State::State(std::vector<Player*>& players)
   : goals(0)
 {
@@ -102,23 +132,51 @@ State::State(std::vector<Player*>& players)
 
     loadCards(this);
 
-    // std::random_device rd;
-    // std::mt19937 g(rd());
-    // std::shuffle(deck.begin(), deck.end(), g);
+    // Перемешиваем колоду после загрузки
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(deck.begin(), deck.end(), g);
 }
 
-Cards
-State::getCard()
+/**
+ * @brief Возвращает Id карты с верха колоды
+ *
+ * @return unsigned short int Id верхней карты
+ */
+unsigned short int
+State::getCardFromTop()
 {
-    return deck[currentCardID++];
+    Cards t = deck[currentCardID++];
+    if (std::holds_alternative<CardTheme>(t)) {
+        return std::get<CardTheme>(t).getId();
+    } else if (std::holds_alternative<CardGoal>(t)) {
+        return std::get<CardGoal>(t).getId();
+    } else if (std::holds_alternative<CardAction>(t)) {
+        return std::get<CardAction>(t).getId();
+    } else if (std::holds_alternative<CardRule>(t)) {
+        return std::get<CardRule>(t).getId();
+    }
+    return 0;
 }
 
+/**
+ * @brief Возвращает текущие правила игры
+ *
+ * @return const RulesParams* Указатель на текущие правила
+ */
 const RulesParams*
 State::getRules() const
 {
     return &this->params;
 }
 
+/**
+ * @brief Добавляет в колоду карту-тему
+ *
+ * @param id Id карты
+ * @param name Название карты
+ * @param imgPath Путь до изображения
+ */
 void
 State::addCardTheme(unsigned short int id,
                     std::string name,
@@ -128,6 +186,16 @@ State::addCardTheme(unsigned short int id,
     this->deck.push_back(CardTheme(id, name, temp));
 }
 
+/**
+ * @brief Добавляет в колоду карту-цель
+ *
+ * @param id Id карты
+ * @param name Название карты
+ * @param imgPath Путь до изображения
+ * @param themes Вектор Id карт-тем?
+ * @param isNumOfThemes Цель на количество тем?
+ * @param isNumOfCards Цель на количество карт?
+ */
 void
 State::addCardGoal(unsigned short int id,
                    std::string name,
@@ -141,6 +209,14 @@ State::addCardGoal(unsigned short int id,
       CardGoal(id, name, temp, themes, isNumOfThemes, isNumOfCards));
 }
 
+/**
+ * @brief Добавляет в колоду карту-действия
+ *
+ * @param id Id карты
+ * @param name Название карты
+ * @param imgPath Путь до изображения
+ * @param action название действия (см. файл actions.hpp и actions.cpp)
+ */
 void
 State::addCardAction(unsigned short int id,
                      std::string name,
@@ -151,6 +227,14 @@ State::addCardAction(unsigned short int id,
     this->deck.push_back(CardAction(id, name, temp, action));
 }
 
+/**
+ * @brief Добавляет в колоду карту-правило
+ *
+ * @param id Id карты
+ * @param name Название карты
+ * @param imgPath Путь до изображения
+ * @param params Параметры правил
+ */
 void
 State::addCardRule(unsigned short int id,
                    std::string name,
@@ -161,11 +245,17 @@ State::addCardRule(unsigned short int id,
     this->deck.push_back(CardRule(id, name, temp, params));
 }
 
+/**
+ * @brief Устанавливает правила для текущей игры
+ *
+ * @param goalId Id новой карты-цели
+ */
 void
 State::setGoal(unsigned short int goalId)
 {
     unsigned short int numberOfGoals = goals.size();
     if (params.duplet && numberOfGoals == 2) {
+        // TODO: Для Савелия
         // Реализовать метод, который возвращает указатель на выбранную тему
         // Она будет заменена на предоставленную
     } else if (params.duplet && numberOfGoals < 2) {
@@ -177,7 +267,12 @@ State::setGoal(unsigned short int goalId)
     }
 }
 
-bool
+/**
+ * @brief Возвращает указатель на победителя, иначе nullptr
+ *
+ * @return Player* Указатель на победителя
+ */
+Player*
 State::checkWinner()
 {
     unsigned short int count = 0;
@@ -185,30 +280,50 @@ State::checkWinner()
         std::vector<unsigned short int> temp =
           std::get<CardGoal>(*getCardById(goal)).getThemes();
         for (Player* p : players) {
-            for (const unsigned short int& card : p->getThemes()) {
-                if (std::find(temp.begin(), temp.end(), card) != temp.end())
-                    count++;
-            }
+            if (isNumOfCards && p->numOfCardsInHands() >= 10)
+                return p;
+            else if (isNumOfThemes && p->getThemes().size() >= 5)
+                return p;
+            else
+                for (const unsigned short int& card : p->getThemes()) {
+                    if (std::find(temp.begin(), temp.end(), card) != temp.end())
+                        count++;
+                }
             if (count >= 2)
-                return true;
+                return p;
             count = 0;
         }
     }
-    return false;
+    return nullptr;
 }
 
+/**
+ * @brief Возвращает колоду
+ *
+ * @return const std::vector<Cards>& Колода
+ */
 const std::vector<Cards>&
 State::getDeck() const
 {
     return this->deck;
 }
 
+/**
+ * @brief Возвращает указатель на текущего игрока
+ *
+ * @return Player* Текущий игрок
+ */
 Player*
 State::currentPlayer()
 {
     return players[currentPlayerID];
 }
 
+/**
+ * @brief Возвращает указатель на следующего игрока
+ *
+ * @return Player*
+ */
 Player*
 State::nextPlayer()
 {
@@ -218,6 +333,12 @@ State::nextPlayer()
         return players[currentPlayerID + 1];
 }
 
+/**
+ * @brief Возвращает указатель на n-ого игрока от текущего игрока
+ *
+ * @param n Количество позиций от текущего игрока
+ * @return Player* Указатель на игрока
+ */
 Player*
 State::nextPlayer(unsigned short int n)
 {
@@ -229,6 +350,10 @@ State::nextPlayer(unsigned short int n)
         return players[currentPlayerID + n];
 }
 
+/**
+ * @brief Смена хода на следующий. Меняет ID текущего игрока
+ *
+ */
 void
 State::nextMove()
 {
@@ -238,18 +363,33 @@ State::nextMove()
         currentPlayerID++;
 }
 
+/**
+ * @brief Возвращает количество карт, которые нужно взять
+ *
+ * @return const unsigned short int Количество карт
+ */
 const unsigned short int
 State::howManyTake() const
 {
     return params.take;
 }
 
+/**
+ * @brief Возвращает количество карт, которые нужно сыграть
+ *
+ * @return const unsigned short int Количество карт
+ */
 const unsigned short int
 State::howManyPlay() const
 {
     return params.play;
 }
 
+/**
+ * @brief Добавляет новое правило в вектор правил
+ *
+ * @param ruleId Id карты-правила
+ */
 void
 State::addRule(unsigned short int ruleId)
 {
@@ -302,6 +442,10 @@ State::addRule(unsigned short int ruleId)
     updateRules();
 }
 
+/**
+ * @brief Обновляет текущие правила игры
+ *
+ */
 void
 State::updateRules()
 {
@@ -333,6 +477,10 @@ State::updateRules()
     }
 }
 
+/**
+ * @brief Очищает правила до базовых
+ *
+ */
 void
 State::clearRules()
 {
@@ -354,6 +502,12 @@ State::clearRules()
     params.withoutHands = false;
 }
 
+/**
+ * @brief Возвращает указатель на карту по переданному Id
+ *
+ * @param id Id карты
+ * @return Cards* Указатель на карту
+ */
 Cards*
 State::getCardById(unsigned short int id)
 {
@@ -376,4 +530,5 @@ State::getCardById(unsigned short int id)
                 return &card;
         }
     }
+    return nullptr;
 }
