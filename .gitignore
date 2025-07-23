@@ -6,4 +6,10 @@ out
 .vs
 .vscode
 tests
+<<<<<<< HEAD
 config/settings.txt
+=======
+config/settings.txt
+docs
+config/nickname.txt
+>>>>>>> main
