@@ -1,4 +1,7 @@
 #include "gamegui.hpp"
+#include "TGUI/Texture.hpp"
+#include "card.hpp"
+#include <variant>
 
 void
 makeGlow(tgui::Picture::Ptr card)
@@ -36,11 +39,8 @@ selectCard(tgui::Gui& gui, tgui::Picture::Ptr card)
 
 auto
 createCard(const Cards& Card, tgui::Gui& gui)
-{
-    auto texture = tgui::Texture();
-    texture.loadFromPixelData(std::get<CardTheme>(Card).getSprite().getTexture().getSize(),
-    std::get<CardTheme>(Card).getSprite().getTexture().copyToImage().getPixelsPtr());
-    auto card = tgui::Picture::create(texture);
+{   
+    auto card = tgui::Picture::create(std::visit(CardTexture{}, Card));
     auto sizeOfCard = card->getSize();
     auto resolution = gui.getWindow()->getSize();
     // card->setSize("15%", "15%");
@@ -167,11 +167,9 @@ initPlayersBoardCards(tgui::Gui& gui, int numberOfPlayers)
     /*
       Test block
     */
-    
-    auto defaultTex = sf::Texture("./resources/img/default.png");
 
     for(int i = 0; i < 5; i++){
-        CardTheme card =  CardTheme(i, "NoName", defaultTex);
+        CardTheme card =  CardTheme(i, "NoName", "./resources/img/default.png");
         auto Test = createCard(card, gui);
         firstPlayerCards->add(Test);
         // Test->setScale(0.3f);
@@ -331,6 +329,13 @@ void
 loadGame(tgui::Gui& gui, int numberOfPlayers)
 {
     gui.removeAllWidgets();
+
+    /*
+        Initialization state
+    */
+    State state(numberOfPlayers);
+    for (Player*& p : state.getPlayers())
+        p->takeCards(state);
 
     /*
         Initialization main panels for main game window
