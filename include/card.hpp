@@ -1,7 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
+#include <TGUI/Texture.hpp>
 #include <string>
 #include <variant>
 #include <vector>
@@ -44,12 +43,12 @@ class Card
 {
 protected:
     unsigned short int id;
-    sf::Sprite sprite;
+    tgui::Texture texture;
     std::string name = "Default";
 
 public:
-    Card(unsigned short int id, std::string name, sf::Texture& t);
-    const sf::Sprite& getSprite() const;
+    Card(unsigned short int id, std::string name, std::string imgPath);
+    const tgui::Texture& getTexture() const;
     const std::string& getName() const;
     const unsigned short int& getId() const;
     bool operator==(unsigned short int id);
@@ -62,7 +61,7 @@ public:
 class CardTheme : public Card
 {
 public:
-    CardTheme(unsigned short int id, std::string name, sf::Texture& t);
+    CardTheme(unsigned short int id, std::string name, std::string imgPath);
     void play(State* state) override;
 };
 
@@ -78,7 +77,7 @@ protected:
 public:
     CardGoal(unsigned short int id,
              std::string name,
-             sf::Texture& t,
+             std::string imgPath,
              std::vector<unsigned short int>& themes,
              bool isNumOfThemes,
              bool isNumOfCards);
@@ -95,7 +94,7 @@ public:
     void (*action)(State* state);
     CardAction(unsigned short int id,
                std::string name,
-               sf::Texture& t,
+               std::string imgPath,
                std::string action);
     void play(State* state) override;
 };
@@ -111,7 +110,7 @@ protected:
 public:
     CardRule(unsigned short int id,
              std::string name,
-             sf::Texture& t,
+             std::string imgPath,
              RulesParams& params);
     void play(State* state) override;
     const RulesParams getParams() const;
@@ -130,18 +129,22 @@ struct CardPlay
     void operator()(CardRule& card) { card.play(state); }
 };
 
-struct CardSprite
+struct CardTexture
 {
-    void operator()(CardTheme& card) { card.getSprite(); }
-    void operator()(CardGoal& card) { card.getSprite(); }
-    void operator()(CardAction& card) { card.getSprite(); }
-    void operator()(CardRule& card) { card.getSprite(); }
+    tgui::Texture operator()(CardTheme& card) { return card.getTexture(); }
+    tgui::Texture operator()(CardGoal& card) { return card.getTexture(); }
+    tgui::Texture operator()(CardAction& card) { return card.getTexture(); }
+    tgui::Texture operator()(CardRule& card) { return card.getTexture(); }
+    tgui::Texture operator()(const CardTheme& card) { return card.getTexture(); }
+    tgui::Texture operator()(const CardGoal& card) { return card.getTexture(); }
+    tgui::Texture operator()(const CardAction& card) { return card.getTexture(); }
+    tgui::Texture operator()(const CardRule& card) { return card.getTexture(); }
 };
 
 struct CardId
 {
-    void operator()(CardTheme& card) { card.getId(); }
-    void operator()(CardGoal& card) { card.getId(); }
-    void operator()(CardAction& card) { card.getId(); }
-    void operator()(CardRule& card) { card.getId(); }
+    unsigned short int operator()(CardTheme& card) { return card.getId(); }
+    unsigned short int operator()(CardGoal& card) { return card.getId(); }
+    unsigned short int operator()(CardAction& card) { return card.getId(); }
+    unsigned short int operator()(CardRule& card) { return card.getId(); }
 };
