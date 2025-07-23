@@ -20,7 +20,7 @@ void
 loadCards(State* state)
 {
     unsigned short int id = 0;
-    std::ifstream f("../config/cards_debug.json"); // Загружаем конфиг
+    std::ifstream f("./config/cards.json"); // Загружаем конфиг
     json data = json::parse(f);
 
     for (const auto& e : data) {
@@ -121,11 +121,18 @@ loadCards(State* state)
 /**
  * @brief Конструктор для начального игрового состояния
  *
- * @param players Вектор из указателей на игроков
+ * @param numOfPlayers Количество игроков
  */
-State::State(std::vector<Player*>& players)
+State::State(unsigned short int numOfPlayers)
   : goals(0)
 {
+    // Инициализируем игроков и присвиваем каждому уникальный id
+    unsigned short int id = 0;
+    std::vector<Player*> players(numOfPlayers);
+    for (Player*& p : players) {
+        p = new Player(id++);
+    }
+
     this->players = players;
     params.play = 1;
     params.take = 1;
@@ -133,9 +140,19 @@ State::State(std::vector<Player*>& players)
     loadCards(this);
 
     // Перемешиваем колоду после загрузки
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(deck.begin(), deck.end(), g);
+    // std::random_device rd;
+    // std::mt19937 g(rd());
+    // std::shuffle(deck.begin(), deck.end(), g);
+}
+
+/**
+ * @brief Деструктор игрового состояния. Очищает память от игроков
+ *
+ */
+State::~State()
+{
+    for (Player*& p : players)
+        delete p;
 }
 
 /**
@@ -504,6 +521,12 @@ State::clearRules()
 
 /**
  * @brief Возвращает указатель на карту по переданному Id
+ * @code {.cpp}
+ * Cards* card = state.getCardById(2);
+ * std::visit(CardPlay{&state}, card); // Необходимо, чтобы сыграть карту
+ * std::visit(CardSprite{}, card); // Необходимо, чтобы получить спрайт карты
+ * std::visit(CardId{}, card); // Необходимо, чтобы получить Id карты
+ * @endcode
  *
  * @param id Id карты
  * @return Cards* Указатель на карту
@@ -531,4 +554,22 @@ State::getCardById(unsigned short int id)
         }
     }
     return nullptr;
+}
+
+/**
+ * @brief Возвращает вектор указателей на игроков
+ *
+ * @code {.cpp}
+ * for(Player*& p : state.getPlayers()) {
+ *     auto id = p->getId();
+ *     auto themes = p->getThemes();
+ *     // etc
+ * }
+ * @endcode
+ * @return std::vector<Player*>& Вектор указателей на игроков
+ */
+std::vector<Player*>&
+State::getPlayers()
+{
+    return this->players;
 }

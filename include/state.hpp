@@ -28,7 +28,7 @@ private:
     void clearRules();
 
 public:
-    State(std::vector<Player*>& players);
+    State(unsigned short int numOfPlayers);
     unsigned short int getCardFromTop();
     Cards* getCardById(unsigned short int id);
     const std::vector<Cards>& getDeck() const;
@@ -60,4 +60,7 @@ public:
     const unsigned short int howManyPlay() const;
     const RulesParams* getRules() const;
     void updateRules();
+    std::vector<Player*>& getPlayers();
+    Player* getPlayerById(unsigned short int id); // TODO: заготовка на будущее
+    ~State();
 };
