@@ -96,6 +96,7 @@ CardTheme::CardTheme(unsigned short int id, std::string name, sf::Texture& t)
 void
 CardTheme::play(State* state)
 {
+    state->currentPlayer()->deleteCardById(getId());
     state->currentPlayer()->addTheme(getId());
 }
 
@@ -146,6 +147,7 @@ void
 CardGoal::play(State* state)
 {
     state->setGoal(getId());
+    state->currentPlayer()->deleteCardById(getId());
 }
 
 /*
@@ -179,6 +181,7 @@ void
 CardAction::play(State* state)
 {
     this->action(state);
+    state->currentPlayer()->deleteCardById(getId());
 }
 
 /*
@@ -222,4 +225,5 @@ void
 CardRule::play(State* state)
 {
     state->addRule(getId());
+    state->currentPlayer()->deleteCardById(getId());
 }
