@@ -5,7 +5,6 @@
 int
 main()
 {
-    // update(3);
     FILE* settings = fopen("./config/settings.txt", "r");
     sf::Vector2u resolution;
     fscanf(settings, "%ux%u", &resolution.x, &resolution.y);
