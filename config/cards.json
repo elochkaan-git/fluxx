@@ -1,26 +1,24 @@
 {
     "1themes" : {
         "category" : "theme",
-        "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Ракета",
-                "imgPath" : "./resources/img/default.png"
+                "imgPath" : "./resources/img/rocket.png"
             },
             {
                 "name" : "Мозг",
-                "imgPath" : "./resources/img/default.png"
+                "imgPath" : "./resources/img/brain.png"
             }
         ]
     },
 
     "2goals" : {
         "category" : "goal",
-        "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Полет мысли",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "./resources/img/with_speed_of_thought.png",
                 "themes" : [
                     "Ракета", "Мозг"
                 ]
@@ -30,11 +28,10 @@
 
     "3actions" : {
         "category" : "action",
-        "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Тяни-таскай",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "./resources/img/pull_drag.png",
                 "action" : "makeThis"
             }
         ]
@@ -42,18 +39,17 @@
 
     "4rules" : {
         "category" : "rule",
-        "description" : "bla-bla-bla",
         "cards" : [
             {
                 "name" : "Предел руки 0",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "./resources/img/hand_limit_0.png",
                 "rulesParams" : {
                     "handLimit" : 0
                 }
             },
             {
                 "name" : "Сыграй 3",
-                "imgPath" : "./resources/img/default.png",
+                "imgPath" : "./resources/img/play_3.png",
                 "rulesParams" : {
                     "play" : 3
                 }
