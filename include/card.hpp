@@ -124,12 +124,24 @@ struct CardPlay
 {
     State* state;
     CardPlay(State* state) { this->state = state; }
-
     void operator()(CardTheme& card) { card.play(state); }
-
     void operator()(CardGoal& card) { card.play(state); }
-
     void operator()(CardAction& card) { card.play(state); }
-
     void operator()(CardRule& card) { card.play(state); }
+};
+
+struct CardSprite
+{
+    void operator()(CardTheme& card) { card.getSprite(); }
+    void operator()(CardGoal& card) { card.getSprite(); }
+    void operator()(CardAction& card) { card.getSprite(); }
+    void operator()(CardRule& card) { card.getSprite(); }
+};
+
+struct CardId
+{
+    void operator()(CardTheme& card) { card.getId(); }
+    void operator()(CardGoal& card) { card.getId(); }
+    void operator()(CardAction& card) { card.getId(); }
+    void operator()(CardRule& card) { card.getId(); }
 };
