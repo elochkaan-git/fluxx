@@ -1,25 +1,17 @@
 #include "core.hpp"
-#include "card.hpp"
 
 void
 update(unsigned short int numOfPlayers)
 {
-    std::vector<Player*> players(numOfPlayers);
-    for (Player*& p : players)
-        p = new Player();
-    State state(players);
+    State state(numOfPlayers);
+    for (Player*& p : state.getPlayers())
+        p->takeCards(state);
 
-    unsigned short int takes = 0, moves = 0;
+    unsigned short int moves = 0;
+    bool fl = false;
     while (!state.checkWinner()) {
-        for (Player*& p : players)
-            if (p->isFirstTurn())
-                p->takeCards(state);
-            else
-                while (takes < state.howManyTake()) {
-                    p->takeCards(state);
-                    takes++;
-                }
-        takes = 0;
+        if (fl)
+            state.currentPlayer()->takeCards(state);
 
         while (moves < state.howManyPlay()) {
             // TODO: Для Савелия
@@ -32,11 +24,8 @@ update(unsigned short int numOfPlayers)
         }
 
         // Конец цикла
-        takes = 0;
+        fl = true;
         moves = 0;
         state.nextMove();
     }
-
-    for (Player*& p : players)
-        delete p;
 }
