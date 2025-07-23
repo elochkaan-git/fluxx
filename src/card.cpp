@@ -1,4 +1,5 @@
 #include "card.hpp"
+#include "TGUI/Texture.hpp"
 #include "actions.hpp"
 #include "player.hpp"
 #include "state.hpp"
@@ -16,8 +17,8 @@
  * @param name Название карты
  * @param t Ссылка на текстуру для карты
  */
-Card::Card(unsigned short int id, std::string name, sf::Texture& t)
-  : sprite(t, { { 10, 10 }, { 50, 60 } })
+Card::Card(unsigned short int id, std::string name, std::string imgPath)
+  : texture(imgPath)
   , name(name)
   , id(id)
 {
@@ -28,10 +29,10 @@ Card::Card(unsigned short int id, std::string name, sf::Texture& t)
  *
  * @return Спрайт карты
  */
-const sf::Sprite&
-Card::getSprite() const
+const tgui::Texture&
+Card::getTexture() const
 {
-    return this->sprite;
+    return this->texture;
 }
 
 /**
@@ -83,8 +84,8 @@ Card::operator==(unsigned short int id)
  * @param name Название карты
  * @param t Ссылка на текстуру для карты
  */
-CardTheme::CardTheme(unsigned short int id, std::string name, sf::Texture& t)
-  : Card(id, name, t)
+CardTheme::CardTheme(unsigned short int id, std::string name, std::string imgPath)
+  : Card(id, name, imgPath)
 {
 }
 
@@ -116,11 +117,11 @@ CardTheme::play(State* state)
  */
 CardGoal::CardGoal(unsigned short int id,
                    std::string name,
-                   sf::Texture& t,
+                   std::string imgPath,
                    std::vector<unsigned short int>& themes,
                    bool isNumOfThemes,
                    bool isNumOfCards)
-  : Card(id, name, t)
+  : Card(id, name, imgPath)
 {
     this->themes = themes;
     this->isNumOfThemes = isNumOfThemes;
@@ -165,9 +166,9 @@ CardGoal::play(State* state)
  */
 CardAction::CardAction(unsigned short int id,
                        std::string name,
-                       sf::Texture& t,
+                       std::string imgPath,
                        std::string action)
-  : Card(id, name, t)
+  : Card(id, name, imgPath)
 {
     this->action = actions[action];
 }
@@ -198,9 +199,9 @@ CardAction::play(State* state)
  */
 CardRule::CardRule(unsigned short int id,
                    std::string name,
-                   sf::Texture& t,
+                   std::string imgPath,
                    RulesParams& params)
-  : Card(id, name, t)
+  : Card(id, name, imgPath)
 {
     this->params = params;
 }

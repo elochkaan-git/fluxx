@@ -199,8 +199,7 @@ State::addCardTheme(unsigned short int id,
                     std::string name,
                     std::string imgPath)
 {
-    sf::Texture temp(imgPath);
-    this->deck.push_back(CardTheme(id, name, temp));
+    this->deck.push_back(CardTheme(id, name, imgPath));
 }
 
 /**
@@ -221,9 +220,8 @@ State::addCardGoal(unsigned short int id,
                    bool isNumOfThemes,
                    bool isNumOfCards)
 {
-    sf::Texture temp(imgPath);
     this->deck.push_back(
-      CardGoal(id, name, temp, themes, isNumOfThemes, isNumOfCards));
+      CardGoal(id, name, imgPath, themes, isNumOfThemes, isNumOfCards));
 }
 
 /**
@@ -240,8 +238,7 @@ State::addCardAction(unsigned short int id,
                      std::string imgPath,
                      std::string action)
 {
-    sf::Texture temp(imgPath);
-    this->deck.push_back(CardAction(id, name, temp, action));
+    this->deck.push_back(CardAction(id, name, imgPath, action));
 }
 
 /**
@@ -258,8 +255,7 @@ State::addCardRule(unsigned short int id,
                    std::string imgPath,
                    RulesParams& params)
 {
-    sf::Texture temp(imgPath);
-    this->deck.push_back(CardRule(id, name, temp, params));
+    this->deck.push_back(CardRule(id, name, imgPath, params));
 }
 
 /**
