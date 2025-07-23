@@ -1,6 +1,7 @@
 #include "player.hpp"
 #include "card.hpp"
 #include "state.hpp"
+#include <algorithm>
 #include <vector>
 
 /**
@@ -8,10 +9,11 @@
  *
  * Создает новый объект класса Player с пустыми рукой и темами на столе
  */
-Player::Player()
+Player::Player(unsigned short int id)
   : hand()
   , tableThemes(0)
 {
+    this->id = id;
 }
 
 /**
@@ -77,4 +79,25 @@ const unsigned short int
 Player::numOfCardsInHands() const
 {
     return this->hand.size();
+}
+
+const unsigned short int
+Player::getId() const
+{
+    return this->id;
+}
+
+void
+Player::deleteCardById(unsigned short int id)
+{
+    auto ptr = std::find(hand.begin(), hand.end(), id);
+    if (ptr != hand.end()) {
+        hand.erase(ptr);
+        return;
+    }
+    ptr = std::find(tableThemes.begin(), tableThemes.end(), id);
+    if (ptr != tableThemes.end()) {
+        tableThemes.erase(ptr);
+        return;
+    }
 }
