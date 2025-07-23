@@ -5,7 +5,6 @@
 #include <SFML/Graphics/Texture.hpp>
 
 #include "gui.hpp"
-#include "card.hpp"
-#include "state.hpp"
+#include "core.hpp"
 
 void loadGame(tgui::Gui& gui, int numberOfPlayers);

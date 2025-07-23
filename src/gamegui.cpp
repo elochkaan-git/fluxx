@@ -41,6 +41,7 @@ createCard(const Cards& Card, tgui::Gui& gui)
     texture.loadFromPixelData(std::get<CardTheme>(Card).getSprite().getTexture().getSize(),
     std::get<CardTheme>(Card).getSprite().getTexture().copyToImage().getPixelsPtr());
     auto card = tgui::Picture::create(texture);
+    card->setWidgetName(Card.getId());
     auto sizeOfCard = card->getSize();
     auto resolution = gui.getWindow()->getSize();
     // card->setSize("15%", "15%");
@@ -119,11 +120,13 @@ void
 initPlayersBoardCards(tgui::Gui& gui, int numberOfPlayers)
 {
     auto firstPlayerCards = tgui::ScrollablePanel::create();
+    firstPlayerCards->setWidgetName("1cards");
     firstPlayerCards->getVerticalScrollbar()->setPolicy(
       tgui::Scrollbar::Policy::Never);
     firstPlayerCards->getRenderer()->setBackgroundColor("rgb(120, 141, 233)");
 
     auto fourthPlayerCards = tgui::ScrollablePanel::create();
+    fourthPlayerCards->setWidgetName("4cards");
     fourthPlayerCards->getVerticalScrollbar()->setPolicy(
       tgui::Scrollbar::Policy::Never);
     fourthPlayerCards->getRenderer()->setBackgroundColor("rgb(120, 233, 126)");
@@ -137,11 +140,13 @@ initPlayersBoardCards(tgui::Gui& gui, int numberOfPlayers)
     gui.add(splitBottom, "splitBottom");
 
     auto secondPlayerCards = tgui::ScrollablePanel::create();
+    secondPlayerCards->setWidgetName("2cards");
     secondPlayerCards->getVerticalScrollbar()->setPolicy(
       tgui::Scrollbar::Policy::Never);
     secondPlayerCards->getRenderer()->setBackgroundColor("rgb(233, 156, 120)");
 
     auto thirdPlayerCards = tgui::ScrollablePanel::create();
+    thirdPlayerCards->setWidgetName("3cards");
     thirdPlayerCards->getVerticalScrollbar()->setPolicy(
       tgui::Scrollbar::Policy::Never);
     thirdPlayerCards->getRenderer()->setBackgroundColor("rgb(207, 120, 233)");
@@ -267,6 +272,7 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers){
     */
 
     auto firstPlayerNick = tgui::Label::create("PlaceHolder1");
+    firstPlayerNick->setWidgetName("1name");
     firstPlayerNick->getRenderer()->setTextSize(static_cast<unsigned>(gui.getView().getRect().height*0.03f));
     firstPlayerNick->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
     firstPlayerNick->setVerticalAlignment(tgui::VerticalAlignment::Center);
@@ -278,6 +284,7 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers){
     
     auto nickRender = firstPlayerNick->getSharedRenderer();
     auto secondPlayerNick = tgui::Label::create("PlaceHolder2");
+    secondPlayerNick->setWidgetName("2name");
     secondPlayerNick->setRenderer(nickRender->getData());
     firstPlayerNick->setRenderer(nickRender->getData());
     secondPlayerNick->setOrigin(0.5f, 0.f);
@@ -286,7 +293,9 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers){
     gui.add(secondPlayerNick);
 
     auto fourthPlayerNick = tgui::Label::create("PlaceHolder4");
+    fourthPlayerNick->setWidgetName("4name");
     auto thirdPlayerNick = tgui::Label::create("PlaceHolder3");
+    thirdPlayerNick->setWidgetName("3name");
     switch (numberOfPlayers) {
         case 4:
             firstPlayerNick->setPosition({"36.25%", "splitBottom.top"});
@@ -343,5 +352,29 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
 
     initNicknames(gui, numberOfPlayers);
     initPlayerHand(gui);
+    // initOthersHands(gui, numberOfPlayers);
     
 }
+
+// void initOthersHands(tgui::Gui& gui, int numberOfPlayers){
+//     auto hands = tgui::TabContainer::create({ "75%", "25%" });
+//     hands->setOrigin(0.5f, 0.f);
+//     hands->setPosition({"57.5%", 0});
+//     // hands->setTabsHeight({"5%"});
+//     hands->getTabsRenderer()->setTextSize(static_cast<unsigned>(gui.getView().getRect().height*0.03f));
+//     hands->setWidgetName("OthersHand");
+//     hands->setTabAlignment(tgui::TabContainer::TabAlign::Bottom);
+//     for(int i = 2; i<=numberOfPlayers;i++){
+//         // auto bgColor = gui.get<tgui::ScrollablePanel>(std::to_string(i)+"cards")->getRenderer()->getBackgroundColor();
+//         auto tab = hands->addTab(gui.get<tgui::Label>(std::to_string(i)+"name")->getText());
+//         // std::cout << hands->getPanelCount() << '\n';
+//         // hands->getPanel(0)->
+//         // getRenderer()->
+//         // setBackgroundColor(bgColor);
+
+        
+//     }
+
+//     gui.add(hands);
+//     // hands->setVisible(false);
+// }

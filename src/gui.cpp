@@ -170,21 +170,21 @@ loadSettings(tgui::Gui& gui)
 
     auto nickForm = tgui::EditBox::create();
     nickForm->setWidgetName("nickForm");
-    nickForm->setSize({buttonSize.x, buttonSize.y});
-    nickForm->setOrigin({1.f, 0.5f});
-    nickForm->setPosition({"resolutionBox.right", "20%"});
+    nickForm->setSize({ buttonSize.x, buttonSize.y });
+    nickForm->setOrigin({ 1.f, 0.5f });
+    nickForm->setPosition({ "resolutionBox.right", "20%" });
     nickForm->setMaximumCharacters(12);
     gui.add(nickForm);
 
-    changeNickButton->onClick([&gui]{
+    changeNickButton->onClick([&gui] {
         auto editBox = gui.get<tgui::EditBox>("nickForm");
         const tgui::String& input = editBox->getText();
-        if(input.length()){
+        if (input.length()) {
             std::ofstream nickfile;
             nickfile.open("./config/nickname.txt", std::ios::trunc);
             nickfile << input;
 
-        }else{
+        } else {
             auto background = tgui::Panel::create();
             background->getRenderer()->setBackgroundColor(tgui::Color::Black);
             background->getRenderer()->setOpacity(0.5f);
@@ -193,18 +193,17 @@ loadSettings(tgui::Gui& gui)
             auto message = tgui::MessageBox::create();
             message->setText("You don't entered any symbol!");
             message->addButton("Ok");
-            message->setOrigin(0.5f,0.5f);
-            message->setPosition({"50%", "50%"});
+            message->setOrigin(0.5f, 0.5f);
+            message->setPosition({ "50%", "50%" });
             message->getRenderer()->setTitleBarHeight(0.f);
             message->setButtonAlignment(tgui::HorizontalAlignment::Center);
-            message->onButtonPress([background, message]{
+            message->onButtonPress([background, message] {
                 message->getParent()->remove(message->shared_from_this());
                 background->getParent()->remove(background->shared_from_this());
             });
             gui.add(message);
         }
     });
-
 }
 
 void
