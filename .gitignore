@@ -6,5 +6,6 @@ out
 .vs
 .vscode
 tests
+docs
 config/settings.txt
 config/nickname.txt
