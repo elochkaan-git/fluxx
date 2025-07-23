@@ -19,6 +19,9 @@ private:
     bool firstTurn = true;
 
 public:
+    unsigned short int moves = 0;
+    unsigned short int takes = 0;
+
     Player(unsigned short int id);
     void takeCards(State& state);
     const std::vector<unsigned short int> getThemes() const;
