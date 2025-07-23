@@ -120,10 +120,10 @@ public:
 /** Использование слово Cards вместо объемного типа */
 using Cards = std::variant<CardAction, CardGoal, CardRule, CardTheme>;
 
-struct CardVisitor
+struct CardPlay
 {
     State* state;
-    CardVisitor(State* state) { this->state = state; }
+    CardPlay(State* state) { this->state = state; }
 
     void operator()(CardTheme& card) { card.play(state); }
 

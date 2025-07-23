@@ -1,4 +1,5 @@
 #include "core.hpp"
+#include "card.hpp"
 
 void
 update(unsigned short int numOfPlayers)
@@ -26,7 +27,7 @@ update(unsigned short int numOfPlayers)
             // или ее id на нее
             // Далее разыгрывается выбранная карта
             Cards* temp = state.getCardById(2);
-            std::visit(CardVisitor{ &state }, *temp);
+            std::visit(CardPlay{ &state }, *temp);
             moves++;
         }
 
