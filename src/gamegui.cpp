@@ -6,6 +6,15 @@
 void
 loadCardsToHand(tgui::Gui& gui);
 
+void
+loadCardsToTable(tgui::Gui& gui);
+
+void
+loadCardsToGoal(tgui::Gui&gui);
+
+void
+loadCardsToRules(tgui::Gui&gui);
+
 inline unsigned
 returnSelectedId(tgui::Gui& gui){
     auto card = gui.get<tgui::Picture>("Selected");
@@ -94,15 +103,18 @@ void test(tgui::Gui& gui){
        Cards* selectedCard = state.getCardById(selectedId);
        gui.remove(gui.get<tgui::Picture>("Selected"));
        selectedCard->play(&state);
-    //    switch (selectedCard->getType())
-    //    {
-    //    case :
-    //     /* code */
+       switch (selectedCard->getType())
+       {
+       case Type::THEME:
+        loadCardsToTable(gui);
+        break;
+    //    case Type::GOAL:
+    //     loadCardsToGoal(gui);
     //     break;
-       
-    //    default:
-    //     break;
-    //    }
+    //    case::Type::RULE:
+    //     loadCardsToRules(gui);
+        // break;
+       }
        loadCardsToHand(gui);
     }
 }
@@ -329,6 +341,7 @@ initCentralPanel(tgui::Gui& gui)
 void
 loadCardsToHand(tgui::Gui& gui){
     auto hand = gui.get<tgui::ScrollablePanel>("Hand");
+    hand->removeAllWidgets();
     unsigned howManyCards = 0;
     float scale = 3.f;
     State& state = State::getInstance();
@@ -343,6 +356,31 @@ loadCardsToHand(tgui::Gui& gui){
     }
     hand->setUserData(howManyCards);
 }
+
+void
+loadCardsToTable(tgui::Gui& gui){
+    auto cardsTable = gui.get<tgui::ScrollablePanel>("1card");
+    cardsTable->removeAllWidgets();
+    unsigned howManyCards = 0;
+    float scale = 1.f;
+    State& state = State::getInstance();
+    auto handId = state.getPlayers()[0]->getThemes();
+    for(const auto cardId: handId){
+        Cards* card = state.getCardById(cardId);
+        auto CardWidget = createCard(card, gui);
+        cardsTable->add(CardWidget);
+        CardWidget->setScale(scale);
+        CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
+        howManyCards++;
+    }
+    cardsTable->setUserData(howManyCards);
+}
+
+void
+loadCardsToGoal(tgui::Gui&gui);
+
+void
+loadCardsToRules(tgui::Gui&gui);
 
 void
 loadGame(tgui::Gui& gui, int numberOfPlayers)
