@@ -114,17 +114,10 @@ loadCards(State* state)
  *
  * @param numOfPlayers Количество игроков
  */
-State::State(unsigned short int numOfPlayers)
-  : goals(0)
+State::State()
+  : players(0)
+  , goals(0)
 {
-    // Инициализируем игроков и присвиваем каждому уникальный id
-    unsigned short int id = 0;
-    std::vector<Player*> players(numOfPlayers);
-    for (Player*& p : players) {
-        p = new Player(id++);
-    }
-
-    this->players = players;
     params.play = 1;
     params.take = 1;
 
@@ -144,6 +137,16 @@ State::~State()
 {
     for (Player*& p : players)
         delete p;
+}
+
+void
+State::initPlayers(unsigned short int numOfPlayers)
+{
+    // Инициализируем игроков и присвиваем каждому уникальный id
+    unsigned short int id = 0;
+    for (unsigned short int p = 0; p < numOfPlayers; ++p, ++id) {
+        players.push_back(new Player(id));
+    }
 }
 
 /**

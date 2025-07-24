@@ -29,7 +29,7 @@ private:
 
 public:
     State();
-    State(unsigned short int numOfPlayers);
+    void initPlayers(unsigned short int numOfPlayers);
     void dumpCard(unsigned short int id);
     unsigned short int getCardFromTop();
     Cards* getCardById(unsigned short int id);
