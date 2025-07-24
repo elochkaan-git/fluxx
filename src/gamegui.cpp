@@ -2,15 +2,9 @@
 #include "TGUI/Texture.hpp"
 #include "card.hpp"
 
-unsigned findSelected(tgui::Gui& gui){
-    for(const auto wid : gui.getWidgets()){
-        if(wid->getWidgetName().ends_with('_')){
-            auto text = wid->getWidgetName();
-            text.pop_back();
-            return text.toUInt();
-        }
-    }
-    return 0;
+inline unsigned
+returnSelectedId(tgui::Gui& gui){
+    return gui.get<tgui::Picture>("Selected")->getUserData<unsigned>();
 }
 
 void
@@ -24,7 +18,7 @@ makeGlow(tgui::Picture::Ptr card)
 void
 makeNormal(tgui::Picture::Ptr card)
 {
-    if (!card->getWidgetName().ends_with('_')) {
+    if (card->getWidgetName() != "Selected") {
         auto glowTexture = card->getRenderer()->getTexture();
         glowTexture.setColor(tgui::Color::White);
         card->getRenderer()->setTexture(glowTexture);
@@ -34,14 +28,13 @@ makeNormal(tgui::Picture::Ptr card)
 void
 selectCard(tgui::Gui& gui, tgui::Picture::Ptr card)
 {
-    auto lastSelected = findSelected(gui);
-    auto last =  gui.get<tgui::Picture>(std::to_string(lastSelected) + '_');
+    auto last =  gui.get<tgui::Picture>("Selected");
     if (last) {
-        last->setWidgetName(std::to_string(lastSelected));
+        last->setWidgetName(std::to_string(last->getUserData<unsigned>()));
         makeNormal(last);
         last->setIgnoreMouseEvents(false);
     }
-    card->setWidgetName(card->getWidgetName() + "_");
+    card->setWidgetName("Selected");
     auto glowTexture = card->getRenderer()->getTexture();
     glowTexture.setColor(tgui::Color::Green);
     card->getRenderer()->setTexture(glowTexture);
@@ -52,6 +45,9 @@ auto
 createCard(const Cards& Card, tgui::Gui& gui)
 {
     auto card = tgui::Picture::create(Card.getTexture());
+    unsigned id = Card.getId();
+    card->setUserData(id);
+    card->setWidgetName(std::to_string(id));
     auto sizeOfCard = card->getSize();
     auto resolution = gui.getWindow()->getSize();
     // card->setSize("15%", "15%");
@@ -74,6 +70,10 @@ showCardsButtonOnToggle(tgui::Gui& gui, bool isDown)
     } else {
         hand->hideWithEffect(tgui::ShowEffectType::SlideToBottom, 400);
     }
+}
+
+void test(tgui::Gui& gui){
+    std::cout<< returnSelectedId(gui) << '\n';
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ initfunctionalPanel(tgui::Gui& gui)
     functionalPanel->add(confirmButton);
     confirmButton->setAutoLayout(tgui::AutoLayout::Bottom);
     confirmButton->setHeight(buttonSize.y);
-    confirmButton->onClick(&loadMainMenu, std::ref(gui));
+    confirmButton->onClick(&test, std::ref(gui));
 
     auto startGameButton = tgui::Button::create("Start\ngame");
     functionalPanel->add(startGameButton);
