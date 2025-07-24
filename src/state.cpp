@@ -18,7 +18,7 @@ using json = nlohmann::json;
 void
 loadCards(State* state)
 {
-    unsigned short int id = 0;
+    unsigned short int id = 1;
     std::ifstream f("./config/cards.json"); // Загружаем конфиг
     json data = json::parse(f);
 
