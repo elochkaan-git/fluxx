@@ -90,7 +90,6 @@ showCardsButtonOnToggle(tgui::Gui& gui, bool isDown)
 }
 
 void test(tgui::Gui& gui){
-    std::cout<< returnSelectedId(gui) << '\n';
     State& state = State::getInstance();
     unsigned selectedId = returnSelectedId(gui);
     if(selectedId){
@@ -108,12 +107,12 @@ void test(tgui::Gui& gui){
        case Type::THEME:
         loadCardsToTable(gui);
         break;
-    //    case Type::GOAL:
-    //     loadCardsToGoal(gui);
-    //     break;
-    //    case::Type::RULE:
-    //     loadCardsToRules(gui);
-        // break;
+       case Type::GOAL:
+        loadCardsToGoal(gui);
+        break;
+       case::Type::RULE:
+        loadCardsToRules(gui);
+        break;
        }
        loadCardsToHand(gui);
     }
@@ -227,6 +226,7 @@ void
 initGoalPanel(tgui::Gui& gui)
 {
     auto goalPanel = tgui::HorizontalWrap::create();
+    goalPanel->setWidgetName("Goals");
     goalPanel->setAutoLayout(tgui::AutoLayout::Left);
     goalPanel->setWidth({ "20%" });
     goalPanel->getRenderer()->setPadding(
@@ -240,6 +240,7 @@ void
 initRulePanel(tgui::Gui& gui)
 {
     auto rulePanel = tgui::HorizontalWrap::create();
+    rulePanel->setWidgetName("Rules");
     rulePanel->setAutoLayout(tgui::AutoLayout::Right);
     rulePanel->setWidth({ "20%" });
     rulePanel->getRenderer()->setPadding(
@@ -359,28 +360,66 @@ loadCardsToHand(tgui::Gui& gui){
 
 void
 loadCardsToTable(tgui::Gui& gui){
-    auto cardsTable = gui.get<tgui::ScrollablePanel>("1card");
-    cardsTable->removeAllWidgets();
+    auto cardsTable = gui.get<tgui::ScrollablePanel>("1cards");
+    if(cardsTable){
+        cardsTable->removeAllWidgets();
+        unsigned howManyCards = 0;
+        float scale = 1.f;
+        State& state = State::getInstance();
+        auto handId = state.getPlayers()[0]->getThemes();
+        for(const auto cardId: handId){
+            Cards* card = state.getCardById(cardId);
+            auto CardWidget = createCard(card, gui);
+            cardsTable->add(CardWidget);
+            CardWidget->setScale(scale);
+            CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
+            howManyCards++;
+        }
+        cardsTable->setUserData(howManyCards);
+    }else{
+        std::cout << "Cards on table widget not found!\n";
+    }
+}
+
+void
+loadCardsToGoal(tgui::Gui&gui){
+    auto goals = gui.get<tgui::HorizontalWrap>("Goals");
+    goals->removeAllWidgets();
     unsigned howManyCards = 0;
-    float scale = 1.f;
+    float scale = 2.f;
     State& state = State::getInstance();
-    auto handId = state.getPlayers()[0]->getThemes();
+    auto handId = state.getGoalsId();
     for(const auto cardId: handId){
         Cards* card = state.getCardById(cardId);
         auto CardWidget = createCard(card, gui);
-        cardsTable->add(CardWidget);
+        goals->add(CardWidget);
         CardWidget->setScale(scale);
         CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
         howManyCards++;
     }
-    cardsTable->setUserData(howManyCards);
+    goals->setUserData(howManyCards);
 }
 
 void
-loadCardsToGoal(tgui::Gui&gui);
-
-void
-loadCardsToRules(tgui::Gui&gui);
+loadCardsToRules(tgui::Gui&gui){
+    auto rules = gui.get<tgui::HorizontalWrap>("Rules");
+    if(rules){
+        rules->removeAllWidgets();
+        unsigned howManyCards = 0;
+        float scale = 1.f;
+        State& state = State::getInstance();
+        auto handId = state.getRulesId();
+        for(const auto cardId: handId){
+            Cards* card = state.getCardById(cardId);
+            auto CardWidget = createCard(card, gui);
+            rules->add(CardWidget);
+            CardWidget->setScale(scale);
+            CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
+            howManyCards++;
+        }
+        rules->setUserData(howManyCards);
+    }
+}
 
 void
 loadGame(tgui::Gui& gui, int numberOfPlayers)
@@ -395,19 +434,20 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     for (Player*& p : state.getPlayers())
         p->takeCards(state);
 
-    initPlayerHand(gui);
-    loadCardsToHand(gui);
+    
     
     /*
     Initialization main panels for main game window
     */
-    initfunctionalPanel(gui);
+    initPlayerHand(gui);
+    loadCardsToHand(gui);
     initPlayersBoardCards(gui, numberOfPlayers);
     initGoalPanel(gui);
     initRulePanel(gui);
     initCentralPanel(gui);
-    
     initNicknames(gui, numberOfPlayers);
+
+    initfunctionalPanel(gui);
     gui.moveWidgetToFront(gui.get<tgui::ScrollablePanel>("Hand"));
     // initOthersHands(gui, numberOfPlayers);
 }
