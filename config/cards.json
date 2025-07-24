@@ -7,8 +7,76 @@
                 "imgPath" : "./resources/img/rocket.png"
             },
             {
-                "name" : "Мозг",
+                "name" : "Мозги",
                 "imgPath" : "./resources/img/brain.png"
+            },
+            {
+                "name" : "Деньги",
+                "imgPath" : "./resources/img/money.png"
+            },
+            {
+                "name" : "Грезы",
+                "imgPath" : "./resources/img/daydream.png"
+            },
+            {
+                "name" : "Сон",
+                "imgPath" : "./resources/img/dream.png"
+            },
+            {
+                "name" : "Тостер",
+                "imgPath" : "./resources/img/toaster.png"
+            },
+            {
+                "name" : "Печеньки",
+                "imgPath" : "./resources/img/coockie.png"
+            },
+            {
+                "name" : "Луна",
+                "imgPath" : "./resources/img/moon.png"
+            },
+            {
+                "name" : "Время",
+                "imgPath" : "./resources/img/time.png"
+            },
+            {
+                "name" : "Любовь",
+                "imgPath" : "./resources/img/love.png"
+            },
+            {
+                "name" : "Глаз",
+                "imgPath" : "./resources/img/eye.png"
+            },
+            {
+                "name" : "Шоколадка",
+                "imgPath" : "./resources/img/chocolate.png"
+            },
+            {
+                "name" : "Солнце",
+                "imgPath" : "./resources/img/sun.png"
+            },
+            {
+                "name" : "Вечеринка",
+                "imgPath" : "./resources/img/party.png"
+            },
+            {
+                "name" : "Мир",
+                "imgPath" : "./resources/img/peace.png"
+            },
+            {
+                "name" : "Телевизор",
+                "imgPath" : "./resources/img/tv.png"
+            },
+            {
+                "name" : "Музыка",
+                "imgPath" : "./resources/img/music.png"
+            },
+            {
+                "name" : "Хлеб",
+                "imgPath" : "./resources/img/bread.png"
+            },
+            {
+                "name" : "Молоко",
+                "imgPath" : "./resources/img/milk.png"
             }
         ]
     },
@@ -17,10 +85,213 @@
         "category" : "goal",
         "cards" : [
             {
-                "name" : "Полет мысли",
+                "name" : "Со скоростью мысли",
                 "imgPath" : "./resources/img/with_speed_of_thought.png",
                 "themes" : [
-                    "Ракета", "Мозг"
+                    "Ракета", "Мозги"
+                ]
+            },
+            {
+                "name" : "5 тем",
+                "imgPath" : "./resources/img/5_themes.png",
+                "themes" : [
+                    "5 тем"
+                ]
+            },
+            {
+                "name" : "Красивые глазки",
+                "imgPath" : "./resources/img/nice_eyes.png",
+                "themes" : [
+                    "Глаз", "Любовь"
+                ]
+            },
+            {
+                "name" : "Выигрыш в лотерею",
+                "imgPath" : "./resources/img/win_in_lottery.png",
+                "themes" : [
+                    "Деньги", "Грезы"
+                ]
+            },
+            {
+                "name" : "Мечты наяву",
+                "imgPath" : "./resources/img/real_dreams.png",
+                "themes" : [
+                    "Солнце", "Грезы"
+                ]
+            },
+            {
+                "name" : "Время - деньги",
+                "imgPath" : "./resources/img/time_is_money.png",
+                "themes" : [
+                    "Деньги", "Время"
+                ]
+            },
+            {
+                "name" : "Сердца и умы",
+                "imgPath" : "./resources/img/hearts_and_brains.png",
+                "themes" : [
+                    "Мозги", "Любовь"
+                ]
+            },
+            {
+                "name" : "Шоколадное молоко",
+                "imgPath" : "./resources/img/choco_milk.png",
+                "themes" : [
+                    "Шоколадка", "Молоко"
+                ]
+            },
+            {
+                "name" : "Хиппи",
+                "imgPath" : "./resources/img/hippies.png",
+                "themes" : [
+                    "Мир", "Любовь"
+                ]
+            },
+            {
+                "name" : "Шоколадное печенье",
+                "imgPath" : "./resources/img/choco_coockie.png",
+                "themes" : [
+                    "Шоколадка", "Печеньки"
+                ]
+            },
+            {
+                "name" : "В десяточку!",
+                "imgPath" : "./resources/img/in_ten.png",
+                "themes" : [
+                    "В десяточку!"
+                ]
+            },
+            {
+                "name" : "Страна грез",
+                "imgPath" : "./resources/img/land_of_dreams.png",
+                "themes" : [
+                    "Сон", "Грезы"
+                ]
+            },
+            {
+                "name" : "Время тусить",
+                "imgPath" : "./resources/img/time_to_party.png",
+                "themes" : [
+                    "Вечеринка", "Время"
+                ]
+            },
+            {
+                "name" : "Саундтрек",
+                "imgPath" : "./resources/img/soundtrack.png",
+                "themes" : [
+                    "Музыка", "Телевизор"
+                ]
+            },
+            {
+                "name" : "Тосты",
+                "imgPath" : "./resources/img/toasts.png",
+                "themes" : [
+                    "Тостер", "Хлеб"
+                ]
+            },
+            {
+                "name" : "Праздничный стол",
+                "imgPath" : "./resources/img/celebrate_table.png",
+                "themes" : [
+                    "Вечеринка", "Шоколадка", "Печеньки", "Молоко"
+                ]
+            },
+            {
+                "name" : "Полет на Луну",
+                "imgPath" : "./resources/img/flying_to_the_moon.png",
+                "themes" : [
+                    "Ракета", "Луна"
+                ]
+            },
+            {
+                "name" : "Сделай погромче!",
+                "imgPath" : "./resources/img/make_louder.png",
+                "themes" : [
+                    "Вечеринка", "Музыка"
+                ]
+            },
+            {
+                "name" : "Мир во всем мире",
+                "imgPath" : "./resources/img/peace_in_the_world.png",
+                "themes" : [
+                    "Мир", "Грезы"
+                ]
+            },
+            {
+                "name" : "Доброе утро!",
+                "imgPath" : "./resources/img/good_morning.png",
+                "themes" : [
+                    "Телевизор", "Тостер"
+                ]
+            },
+            {
+                "name" : "Подтаявшая шоколадка",
+                "imgPath" : "./resources/img/melted_choco.png",
+                "themes" : [
+                    "Солнце", "Шоколадка"
+                ]
+            },
+            {
+                "name" : "Выпечка",
+                "imgPath" : "./resources/img/bakery.png",
+                "themes" : [
+                    "Хлеб", "Печеньки"
+                ]
+            },
+            {
+                "name" : "День и ночь",
+                "imgPath" : "./resources/img/day_and_night.png",
+                "themes" : [
+                    "Солнце", "Луна"
+                ]
+            },
+            {
+                "name" : "Любовь купить нельзя",
+                "imgPath" : "./resources/img/love_not_for_sale.png",
+                "themes" : [
+                    "Любовь", "Деньги"
+                ]
+            },
+            {
+                "name" : "Вкусный полдник",
+                "imgPath" : "./resources/img/yammy_lunch.png",
+                "themes" : [
+                    "Печеньки", "Молоко"
+                ]
+            },
+            {
+                "name" : "Мысленный взор",
+                "imgPath" : "./resources/img/mind_eye.png",
+                "themes" : [
+                    "Мозги", "Глаз"
+                ]
+            },
+            {
+                "name" : "Выключи ТВ. Включи мозги",
+                "imgPath" : "./resources/img/turn_off_tv_turn_on_brain.png",
+                "themes" : [
+                    "Телевизор"
+                ]
+            },
+            {
+                "name" : "Хлеб насущный",
+                "imgPath" : "./resources/img/daily_bread.png",
+                "themes" : [
+                    "Хлеб", "Деньги"
+                ]
+            },
+            {
+                "name" : "Колыбельная",
+                "imgPath" : "./resources/img/lullaby.png",
+                "themes" : [
+                    "Музыка", "Сон"
+                ]
+            },
+            {
+                "name" : "Спокойной ночи!",
+                "imgPath" : "./resources/img/good_night.png",
+                "themes" : [
+                    "Время", "Сон"
                 ]
             }
         ]
@@ -33,6 +304,116 @@
                 "name" : "Тяни-таскай",
                 "imgPath" : "./resources/img/pull_drag.png",
                 "action" : "makeThis"
+            },
+            {
+                "name" : "Тяни 3, сыграй 2",
+                "imgPath" : "./resources/img/take_3_play_2.png",
+                "action" : "take3play2"
+            },
+            {
+                "name" : "Руковорот",
+                "imgPath" : "./resources/img/handcycle.png",
+                "action" : "handcycle"
+            },
+            {
+                "name" : "Давай повторим!",
+                "imgPath" : "./resources/img/lets_retry.png",
+                "action" : "letsRetry"
+            },
+            {
+                "name" : "Джекпот!",
+                "imgPath" : "./resources/img/jackpot.png",
+                "action" : "jackpot"
+            },
+            {
+                "name" : "Как карта ляжет",
+                "imgPath" : "./resources/img/how_card_will_lay.png",
+                "action" : "howCardWillLay"
+            },
+            {
+                "name" : "Мешанина",
+                "imgPath" : "./resources/img/mishmash.png",
+                "action" : "mishmash"
+            },
+            {
+                "name" : "Тяни 2 и используй их",
+                "imgPath" : "./resources/img/take_2_and_use_it.png",
+                "action" : "takeTwoAndUseIt"
+            },
+            {
+                "name" : "Большая уборка",
+                "imgPath" : "./resources/img/big_cleaning.png",
+                "action" : "bigCleaning"
+            },
+            {
+                "name" : "С новых ходом!",
+                "imgPath" : "./resources/img/with_new_move.png",
+                "action" : "withNewMove"
+            },
+            {
+                "name" : "Из рук в руки",
+                "imgPath" : "./resources/img/from_hand_to_hand.png",
+                "action" : "fromHandToHand"
+            },
+            {
+                "name" : "Оброк",
+                "imgPath" : "./resources/img/quitrent.png",
+                "action" : "quitrent"
+            },
+            {
+                "name" : "Сбрось и тяни",
+                "imgPath" : "./resources/img/take_off_and_take.png",
+                "action" : "takeOffAndTake"
+            },
+            {
+                "name" : "Будь проще",
+                "imgPath" : "./resources/img/be_easier.png",
+                "action" : "beEasier"
+            },
+            {
+                "name" : "Новое правило долой!",
+                "imgPath" : "./resources/img/new_rule_off.png",
+                "action" : "newRuleOff"
+            },
+            {
+                "name" : "Обмен темами",
+                "imgPath" : "./resources/img/exchange_themes.png",
+                "action" : "exchangeThemes"
+            },
+            {
+                "name" : "Именинникам подарок",
+                "imgPath" : "./resources/img/birthday_boy_get_present.png",
+                "action" : "birthdayBoyGetPresent"
+            },
+            {
+                "name" : "Все получают 1",
+                "imgPath" : "./resources/img/all_get_1.png",
+                "action" : "allGetOne"
+            },
+            {
+                "name" : "Камень-ножницы-бумага",
+                "imgPath" : "./resources/img/rock-scissors-paper.png",
+                "action" : "rockSisscorsPaper"
+            },
+            {
+                "name" : "Схвати карту",
+                "imgPath" : "./resources/img/grab_card.png",
+                "action" : "grabCard"
+            },
+            {
+                "name" : "Беспредел",
+                "imgPath" : "./resources/img/borderless.png",
+                "action" : "borderless"
+            },
+            {
+                "name" : "Перезагрузка",
+                "imgPath" : "./resources/img/rebooting.png",
+                "action" : "rebooting"
+            },
+            {
+                "name" : "В мусорку!",
+                "imgPath" : "./resources/img/in_trash.png",
+                "action" : "inTrash"
             }
         ]
     },
@@ -48,10 +429,185 @@
                 }
             },
             {
+                "name" : "Предел руки 1",
+                "imgPath" : "./resources/img/hand_limit_1.png",
+                "rulesParams" : {
+                    "handLimit" : 1
+                }
+            },
+            {
+                "name" : "Предел руки 2",
+                "imgPath" : "./resources/img/hand_limit_2.png",
+                "rulesParams" : {
+                    "handLimit" : 2
+                }
+            },
+            {
+                "name" : "Тяни 2",
+                "imgPath" : "./resources/img/take_2.png",
+                "rulesParams" : {
+                    "take" : 2
+                }
+            },
+            {
+                "name" : "Тяни 3",
+                "imgPath" : "./resources/img/take_3.png",
+                "rulesParams" : {
+                    "take" : 3
+                }
+            },
+            {
+                "name" : "Тяни 4",
+                "imgPath" : "./resources/img/take_4.png",
+                "rulesParams" : {
+                    "take" : 4
+                }
+            },
+            {
+                "name" : "Тяни 5",
+                "imgPath" : "./resources/img/take_5.png",
+                "rulesParams" : {
+                    "take" : 5
+                }
+            },
+            {
+                "name" : "Предел тем 2",
+                "imgPath" : "./resources/img/theme_limit_2.png",
+                "rulesParams" : {
+                    "themeLimit" : 2
+                }
+            },
+            {
+                "name" : "Предел тем 3",
+                "imgPath" : "./resources/img/theme_limit_3.png",
+                "rulesParams" : {
+                    "themeLimit" : 3
+                }
+            },
+            {
+                "name" : "Предел тем 4",
+                "imgPath" : "./resources/img/theme_limit_4.png",
+                "rulesParams" : {
+                    "themeLimit" : 4
+                }
+            },
+            {
+                "name" : "Бедность не порок",
+                "imgPath" : "./resources/img/poverty_is_not_vice.png",
+                "rulesParams" : {
+                    "poverty" : true
+                }
+            },
+            {
+                "name" : "Наугад",
+                "imgPath" : "./resources/img/random.png",
+                "rulesParams" : {
+                    "random" : true
+                }
+            },
+            {
+                "name" : "Богато жить не запретишь",
+                "imgPath" : "./resources/img/richly_live.png",
+                "rulesParams" : {
+                    "rich" : true
+                }
+            },
+            {
+                "name" : "Игра вслепую",
+                "imgPath" : "./resources/img/blind_game.png",
+                "rulesParams" : {
+                    "blindGame" : true
+                }
+            },
+            {
+                "name" : "Как без рук",
+                "imgPath" : "./resources/img/like_without_hands.png",
+                "rulesParams" : {
+                    "withoutHands" : true
+                }
+            },
+            {
+                "name" : "Дуплет",
+                "imgPath" : "./resources/img/duplet.png",
+                "rulesParams" : {
+                    "duplet" : true
+                }
+            },
+            {
+                "name" : "С меня хватит",
+                "imgPath" : "./resources/img/thats_enough.png",
+                "rulesParams" : {
+                    "enough" : true
+                }
+            },
+            {
+                "name" : "Инфляция",
+                "imgPath" : "./resources/img/inflation.png",
+                "rulesParams" : {
+                    "inflation" : true
+                }
+            },
+            {
+                "name" : "Рокировка",
+                "imgPath" : "./resources/img/castling.png",
+                "rulesParams" : {
+                    "castling" : true
+                }
+            },
+            {
+                "name" : "Переработка",
+                "imgPath" : "./resources/img/recycling.png",
+                "rulesParams" : {
+                    "utilize" : true
+                }
+            },
+            {
+                "name" : "Сыграй всё, кроме 1",
+                "imgPath" : "./resources/img/play_all_without_1.png",
+                "rulesParams" : {
+                    "play" : 999
+                }
+            },
+            {
+                "name" : "Сыграй 2",
+                "imgPath" : "./resources/img/play_2.png",
+                "rulesParams" : {
+                    "play" : 2
+                }
+            },
+            {
                 "name" : "Сыграй 3",
                 "imgPath" : "./resources/img/play_3.png",
                 "rulesParams" : {
                     "play" : 3
+                }
+            },
+            {
+                "name" : "Сыграй 4",
+                "imgPath" : "./resources/img/play_4.png",
+                "rulesParams" : {
+                    "play" : 4
+                }
+            },
+            {
+                "name" : "Сыграй всё",
+                "imgPath" : "./resources/img/play_all.png",
+                "rulesParams" : {
+                    "play" : 1000
+                }
+            },
+            {
+                "name" : "Танцуяют все!",
+                "imgPath" : "./resources/img/all_dancing.png",
+                "rulesParams" : {
+                    "dance" : true
+                }
+            },
+            {
+                "name" : "Кручу-верчу",
+                "imgPath" : "./resources/img/spin_and_turn.png",
+                "rulesParams" : {
+                    "spinAndTurn" : true
                 }
             }
         ]
