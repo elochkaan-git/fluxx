@@ -351,7 +351,8 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     /*
         Initialization state
     */
-    static State state(numberOfPlayers);
+    State state;
+    state.initPlayers(numberOfPlayers);
     for (Player*& p : state.getPlayers())
         p->takeCards(state);
 
