@@ -1,10 +1,11 @@
 #pragma once
 
-#include<TGUI/TGUI.hpp>
-#include <TGUI/Backend/SFML-Graphics.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <TGUI/Backend/SFML-Graphics.hpp>
+#include <TGUI/TGUI.hpp>
 
-#include "gui.hpp"
 #include "core.hpp"
+#include "gui.hpp"
 
-void loadGame(tgui::Gui& gui, int numberOfPlayers);
+void
+loadGame(tgui::Gui& gui, int numberOfPlayers);

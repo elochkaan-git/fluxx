@@ -8,18 +8,22 @@ update(unsigned short int numOfPlayers)
         p->takeCards(state);
 
     unsigned short int moves = 0;
-    bool fl = false;
+    bool fl = false, t = 0;
     while (!state.checkWinner()) {
         if (fl)
             state.currentPlayer()->takeCards(state);
 
-        while (moves < state.howManyPlay()) {
+        if (state.getRules()->play == 999)
+            t = 1;
+        else
+            t = 0;
+        while (moves < state.howManyPlay() - t &&
+               state.currentPlayer()->numOfCardsInHands() != 0) {
             // TODO: Для Савелия
             // Реализовать метод, который возвращает название выбранной карты
             // или ее id на нее
             // Далее разыгрывается выбранная карта
-            Cards* temp = state.getCardById(2);
-            std::visit(CardPlay{ &state }, *temp);
+            state.getCardById(2)->play(&state);
             moves++;
         }
 
