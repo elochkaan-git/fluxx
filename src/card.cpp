@@ -51,7 +51,7 @@ Card::getName() const
  *
  * @return const unsigned short& Id карты
  */
-const unsigned short int&
+const unsigned short int
 Card::getId() const
 {
     return id;
@@ -119,7 +119,7 @@ CardGoal::CardGoal(unsigned short int id,
  *
  * @return const std::vector<unsigned short int> Набор Id карт-тем
  */
-const std::vector<unsigned short int>
+const std::vector<unsigned short int>&
 CardGoal::getThemes() const
 {
     return this->themes;
@@ -197,7 +197,7 @@ CardRule::CardRule(unsigned short int id,
  *
  * @return const RulesParams Параметры карты-правил
  */
-const RulesParams
+const RulesParams&
 CardRule::getParams() const
 {
     return params;
@@ -275,30 +275,11 @@ Cards::getId() const
 }
 
 /**
- * @brief Играет данную карту
- * 
- * @param state Игровое состояние
- */
-void
-Cards::play(State* state)
-{
-    if (std::holds_alternative<CardTheme>(data)) {
-        std::get<CardTheme>(data).play(state);
-    } else if (std::holds_alternative<CardGoal>(data)) {
-        std::get<CardGoal>(data).play(state);
-    } else if (std::holds_alternative<CardAction>(data)) {
-        std::get<CardAction>(data).play(state);
-    } else {
-        std::get<CardRule>(data).play(state);
-    }
-}
-
-/**
  * @brief Возвращает название карты
  * 
  * @return const std::string название карты
  */
-const std::string
+const std::string&
 Cards::getName() const
 {
     if (std::holds_alternative<CardTheme>(data)) {
@@ -310,21 +291,6 @@ Cards::getName() const
     } else {
         return std::get<CardRule>(data).getName();
     }
-}
-
-/**
- * @brief Возвращает вектор Id карт-тем, которые содержатся в цели.
- * Если карта - не цель, то вернется пустой вектор
- * 
- * @return const std::vector<unsigned short int> Вектор Id карт-тем
- * @retval {} Если это не карта-цель
- */
-const std::vector<unsigned short int>
-Cards::getThemes() const
-{
-    if (std::holds_alternative<CardGoal>(data))
-        return std::get<CardGoal>(data).getThemes();
-    return {};
 }
 
 /**
@@ -362,6 +328,21 @@ Cards::getTexture() const
 }
 
 /**
+ * @brief Возвращает вектор Id карт-тем, которые содержатся в цели.
+ * Если карта - не цель, то вернется пустой вектор
+ * 
+ * @return const std::vector<unsigned short int> Вектор Id карт-тем
+ * @retval {} Если это не карта-цель
+ */
+const std::vector<unsigned short int>
+Cards::getThemes() const
+{
+    if (std::holds_alternative<CardGoal>(data))
+        return std::get<CardGoal>(data).getThemes();
+    return {};
+}
+
+/**
  * @brief Перегрузка оператора сравнения карты с указанным id.
  * Необходимо для работы std::find и т.д.
  * 
@@ -387,4 +368,23 @@ bool
 Cards::operator==(std::string name)
 {
     return this->getName() == name;
+}
+
+/**
+ * @brief Играет данную карту
+ * 
+ * @param state Игровое состояние
+ */
+void
+Cards::play(State* state)
+{
+    if (std::holds_alternative<CardTheme>(data)) {
+        std::get<CardTheme>(data).play(state);
+    } else if (std::holds_alternative<CardGoal>(data)) {
+        std::get<CardGoal>(data).play(state);
+    } else if (std::holds_alternative<CardAction>(data)) {
+        std::get<CardAction>(data).play(state);
+    } else {
+        std::get<CardRule>(data).play(state);
+    }
 }

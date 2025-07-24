@@ -47,12 +47,19 @@ protected:
     std::string name = "Default";
 
 public:
+    // Конструктор
     Card(unsigned short int id, std::string name, std::string imgPath);
+
+    // Геттеры
     const tgui::Texture& getTexture() const;
     const std::string& getName() const;
-    const unsigned short int& getId() const;
-    bool operator==(unsigned short int id);
-    bool operator==(std::string name);
+    const unsigned short int getId() const;
+
+    // Операторы сравнения
+    bool operator==(unsigned short int id) const;
+    bool operator==(std::string name) const;
+
+    // Виртуальная функция для наследников
     virtual void play(State* state) = 0;
 };
 
@@ -62,7 +69,10 @@ public:
 class CardTheme : public Card
 {
 public:
+    // Конструктор
     CardTheme(unsigned short int id, std::string name, std::string imgPath);
+
+    // Реализация виртуальной функции
     void play(State* state) override;
 };
 
@@ -72,7 +82,7 @@ public:
 class CardGoal : public Card
 {
 protected:
-    std::vector<unsigned short int> themes = {};
+    std::vector<unsigned short int> themes = {}; // Id карт-тем
     bool isNumOfThemes = false, isNumOfCards = false;
 
 public:
@@ -83,7 +93,7 @@ public:
              bool isNumOfThemes,
              bool isNumOfCards);
     void play(State* state) override;
-    const std::vector<unsigned short int> getThemes() const;
+    const std::vector<unsigned short int>& getThemes() const;
 };
 
 /**
@@ -114,7 +124,7 @@ public:
              std::string imgPath,
              RulesParams& params);
     void play(State* state) override;
-    const RulesParams getParams() const;
+    const RulesParams& getParams() const;
 };
 
 /**
@@ -133,11 +143,13 @@ struct Cards
     Cards(CardRule card);
 
     const unsigned short int getId() const;
-    void play(State* state);
-    const std::string getName() const;
-    const std::vector<unsigned short int> getThemes() const;
+    const std::string& getName() const;
     const RulesParams getParams() const;
     const tgui::Texture& getTexture() const;
+    const std::vector<unsigned short int> getThemes() const;
+
     bool operator==(unsigned short int id);
     bool operator==(std::string name);
+
+    void play(State* state);
 };
