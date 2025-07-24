@@ -392,8 +392,11 @@ State::howManyPlay() const
  */
 void
 State::addRule(unsigned short int ruleId)
-{
-    if (getCardById(ruleId)->getName().find("Тяни") != std::string::npos) {
+{   
+    bool empty = rules.empty();
+    if(empty) { 
+        rules.push_back(ruleId);
+    } else if (getCardById(ruleId)->getName().find("Тяни") != std::string::npos) {
         for (unsigned short int& ptr : rules) {
             if (getCardById(ptr)->getName().find("Тяни") != std::string::npos) {
                 ptr = ruleId;
