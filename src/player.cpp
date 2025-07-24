@@ -41,7 +41,7 @@ Player::takeCards(State& state)
  *
  * @return const std::vector<unsigned short int> Набор Id карт-тем
  */
-const std::vector<unsigned short int>
+const std::vector<unsigned short int>&
 Player::getThemes() const
 {
     return this->tableThemes;
@@ -64,7 +64,7 @@ Player::isFirstTurn() const
  *
  * @param themeId Id сыгранной карты-темы
  */
-const void
+void
 Player::addTheme(unsigned short int themeId)
 {
     tableThemes.push_back(themeId);
@@ -100,4 +100,10 @@ Player::deleteCardById(unsigned short int id)
         tableThemes.erase(ptr);
         return;
     }
+}
+
+const std::vector<unsigned short int>&
+Player::getHand() const
+{
+    return hand;
 }

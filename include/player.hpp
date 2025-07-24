@@ -23,11 +23,15 @@ public:
     unsigned short int takes = 0;
 
     Player(unsigned short int id);
+
     void takeCards(State& state);
-    const std::vector<unsigned short int> getThemes() const;
-    const unsigned short int numOfCardsInHands() const;
-    const void addTheme(unsigned short int theme);
-    const bool isFirstTurn() const;
-    const unsigned short int getId() const;
+    void addTheme(unsigned short int theme);
     void deleteCardById(unsigned short int id);
+
+    const unsigned short int getId() const;
+    const std::vector<unsigned short int>& getHand() const;
+    const std::vector<unsigned short int>& getThemes() const;
+    const unsigned short int numOfCardsInHands() const;
+
+    const bool isFirstTurn() const;
 };
