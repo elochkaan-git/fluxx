@@ -14,10 +14,10 @@ class Player;
 class State
 {
 private:
-    std::vector<Cards> deck, dump; // Колода и сброс
+    std::vector<Cards> deck; // Колода
     std::vector<Player*> players;  // Указатели на игроков
     std::vector<unsigned short int> goals,
-      rules;            // Id активных карт-целей и карт-правил
+      rules, dump;            // Id активных карт-целей, карт-правил и карт в сбросе
     RulesParams params; // Текущие правила игры
     // Номера текущего игрока и верхней карты в колоде
     unsigned char currentPlayerID = 0;
@@ -29,6 +29,7 @@ private:
 
 public:
     State(unsigned short int numOfPlayers);
+    void dumpCard(unsigned short int id);
     unsigned short int getCardFromTop();
     Cards* getCardById(unsigned short int id);
     const std::vector<Cards>& getDeck() const;

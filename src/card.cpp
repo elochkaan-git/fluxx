@@ -169,6 +169,7 @@ CardAction::play(State* state)
 {
     this->action(state);
     state->currentPlayer()->deleteCardById(getId());
+    state->dumpCard(getId());
 }
 
 /*
@@ -271,6 +272,25 @@ Cards::getId() const
         return std::get<CardAction>(data).getId();
     } else {
         return std::get<CardRule>(data).getId();
+    }
+}
+
+/**
+ * @brief Возвращает тип данной карты
+ * 
+ * @return const Type Тип карты
+ */
+const Type
+Cards::getType() const
+{
+    if (std::holds_alternative<CardTheme>(data)) {
+        return THEME;
+    } else if (std::holds_alternative<CardGoal>(data)) {
+        return GOAL;
+    } else if (std::holds_alternative<CardAction>(data)) {
+        return ACTION;
+    } else {
+        return RULE;
     }
 }
 
