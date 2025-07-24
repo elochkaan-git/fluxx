@@ -97,11 +97,14 @@ void test(tgui::Gui& gui){
             1)Play
             2)define type
             3)delete from hand
-
         */
        Cards* selectedCard = state.getCardById(selectedId);
        gui.remove(gui.get<tgui::Picture>("Selected"));
        selectedCard->play(&state);
+       if(state.checkWinner()){
+        exit(0);
+       }
+       
        switch (selectedCard->getType())
        {
        case Type::THEME:
@@ -114,9 +117,13 @@ void test(tgui::Gui& gui){
         loadCardsToRules(gui);
         break;
        }
+       state.nextMove();
        loadCardsToHand(gui);
+       state.currentPlayer()->takeCards(state);
     }
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -409,6 +416,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
 
     initfunctionalPanel(gui);
     gui.moveWidgetToFront(gui.get<tgui::ScrollablePanel>("Hand"));
+
 }
 
 void
@@ -418,7 +426,7 @@ loadCardsToHand(tgui::Gui& gui){
     unsigned howManyCards = 0;
     float scale = 3.f;
     State& state = State::getInstance();
-    auto handId = state.getPlayers()[0]->getHand();
+    auto handId = state.currentPlayer()->getHand();
     for(const auto cardId: handId){
         Cards* card = state.getCardById(cardId);
         auto CardWidget = createCard(card, gui);
@@ -432,25 +440,41 @@ loadCardsToHand(tgui::Gui& gui){
 
 void
 loadCardsToTable(tgui::Gui& gui){
-    auto cardsTable = gui.get<tgui::ScrollablePanel>("firstPlayerCards");
+    State& state = State::getInstance();
+    unsigned howManyPlayers = state.getPlayers().size();
 
-    if(cardsTable){
-        cardsTable->removeAllWidgets();
-        unsigned howManyCards = 0;
-        float scale = 1.5f;
-        State& state = State::getInstance();
-        auto handId = state.getPlayers()[0]->getThemes();
-        for(const auto cardId: handId){
-            Cards* card = state.getCardById(cardId);
-            auto CardWidget = createCard(card, gui);
-            cardsTable->add(CardWidget);
-            CardWidget->setScale(scale);
-            CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
-            howManyCards++;
+    for(int i = 0; i<howManyPlayers; i++){
+        tgui::String nameOfCards;
+        if(i == 0){
+            nameOfCards="firstPlayerCards";
+        }else
+        if(i == 1){
+            nameOfCards="secondPlayerCards";
+        }else
+        if(i == 2){
+            nameOfCards="thirdPlayerCards";
+        }else{
+            nameOfCards="fourthPlayerCards";
         }
-        cardsTable->setUserData(howManyCards);
-    }else{
-        std::cout << "Cards on table widget not found!\n";
+        auto cardsTable = gui.get<tgui::ScrollablePanel>(nameOfCards);
+
+        if(cardsTable){
+            cardsTable->removeAllWidgets();
+            unsigned howManyCards = 0;
+            float scale = 1.5f;
+            auto handId = state.getPlayers()[i]->getThemes();
+            for(const auto cardId: handId){
+                Cards* card = state.getCardById(cardId);
+                auto CardWidget = createCard(card, gui);
+                cardsTable->add(CardWidget);
+                CardWidget->setScale(scale);
+                CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
+                howManyCards++;
+            }
+            cardsTable->setUserData(howManyCards);
+        }else{
+            std::cout << "Cards on table widget not found!\n";
+        }
     }
 }
 
