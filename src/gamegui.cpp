@@ -2,6 +2,10 @@
 #include "TGUI/Texture.hpp"
 #include "card.hpp"
 
+
+void
+loadCardsToHand(tgui::Gui& gui, State& state);
+
 inline unsigned
 returnSelectedId(tgui::Gui& gui){
     auto card = gui.get<tgui::Picture>("Selected");
@@ -78,6 +82,29 @@ showCardsButtonOnToggle(tgui::Gui& gui, bool isDown)
 
 void test(tgui::Gui& gui){
     std::cout<< returnSelectedId(gui) << '\n';
+    State state = gui.get<tgui::Picture>("State")->getUserData<State>();
+    unsigned selectedId = returnSelectedId(gui);
+    if(selectedId){
+        /*
+            1)Play
+            2)define type
+            3)delete from hand
+
+        */
+       Cards* selectedCard = state.getCardById(selectedId);
+       gui.remove(gui.get<tgui::Picture>("Selected"));
+       selectedCard->play(&state);
+    //    switch (selectedCard->getType())
+    //    {
+    //    case :
+    //     /* code */
+    //     break;
+       
+    //    default:
+    //     break;
+    //    }
+       loadCardsToHand(gui, state);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -213,7 +240,7 @@ initRulePanel(tgui::Gui& gui)
 void
 initPlayerHand(tgui::Gui& gui)
 {
-    auto hand = tgui::ScrollablePanel::create({ "75%", "45%" });
+    auto hand = tgui::ScrollablePanel::create({ "75%", "50%" });
     hand->setWidgetName("Hand");
     hand->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
     hand->getRenderer()->setBackgroundColor("rgb(94, 96, 104)");
@@ -324,7 +351,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     /*
         Initialization state
     */
-    State state(numberOfPlayers);
+    static State state(numberOfPlayers);
     for (Player*& p : state.getPlayers())
         p->takeCards(state);
 
@@ -332,6 +359,16 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     /*
         Initialization main panels for main game window
     */
+    initPlayerHand(gui);
+    auto test = tgui::Picture::create("./resources/img/main_cover.png");
+    test->getRenderer()->setOpacity(0);
+    test->setUserData(state);
+    gui.add(test);
+    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
+    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
+    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
+    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
+    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
     initfunctionalPanel(gui);
     initPlayersBoardCards(gui, numberOfPlayers);
     initGoalPanel(gui);
@@ -339,7 +376,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     initCentralPanel(gui);
 
     initNicknames(gui, numberOfPlayers);
-    initPlayerHand(gui);
+    
     loadCardsToHand(gui, state);
     // initOthersHands(gui, numberOfPlayers);
 }
