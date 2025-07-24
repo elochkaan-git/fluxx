@@ -2,9 +2,10 @@
 #include "TGUI/Texture.hpp"
 #include "card.hpp"
 
+State state;
 
 void
-loadCardsToHand(tgui::Gui& gui, State& state);
+loadCardsToHand(tgui::Gui& gui);
 
 inline unsigned
 returnSelectedId(tgui::Gui& gui){
@@ -103,7 +104,7 @@ void test(tgui::Gui& gui){
     //    default:
     //     break;
     //    }
-       loadCardsToHand(gui, state);
+       loadCardsToHand(gui);
     }
 }
 
@@ -327,7 +328,7 @@ initCentralPanel(tgui::Gui& gui)
 }
 
 void
-loadCardsToHand(tgui::Gui& gui, State& state){
+loadCardsToHand(tgui::Gui& gui){
     auto hand = gui.get<tgui::ScrollablePanel>("Hand");
     unsigned howManyCards = 0;
     float scale = 3.f;
@@ -351,7 +352,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     /*
         Initialization state
     */
-    static State state(numberOfPlayers);
+    state = {(unsigned short)numberOfPlayers};
     for (Player*& p : state.getPlayers())
         p->takeCards(state);
 
@@ -360,10 +361,10 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
         Initialization main panels for main game window
     */
     initPlayerHand(gui);
-    auto test = tgui::Picture::create("./resources/img/main_cover.png");
-    test->getRenderer()->setOpacity(0);
-    test->setUserData(state);
-    gui.add(test);
+    // auto test = tgui::Picture::create("./resources/img/main_cover.png");
+    // test->getRenderer()->setOpacity(0);
+    // test->setUserData(state);
+    // gui.add(test);
     gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
     gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
     gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
@@ -377,7 +378,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
 
     initNicknames(gui, numberOfPlayers);
     
-    loadCardsToHand(gui, state);
+    loadCardsToHand(gui);
     // initOthersHands(gui, numberOfPlayers);
 }
 
