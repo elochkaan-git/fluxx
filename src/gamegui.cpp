@@ -82,7 +82,6 @@ showCardsButtonOnToggle(tgui::Gui& gui, bool isDown)
 
 void test(tgui::Gui& gui){
     std::cout<< returnSelectedId(gui) << '\n';
-    // State state = gui.get<tgui::Picture>("State")->getUserData<State>();
     State& state = State::getInstance();
     unsigned selectedId = returnSelectedId(gui);
     if(selectedId){
@@ -358,18 +357,12 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     for (Player*& p : state.getPlayers())
         p->takeCards(state);
 
-    // TODO для Савелия
-    // Надо сделать правильное отображение карт
+    initPlayerHand(gui);
     loadCardsToHand(gui);
     
     /*
     Initialization main panels for main game window
     */
-    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
-    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
-    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
-    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
-    gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
     initfunctionalPanel(gui);
     initPlayersBoardCards(gui, numberOfPlayers);
     initGoalPanel(gui);
@@ -377,7 +370,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     initCentralPanel(gui);
     
     initNicknames(gui, numberOfPlayers);
-    initPlayerHand(gui);
+    gui.moveWidgetToFront(gui.get<tgui::ScrollablePanel>("Hand"));
     // initOthersHands(gui, numberOfPlayers);
 }
 
