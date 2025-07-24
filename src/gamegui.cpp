@@ -184,6 +184,7 @@ initPlayersBoardCards(tgui::Gui& gui, int numberOfPlayers)
     fourthPlayerCards->getRenderer()->setBackgroundColor("rgb(120, 233, 126)");
 
     auto splitBottom = tgui::SplitContainer::create();
+    splitBottom->setWidgetName("splitB");
     splitBottom->setHeight("20%");
     splitBottom->setSplitterOffset("100%");
     splitBottom->setAutoLayout(tgui::AutoLayout::Bottom);
@@ -340,48 +341,6 @@ initCentralPanel(tgui::Gui& gui)
 }
 
 void
-loadCardsToHand(tgui::Gui& gui){
-    auto hand = gui.get<tgui::ScrollablePanel>("Hand");
-    hand->removeAllWidgets();
-    unsigned howManyCards = 0;
-    float scale = 3.f;
-    State& state = State::getInstance();
-    auto handId = state.getPlayers()[0]->getHand();
-    for(const auto cardId: handId){
-        Cards* card = state.getCardById(cardId);
-        auto CardWidget = createCard(card, gui);
-        hand->add(CardWidget);
-        CardWidget->setScale(scale);
-        CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
-        howManyCards++;
-    }
-    hand->setUserData(howManyCards);
-}
-
-void
-loadCardsToTable(tgui::Gui& gui){
-    auto cardsTable = gui.get<tgui::ScrollablePanel>("1cards");
-    if(cardsTable){
-        cardsTable->removeAllWidgets();
-        unsigned howManyCards = 0;
-        float scale = 1.f;
-        State& state = State::getInstance();
-        auto handId = state.getPlayers()[0]->getThemes();
-        for(const auto cardId: handId){
-            Cards* card = state.getCardById(cardId);
-            auto CardWidget = createCard(card, gui);
-            cardsTable->add(CardWidget);
-            CardWidget->setScale(scale);
-            CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
-            howManyCards++;
-        }
-        cardsTable->setUserData(howManyCards);
-    }else{
-        std::cout << "Cards on table widget not found!\n";
-    }
-}
-
-void
 loadCardsToGoal(tgui::Gui&gui){
     auto goals = gui.get<tgui::HorizontalWrap>("Goals");
     goals->removeAllWidgets();
@@ -439,9 +398,10 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     /*
     Initialization main panels for main game window
     */
+   initPlayersBoardCards(gui, numberOfPlayers); 
     initPlayerHand(gui);
     loadCardsToHand(gui);
-    initPlayersBoardCards(gui, numberOfPlayers);
+    
     initGoalPanel(gui);
     initRulePanel(gui);
     initCentralPanel(gui);
@@ -449,8 +409,51 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
 
     initfunctionalPanel(gui);
     gui.moveWidgetToFront(gui.get<tgui::ScrollablePanel>("Hand"));
-    // initOthersHands(gui, numberOfPlayers);
 }
+
+void
+loadCardsToHand(tgui::Gui& gui){
+    auto hand = gui.get<tgui::ScrollablePanel>("Hand");
+    hand->removeAllWidgets();
+    unsigned howManyCards = 0;
+    float scale = 3.f;
+    State& state = State::getInstance();
+    auto handId = state.getPlayers()[0]->getHand();
+    for(const auto cardId: handId){
+        Cards* card = state.getCardById(cardId);
+        auto CardWidget = createCard(card, gui);
+        hand->add(CardWidget);
+        CardWidget->setScale(scale);
+        CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
+        howManyCards++;
+    }
+    hand->setUserData(howManyCards);
+}
+
+void
+loadCardsToTable(tgui::Gui& gui){
+    auto cardsTable = gui.get<tgui::ScrollablePanel>("firstPlayerCards");
+
+    if(cardsTable){
+        cardsTable->removeAllWidgets();
+        unsigned howManyCards = 0;
+        float scale = 1.5f;
+        State& state = State::getInstance();
+        auto handId = state.getPlayers()[0]->getThemes();
+        for(const auto cardId: handId){
+            Cards* card = state.getCardById(cardId);
+            auto CardWidget = createCard(card, gui);
+            cardsTable->add(CardWidget);
+            CardWidget->setScale(scale);
+            CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
+            howManyCards++;
+        }
+        cardsTable->setUserData(howManyCards);
+    }else{
+        std::cout << "Cards on table widget not found!\n";
+    }
+}
+
 
 // void initOthersHands(tgui::Gui& gui, int numberOfPlayers){
 //     auto hands = tgui::TabContainer::create({ "75%", "25%" });
