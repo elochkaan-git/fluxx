@@ -147,4 +147,8 @@ struct CardId
     unsigned short int operator()(CardGoal& card) { return card.getId(); }
     unsigned short int operator()(CardAction& card) { return card.getId(); }
     unsigned short int operator()(CardRule& card) { return card.getId(); }
+    unsigned short int operator()(const CardTheme& card) { return card.getId(); }
+    unsigned short int operator()(const CardGoal& card) { return card.getId(); }
+    unsigned short int operator()(const CardAction& card) { return card.getId(); }
+    unsigned short int operator()(const CardRule& card) { return card.getId(); }
 };

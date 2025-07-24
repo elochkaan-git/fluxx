@@ -3,6 +3,17 @@
 #include "card.hpp"
 #include <variant>
 
+unsigned findSelected(tgui::Gui& gui){
+    for(const auto wid : gui.getWidgets()){
+        if(wid->getWidgetName().ends_with('_')){
+            auto text = wid->getWidgetName();
+            text.pop_back();
+            return text.toUInt();
+        }
+    }
+    return 0;
+}
+
 void
 makeGlow(tgui::Picture::Ptr card)
 {
@@ -14,7 +25,7 @@ makeGlow(tgui::Picture::Ptr card)
 void
 makeNormal(tgui::Picture::Ptr card)
 {
-    if (card->getWidgetName() != "SelectedCard") {
+    if (!card->getWidgetName().ends_with('_')) {
         auto glowTexture = card->getRenderer()->getTexture();
         glowTexture.setColor(tgui::Color::White);
         card->getRenderer()->setTexture(glowTexture);
@@ -24,13 +35,14 @@ makeNormal(tgui::Picture::Ptr card)
 void
 selectCard(tgui::Gui& gui, tgui::Picture::Ptr card)
 {
-    auto lastSelected = gui.get<tgui::Picture>("SelectedCard");
-    if (lastSelected) {
-        lastSelected->setWidgetName("NonSelected");
-        makeNormal(lastSelected);
-        lastSelected->setIgnoreMouseEvents(false);
+    auto lastSelected = findSelected(gui);
+    auto last =  gui.get<tgui::Picture>(std::to_string(lastSelected) + '_');
+    if (last) {
+        last->setWidgetName(std::to_string(lastSelected));
+        makeNormal(last);
+        last->setIgnoreMouseEvents(false);
     }
-    card->setWidgetName("SelectedCard");
+    card->setWidgetName(card->getWidgetName() + "_");
     auto glowTexture = card->getRenderer()->getTexture();
     glowTexture.setColor(tgui::Color::Green);
     card->getRenderer()->setTexture(glowTexture);
@@ -41,6 +53,7 @@ auto
 createCard(const Cards& Card, tgui::Gui& gui)
 {   
     auto card = tgui::Picture::create(std::visit(CardTexture{}, Card));
+    card->setWidgetName(std::to_string(std::visit(CardId{}, Card)));
     auto sizeOfCard = card->getSize();
     auto resolution = gui.getWindow()->getSize();
     // card->setSize("15%", "15%");
