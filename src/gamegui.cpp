@@ -4,7 +4,11 @@
 
 inline unsigned
 returnSelectedId(tgui::Gui& gui){
-    return gui.get<tgui::Picture>("Selected")->getUserData<unsigned>();
+    auto card = gui.get<tgui::Picture>("Selected");
+    if(card){
+        return card->getUserData<unsigned>();
+    }
+    return 0;
 }
 
 void
@@ -42,10 +46,10 @@ selectCard(tgui::Gui& gui, tgui::Picture::Ptr card)
 }
 
 auto
-createCard(const Cards& Card, tgui::Gui& gui)
+createCard(const Cards* Card, tgui::Gui& gui)
 {
-    auto card = tgui::Picture::create(Card.getTexture());
-    unsigned id = Card.getId();
+    auto card = tgui::Picture::create(Card->getTexture());
+    unsigned id = Card->getId();
     card->setUserData(id);
     card->setWidgetName(std::to_string(id));
     auto sizeOfCard = card->getSize();
@@ -66,9 +70,9 @@ showCardsButtonOnToggle(tgui::Gui& gui, bool isDown)
 {
     auto hand = gui.get<tgui::ScrollablePanel>("Hand");
     if (isDown) {
-        hand->showWithEffect(tgui::ShowEffectType::SlideFromBottom, 400);
+        hand->showWithEffect(tgui::ShowEffectType::SlideFromBottom, 300);
     } else {
-        hand->hideWithEffect(tgui::ShowEffectType::SlideToBottom, 400);
+        hand->hideWithEffect(tgui::ShowEffectType::SlideToBottom, 300);
     }
 }
 
@@ -178,42 +182,6 @@ initPlayersBoardCards(tgui::Gui& gui, int numberOfPlayers)
             splitTop->setSplitterOffset("50%");
             break;
     }
-
-    /*
-      Test block
-    */
-
-    for (int i = 0; i < 5; i++) {
-        CardTheme card = CardTheme(i, "NoName", "./resources/img/default.png");
-        auto Test = createCard(card, gui);
-        firstPlayerCards->add(Test);
-        // Test->setScale(0.3f);
-        Test->setPosition(i * 80, 0);
-    }
-
-    // for(int i = 0; i < 5; i++){
-    //   auto Test = createCard(card, gui);
-    //   secondPlayerCards->add(Test);
-    //   // Test->setScale(0.3f);
-    //   Test->setPosition(i*80, 0);
-
-    // }
-
-    // for(int i = 0; i < 5; i++){
-    //   auto Test = createCard(defaultTexure, gui);
-    //   thirdPlayerCards->add(Test);
-    //   // Test->setScale(0.3f);
-    //   Test->setPosition(i*80, 0);
-
-    // }
-
-    // for(int i = 0; i < 5; i++){
-    //   auto Test = createCard(defaultTexure, gui);
-    //   fourthPlayerCards->add(Test);
-    //   // Test->setScale(0.3f);
-    //   Test->setPosition(i*80, 0);
-
-    // }
 }
 
 void
@@ -226,9 +194,6 @@ initGoalPanel(tgui::Gui& gui)
       { 5 }); // Keep 5px on all sides as empty space
     goalPanel->getRenderer()->setSpaceBetweenWidgets(
       10); // Put a 10px gap beside and below widgets
-    // for(int i = 0; i < 6; i++){
-    //   goalPanel->add(createCard("./resources/img/default.png", gui));
-    // }
     gui.add(goalPanel);
 }
 
@@ -242,16 +207,13 @@ initRulePanel(tgui::Gui& gui)
       { 5 }); // Keep 5px on all sides as empty space
     rulePanel->getRenderer()->setSpaceBetweenWidgets(
       10); // Put a 10px gap beside and below widgets
-    // for(int i = 0; i < 6; i++){
-    //   rulePanel->add(createCard("./resources/img/default.png", gui));
-    // }
     gui.add(rulePanel);
 }
 
 void
 initPlayerHand(tgui::Gui& gui)
 {
-    auto hand = tgui::ScrollablePanel::create({ "75%", "25%" });
+    auto hand = tgui::ScrollablePanel::create({ "75%", "45%" });
     hand->setWidgetName("Hand");
     hand->getVerticalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
     hand->getRenderer()->setBackgroundColor("rgb(94, 96, 104)");
@@ -330,19 +292,28 @@ initCentralPanel(tgui::Gui& gui)
     centralPanel->setAutoLayout(tgui::AutoLayout::Fill);
     // centralPanel->setWidth({"40%"});
 
-    // auto Deck = createCard("./resources/img/default.png", gui);
-    // centralPanel->add(Deck);
-    // Deck->setPosition({"10%","10%"});
-    // Deck->setScale(0.3f);
     auto StateLabel = tgui::Label::create("Main label");
     StateLabel->setText("Waiting for players");
     centralPanel->add(StateLabel);
     StateLabel->setPosition({ "10%", "50%" });
-    // auto Dump = createCard("./resources/img/default.png", gui);
-    // // Dump->setScale(0.3f);
-    // centralPanel->add(Dump);
-    // Dump->setPosition({"10%","70%"});
     gui.add(centralPanel);
+}
+
+void
+loadCardsToHand(tgui::Gui& gui, State& state){
+    auto hand = gui.get<tgui::ScrollablePanel>("Hand");
+    unsigned howManyCards = 0;
+    float scale = 3.f;
+    auto handId = state.getPlayers()[0]->getHand();
+    for(const auto cardId: handId){
+        Cards* card = state.getCardById(cardId);
+        auto CardWidget = createCard(card, gui);
+        hand->add(CardWidget);
+        CardWidget->setScale(scale);
+        CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
+        howManyCards++;
+    }
+    hand->setUserData(howManyCards);
 }
 
 void
@@ -357,6 +328,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     for (Player*& p : state.getPlayers())
         p->takeCards(state);
 
+    
     /*
         Initialization main panels for main game window
     */
@@ -368,6 +340,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
 
     initNicknames(gui, numberOfPlayers);
     initPlayerHand(gui);
+    loadCardsToHand(gui, state);
     // initOthersHands(gui, numberOfPlayers);
 }
 
