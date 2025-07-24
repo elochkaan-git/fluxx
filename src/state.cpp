@@ -141,7 +141,8 @@ State::initPlayers(unsigned short int numOfPlayers)
     // Инициализируем игроков и присвиваем каждому уникальный id
     unsigned short int id = 0;
     for (unsigned short int p = 0; p < numOfPlayers; ++p, ++id) {
-        players.push_back(new Player(id));
+        if(id == 0) players.push_back(new Player(id));
+        else players.push_back(new Player(100+id));
     }
 }
 
@@ -398,6 +399,9 @@ State::addRule(unsigned short int ruleId)
                 ptr = ruleId;
                 break;
             }
+            else {
+                rules.push_back(ruleId);
+            }
         }
     } else if (getCardById(ruleId)->getName().find("Сыграй") !=
                std::string::npos) {
@@ -406,6 +410,9 @@ State::addRule(unsigned short int ruleId)
                 std::string::npos) {
                 ptr = ruleId;
                 break;
+            }
+            else {
+                rules.push_back(ruleId);
             }
         }
     } else if (getCardById(ruleId)->getName().find("Предел тем") !=
@@ -416,6 +423,9 @@ State::addRule(unsigned short int ruleId)
                 ptr = ruleId;
                 break;
             }
+            else {
+                rules.push_back(ruleId);
+            }
         }
     } else if (getCardById(ruleId)->getName().find("Предел руки") !=
                std::string::npos) {
@@ -424,6 +434,9 @@ State::addRule(unsigned short int ruleId)
                 std::string::npos) {
                 ptr = ruleId;
                 break;
+            }
+            else {
+                rules.push_back(ruleId);
             }
         }
     } else {

@@ -2,7 +2,9 @@
 #include "card.hpp"
 #include "state.hpp"
 #include <algorithm>
+#include <cstdlib>
 #include <vector>
+#include <random>
 
 /**
  * @brief Конструктор класса Player
@@ -106,4 +108,10 @@ const std::vector<unsigned short int>&
 Player::getHand() const
 {
     return hand;
+}
+
+const unsigned short int
+Player::randomCard() const
+{
+    return hand[rand() % hand.size()];
 }

@@ -12,7 +12,7 @@ class State;
  */
 class Player
 {
-private:
+protected:
     unsigned short int id;
     std::vector<unsigned short int> hand;        // Карты на руки
     std::vector<unsigned short int> tableThemes; // Темы на столе
@@ -32,6 +32,7 @@ public:
     const std::vector<unsigned short int>& getHand() const;
     const std::vector<unsigned short int>& getThemes() const;
     const unsigned short int numOfCardsInHands() const;
+    const unsigned short int randomCard() const;
 
     const bool isFirstTurn() const;
 };
