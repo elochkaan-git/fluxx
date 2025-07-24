@@ -122,11 +122,7 @@ State::State()
     params.take = 1;
 
     loadCards(this);
-
-    // Перемешиваем колоду после загрузки
-    std::random_device rd;
-    std::mt19937 g(rd());
-    std::shuffle(deck.begin(), deck.end(), g);
+    shuffleDeck();
 }
 
 /**
@@ -169,6 +165,12 @@ const RulesParams*
 State::getRules() const
 {
     return &this->params;
+}
+
+const std::vector<unsigned short int>&
+State::getRulesId() const
+{
+    return rules;
 }
 
 /**
@@ -530,6 +532,13 @@ void
 State::dumpCard(unsigned short int id)
 {   
     for(Player*& p : players) p->deleteCardById(id);
+
+    if(std::find(rules.begin(), rules.end(), id) != rules.end()) 
+        rules.erase(std::find(rules.begin(), rules.end(), id));
+
+    if(std::find(goals.begin(), goals.end(), id) != goals.end()) 
+        goals.erase(std::find(goals.begin(), goals.end(), id));
+
     this->dump.insert(dump.begin(), id);
 }
 
@@ -537,4 +546,31 @@ State&
 State::getInstance() {
     static State instance; // Создается один раз, живет до завершения программы
     return instance;
+}
+
+void
+State::clearDump()
+{
+    dump.clear();
+}
+
+void
+State::shuffleDeck()
+{
+    // Перемешиваем колоду после загрузки
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(deck.begin(), deck.end(), g);
+}
+
+void
+State::setCurrentCardId(unsigned char currentCardID)
+{
+    this->currentCardID = currentCardID;
+}
+
+const std::vector<unsigned short int>&
+State::getGoalsId() const
+{
+    return goals;
 }

@@ -1,10 +1,41 @@
 #include "actions.hpp"
-#include <iostream>
+#include "player.hpp"
 
 void
-test(State* state)
+allGetOne(State* state)
 {
-    std::cout << "Testing";
+    for (Player*& p : state->getPlayers())
+        p->takeCards(*state);
 }
 
-std::map<std::string, void (*)(State*)> actions = { { "test", test } };
+void
+beEasier(State* state)
+{   
+    std::vector<unsigned short int> ids = state->getRulesId();
+    for (unsigned short int id; id < ids.size() / 2; ++id) {
+        state->dumpCard(id);
+    }
+}
+
+void
+bigCleaning(State* state)
+{   
+    auto deck = state->getDeck();
+    state->clearDump();
+    state->dumpCard(std::find(deck.begin(), deck.end(), "Будь проще")->getId());
+    state->shuffleDeck();
+    state->setCurrentCardId(0);
+}
+
+void
+borderless(State* state)
+{
+    
+}
+
+std::map<std::string, void (*)(State*)> actions = { 
+    { "allGetOne", allGetOne },
+    { "beEasier", beEasier },
+    { "bigCleaning", bigCleaning },
+    { "borderless", borderless }
+};

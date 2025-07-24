@@ -62,8 +62,15 @@ public:
     const unsigned short int howManyTake() const;
     const unsigned short int howManyPlay() const;
     const RulesParams* getRules() const;
+    const std::vector<unsigned short int>& getRulesId() const;
+    const std::vector<unsigned short int>& getGoalsId() const;
     void updateRules();
     std::vector<Player*>& getPlayers();
     Player* getPlayerById(unsigned short int id); // TODO: заготовка на будущее
+    void clearDump();
+    void shuffleDeck();
+    void setCurrentCardId(unsigned char currentCardID);
+
+
     ~State();
 };
