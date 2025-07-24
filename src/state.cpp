@@ -141,7 +141,8 @@ State::initPlayers(unsigned short int numOfPlayers)
     // Инициализируем игроков и присвиваем каждому уникальный id
     unsigned short int id = 0;
     for (unsigned short int p = 0; p < numOfPlayers; ++p, ++id) {
-        players.push_back(new Player(id));
+        if(id == 0) players.push_back(new Player(id));
+        else players.push_back(new Player(100+id));
     }
 }
 
