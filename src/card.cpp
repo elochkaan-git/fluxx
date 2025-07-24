@@ -275,6 +275,25 @@ Cards::getId() const
 }
 
 /**
+ * @brief Возвращает тип данной карты
+ * 
+ * @return const Type Тип карты
+ */
+const Type
+Cards::getType() const
+{
+    if (std::holds_alternative<CardTheme>(data)) {
+        return THEME;
+    } else if (std::holds_alternative<CardGoal>(data)) {
+        return GOAL;
+    } else if (std::holds_alternative<CardAction>(data)) {
+        return ACTION;
+    } else {
+        return RULE;
+    }
+}
+
+/**
  * @brief Возвращает название карты
  * 
  * @return const std::string название карты

@@ -35,6 +35,17 @@ struct RulesParams
 };
 
 /**
+ * @brief Перечисление всех типов карт
+ * 
+ */
+enum Type {
+    THEME,
+    GOAL,
+    ACTION,
+    RULE
+};
+
+/**
  * \brief Базовый класс карты
  *
  * Базовый класс карты, от которого наследуются все остальные типы карт
@@ -136,6 +147,7 @@ public:
 struct Cards
 {
     std::variant<CardTheme, CardGoal, CardAction, CardRule> data;
+    enum type {theme, goal, action, rule};
 
     Cards(CardTheme card);
     Cards(CardGoal card);
@@ -143,6 +155,7 @@ struct Cards
     Cards(CardRule card);
 
     const unsigned short int getId() const;
+    const Type getType() const;
     const std::string& getName() const;
     const RulesParams getParams() const;
     const tgui::Texture& getTexture() const;
