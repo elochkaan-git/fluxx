@@ -398,6 +398,9 @@ State::addRule(unsigned short int ruleId)
                 ptr = ruleId;
                 break;
             }
+            else {
+                rules.push_back(ruleId);
+            }
         }
     } else if (getCardById(ruleId)->getName().find("Сыграй") !=
                std::string::npos) {
@@ -406,6 +409,9 @@ State::addRule(unsigned short int ruleId)
                 std::string::npos) {
                 ptr = ruleId;
                 break;
+            }
+            else {
+                rules.push_back(ruleId);
             }
         }
     } else if (getCardById(ruleId)->getName().find("Предел тем") !=
@@ -416,6 +422,9 @@ State::addRule(unsigned short int ruleId)
                 ptr = ruleId;
                 break;
             }
+            else {
+                rules.push_back(ruleId);
+            }
         }
     } else if (getCardById(ruleId)->getName().find("Предел руки") !=
                std::string::npos) {
@@ -424,6 +433,9 @@ State::addRule(unsigned short int ruleId)
                 std::string::npos) {
                 ptr = ruleId;
                 break;
+            }
+            else {
+                rules.push_back(ruleId);
             }
         }
     } else {
