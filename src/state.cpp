@@ -522,3 +522,10 @@ State::getPlayers()
 {
     return this->players;
 }
+
+void
+State::dumpCard(unsigned short int id)
+{   
+    for(Player*& p : players) p->deleteCardById(id);
+    this->dump.insert(dump.begin(), id);
+}

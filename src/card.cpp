@@ -169,6 +169,7 @@ CardAction::play(State* state)
 {
     this->action(state);
     state->currentPlayer()->deleteCardById(getId());
+    state->dumpCard(getId());
 }
 
 /*
