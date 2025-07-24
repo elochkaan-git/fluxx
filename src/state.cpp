@@ -115,8 +115,8 @@ loadCards(State* state)
  * @param numOfPlayers Количество игроков
  */
 State::State()
-  : players(0)
-  , goals(0)
+    : goals(0)
+    , players(0)
 {
     params.play = 1;
     params.take = 1;
@@ -531,4 +531,10 @@ State::dumpCard(unsigned short int id)
 {   
     for(Player*& p : players) p->deleteCardById(id);
     this->dump.insert(dump.begin(), id);
+}
+
+State&
+State::getInstance() {
+    static State instance; // Создается один раз, живет до завершения программы
+    return instance;
 }

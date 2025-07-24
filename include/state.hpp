@@ -29,6 +29,7 @@ private:
 
 public:
     State();
+    static State& getInstance();
     void initPlayers(unsigned short int numOfPlayers);
     void dumpCard(unsigned short int id);
     unsigned short int getCardFromTop();

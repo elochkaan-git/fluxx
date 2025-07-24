@@ -2,7 +2,6 @@
 #include "TGUI/Texture.hpp"
 #include "card.hpp"
 
-State state;
 
 void
 loadCardsToHand(tgui::Gui& gui);
@@ -83,7 +82,8 @@ showCardsButtonOnToggle(tgui::Gui& gui, bool isDown)
 
 void test(tgui::Gui& gui){
     std::cout<< returnSelectedId(gui) << '\n';
-    State state = gui.get<tgui::Picture>("State")->getUserData<State>();
+    // State state = gui.get<tgui::Picture>("State")->getUserData<State>();
+    State& state = State::getInstance();
     unsigned selectedId = returnSelectedId(gui);
     if(selectedId){
         /*
@@ -332,6 +332,7 @@ loadCardsToHand(tgui::Gui& gui){
     auto hand = gui.get<tgui::ScrollablePanel>("Hand");
     unsigned howManyCards = 0;
     float scale = 3.f;
+    State& state = State::getInstance();
     auto handId = state.getPlayers()[0]->getHand();
     for(const auto cardId: handId){
         Cards* card = state.getCardById(cardId);
@@ -352,20 +353,18 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     /*
         Initialization state
     */
-    State state;
+    State& state = State::getInstance();
     state.initPlayers(numberOfPlayers);
     for (Player*& p : state.getPlayers())
         p->takeCards(state);
 
+    // TODO для Савелия
+    // Надо сделать правильное отображение карт
+    loadCardsToHand(gui);
     
     /*
-        Initialization main panels for main game window
+    Initialization main panels for main game window
     */
-    initPlayerHand(gui);
-    // auto test = tgui::Picture::create("./resources/img/main_cover.png");
-    // test->getRenderer()->setOpacity(0);
-    // test->setUserData(state);
-    // gui.add(test);
     gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
     gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
     gui.get<tgui::ScrollablePanel>("Hand")->moveToFront();
@@ -376,10 +375,9 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     initGoalPanel(gui);
     initRulePanel(gui);
     initCentralPanel(gui);
-
-    initNicknames(gui, numberOfPlayers);
     
-    loadCardsToHand(gui);
+    initNicknames(gui, numberOfPlayers);
+    initPlayerHand(gui);
     // initOthersHands(gui, numberOfPlayers);
 }
 
