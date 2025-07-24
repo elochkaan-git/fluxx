@@ -1,7 +1,6 @@
 #include "gamegui.hpp"
 #include "TGUI/Texture.hpp"
 #include "card.hpp"
-#include <variant>
 
 void
 makeGlow(tgui::Picture::Ptr card)
@@ -39,8 +38,8 @@ selectCard(tgui::Gui& gui, tgui::Picture::Ptr card)
 
 auto
 createCard(const Cards& Card, tgui::Gui& gui)
-{   
-    auto card = tgui::Picture::create(std::visit(CardTexture{}, Card));
+{
+    auto card = tgui::Picture::create(Card.getTexture());
     auto sizeOfCard = card->getSize();
     auto resolution = gui.getWindow()->getSize();
     // card->setSize("15%", "15%");
@@ -172,12 +171,12 @@ initPlayersBoardCards(tgui::Gui& gui, int numberOfPlayers)
       Test block
     */
 
-    for(int i = 0; i < 5; i++){
-        CardTheme card =  CardTheme(i, "NoName", "./resources/img/default.png");
+    for (int i = 0; i < 5; i++) {
+        CardTheme card = CardTheme(i, "NoName", "./resources/img/default.png");
         auto Test = createCard(card, gui);
         firstPlayerCards->add(Test);
         // Test->setScale(0.3f);
-        Test->setPosition(i*80, 0);
+        Test->setPosition(i * 80, 0);
     }
 
     // for(int i = 0; i < 5; i++){
@@ -262,7 +261,8 @@ initPlayerHand(tgui::Gui& gui)
 }
 
 void
-initNicknames(tgui::Gui& gui, int numberOfPlayers){
+initNicknames(tgui::Gui& gui, int numberOfPlayers)
+{
 
     /*
         Adding NickNamePlaceHolders
@@ -270,22 +270,22 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers){
 
     auto firstPlayerNick = tgui::Label::create("PlaceHolder1");
     firstPlayerNick->setWidgetName("1name");
-    firstPlayerNick->getRenderer()->setTextSize(static_cast<unsigned>(gui.getView().getRect().height*0.03f));
+    firstPlayerNick->getRenderer()->setTextSize(
+      static_cast<unsigned>(gui.getView().getRect().height * 0.03f));
     firstPlayerNick->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
     firstPlayerNick->setVerticalAlignment(tgui::VerticalAlignment::Center);
     firstPlayerNick->getRenderer()->setBackgroundColor("rgb(110, 110, 110)");
     firstPlayerNick->getRenderer()->setBorders(3);
     firstPlayerNick->setOrigin(0.5f, 1.f);
-    firstPlayerNick->setPosition({"57.5%", "splitBottom.top"});
-    
-    
+    firstPlayerNick->setPosition({ "57.5%", "splitBottom.top" });
+
     auto nickRender = firstPlayerNick->getSharedRenderer();
     auto secondPlayerNick = tgui::Label::create("PlaceHolder2");
     secondPlayerNick->setWidgetName("2name");
     secondPlayerNick->setRenderer(nickRender->getData());
     firstPlayerNick->setRenderer(nickRender->getData());
     secondPlayerNick->setOrigin(0.5f, 0.f);
-    secondPlayerNick->setPosition({"57.5%", "splitTop.bottom"});
+    secondPlayerNick->setPosition({ "57.5%", "splitTop.bottom" });
     gui.add(firstPlayerNick);
     gui.add(secondPlayerNick);
 
@@ -295,24 +295,24 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers){
     thirdPlayerNick->setWidgetName("3name");
     switch (numberOfPlayers) {
         case 4:
-            firstPlayerNick->setPosition({"36.25%", "splitBottom.top"});
+            firstPlayerNick->setPosition({ "36.25%", "splitBottom.top" });
             fourthPlayerNick->setRenderer(nickRender->getData());
             fourthPlayerNick->setOrigin(0.5f, 1.f);
-            fourthPlayerNick->setPosition({"82.25%", "splitBottom.top"});
+            fourthPlayerNick->setPosition({ "82.25%", "splitBottom.top" });
             gui.add(fourthPlayerNick);
         case 3:
-            secondPlayerNick->setPosition({"36.25%", "splitTop.bottom"});
+            secondPlayerNick->setPosition({ "36.25%", "splitTop.bottom" });
             thirdPlayerNick->setRenderer(nickRender->getData());
             thirdPlayerNick->setOrigin(0.5f, 0.f);
-            thirdPlayerNick->setPosition({"82.25%", "splitTop.bottom"});
+            thirdPlayerNick->setPosition({ "82.25%", "splitTop.bottom" });
             gui.add(thirdPlayerNick);
             break;
     }
-
 }
 
 void
-initCentralPanel(tgui::Gui& gui){
+initCentralPanel(tgui::Gui& gui)
+{
     auto centralPanel = tgui::Panel::create();
     // centralPanel->getRenderer()->setSpaceBetweenWidgets(10.f);
     centralPanel->setAutoLayout(tgui::AutoLayout::Fill);
@@ -357,7 +357,6 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     initNicknames(gui, numberOfPlayers);
     initPlayerHand(gui);
     // initOthersHands(gui, numberOfPlayers);
-    
 }
 
 // void initOthersHands(tgui::Gui& gui, int numberOfPlayers){
@@ -369,14 +368,15 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
 //     hands->setWidgetName("OthersHand");
 //     hands->setTabAlignment(tgui::TabContainer::TabAlign::Bottom);
 //     for(int i = 2; i<=numberOfPlayers;i++){
-//         // auto bgColor = gui.get<tgui::ScrollablePanel>(std::to_string(i)+"cards")->getRenderer()->getBackgroundColor();
-//         auto tab = hands->addTab(gui.get<tgui::Label>(std::to_string(i)+"name")->getText());
+//         // auto bgColor =
+//         gui.get<tgui::ScrollablePanel>(std::to_string(i)+"cards")->getRenderer()->getBackgroundColor();
+//         auto tab =
+//         hands->addTab(gui.get<tgui::Label>(std::to_string(i)+"name")->getText());
 //         // std::cout << hands->getPanelCount() << '\n';
 //         // hands->getPanel(0)->
 //         // getRenderer()->
 //         // setBackgroundColor(bgColor);
 
-        
 //     }
 
 //     gui.add(hands);

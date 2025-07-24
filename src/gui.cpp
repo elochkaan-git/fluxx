@@ -163,7 +163,9 @@ loadSettings(tgui::Gui& gui)
     gui.add(nickLable, "nickLable");
 
     auto changeNickButton = tgui::Button::create("OK");
-    changeNickButton->setSize({static_cast<unsigned>(gui.getView().getRect().height*0.08f), buttonSize.y });
+    changeNickButton->setSize(
+      { static_cast<unsigned>(gui.getView().getRect().height * 0.08f),
+        buttonSize.y });
     changeNickButton->setOrigin({ 0.f, 0.5f });
     changeNickButton->setPosition({ "resolutionBox.right", "20%" });
     gui.add(changeNickButton, "changeNickButton");
