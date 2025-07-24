@@ -15,7 +15,7 @@
  *
  * @param id Id карты
  * @param name Название карты
- * @param t Ссылка на текстуру для карты
+ * @param imgPath Путь до изображения карты
  */
 Card::Card(unsigned short int id, std::string name, std::string imgPath)
   : texture(imgPath)
@@ -57,22 +57,6 @@ Card::getId() const
     return id;
 }
 
-/**
- * @brief Перегрузка оператора сравнения
- *
- * Эта функция нужна для работы функций вроде std::find. Это значительно
- * упрощает сравнение карт, ведь теперь сраниваются не два объекта, а их Id
- *
- * @param id Id сравниваемой карты
- * @return true Если Id совпадают
- * @return false Если Id не совпадают
- */
-bool
-Card::operator==(unsigned short int id)
-{
-    return this->id == id;
-}
-
 /*
  *  МЕТОДЫ КЛАССА КАРТЫ-ТЕМЫ
  */
@@ -82,9 +66,11 @@ Card::operator==(unsigned short int id)
  *
  * @param id Id карты
  * @param name Название карты
- * @param t Ссылка на текстуру для карты
+ * @param imgPath Путь до изображения карты
  */
-CardTheme::CardTheme(unsigned short int id, std::string name, std::string imgPath)
+CardTheme::CardTheme(unsigned short int id,
+                     std::string name,
+                     std::string imgPath)
   : Card(id, name, imgPath)
 {
 }
@@ -110,7 +96,7 @@ CardTheme::play(State* state)
  *
  * @param id Id карты
  * @param name Название карты
- * @param t Ссылка на текстуру для карты
+ * @param imgPath Путь до изображения карты
  * @param themes Набор Id карт-тем
  * @param isNumOfThemes Это цель на количество тем?
  * @param isNumOfCards Это цель на количество карт?
@@ -160,7 +146,7 @@ CardGoal::play(State* state)
  *
  * @param id Id карты
  * @param name Название карты
- * @param t Ссылка на текстуру для карты
+ * @param imgPath Путь до изображения карты
  * @param action Указатель на функцию, которая будет вызвана при использовании
  * карты
  */
@@ -194,7 +180,7 @@ CardAction::play(State* state)
  *
  * @param id Id карты
  * @param name Название карты
- * @param t Ссылка на текстуру для карты
+ * @param imgPath Путь до изображения карты
  * @param params Набор параметров карты-правила
  */
 CardRule::CardRule(unsigned short int id,
@@ -227,4 +213,178 @@ CardRule::play(State* state)
 {
     state->addRule(getId());
     state->currentPlayer()->deleteCardById(getId());
+}
+
+/**
+ * @brief Конструктор для карты-темы
+ * 
+ * @param card Карта-тема
+ */
+Cards::Cards(CardTheme card)
+  : data{ card }
+{
+}
+
+/**
+ * @brief Конструктор для карты-цели
+ * 
+ * @param card Карта-цель
+ */
+Cards::Cards(CardGoal card)
+  : data{ card }
+{
+}
+
+/**
+ * @brief Конструктор для карты-действия
+ * 
+ * @param card Карта-действие
+ */
+Cards::Cards(CardAction card)
+  : data{ card }
+{
+}
+
+/**
+ * @brief Конструктор для карты-правила
+ * 
+ * @param card Карта-правило
+ */
+Cards::Cards(CardRule card)
+  : data{ card }
+{
+}
+
+/**
+ * @brief Возвращает Id карты
+ * 
+ * @return const unsigned short int Id карты
+ */
+const unsigned short int
+Cards::getId() const
+{
+    if (std::holds_alternative<CardTheme>(data)) {
+        return std::get<CardTheme>(data).getId();
+    } else if (std::holds_alternative<CardGoal>(data)) {
+        return std::get<CardGoal>(data).getId();
+    } else if (std::holds_alternative<CardAction>(data)) {
+        return std::get<CardAction>(data).getId();
+    } else {
+        return std::get<CardRule>(data).getId();
+    }
+}
+
+/**
+ * @brief Играет данную карту
+ * 
+ * @param state Игровое состояние
+ */
+void
+Cards::play(State* state)
+{
+    if (std::holds_alternative<CardTheme>(data)) {
+        std::get<CardTheme>(data).play(state);
+    } else if (std::holds_alternative<CardGoal>(data)) {
+        std::get<CardGoal>(data).play(state);
+    } else if (std::holds_alternative<CardAction>(data)) {
+        std::get<CardAction>(data).play(state);
+    } else {
+        std::get<CardRule>(data).play(state);
+    }
+}
+
+/**
+ * @brief Возвращает название карты
+ * 
+ * @return const std::string название карты
+ */
+const std::string
+Cards::getName() const
+{
+    if (std::holds_alternative<CardTheme>(data)) {
+        return std::get<CardTheme>(data).getName();
+    } else if (std::holds_alternative<CardGoal>(data)) {
+        return std::get<CardGoal>(data).getName();
+    } else if (std::holds_alternative<CardAction>(data)) {
+        return std::get<CardAction>(data).getName();
+    } else {
+        return std::get<CardRule>(data).getName();
+    }
+}
+
+/**
+ * @brief Возвращает вектор Id карт-тем, которые содержатся в цели.
+ * Если карта - не цель, то вернется пустой вектор
+ * 
+ * @return const std::vector<unsigned short int> Вектор Id карт-тем
+ * @retval {} Если это не карта-цель
+ */
+const std::vector<unsigned short int>
+Cards::getThemes() const
+{
+    if (std::holds_alternative<CardGoal>(data))
+        return std::get<CardGoal>(data).getThemes();
+    return {};
+}
+
+/**
+ * @brief Возвращает параметры правил, если это карта-правило.
+ * Иначе возвращается структура по умолчанию
+ * 
+ * @return const RulesParams Параметры правила
+ * @retval {} Если это не карта-правило
+ */
+const RulesParams
+Cards::getParams() const
+{
+    if (std::holds_alternative<CardRule>(data))
+        return std::get<CardRule>(data).getParams();
+    return {};
+}
+
+/**
+ * @brief Возвращает текстуру данной карты
+ * 
+ * @return const tgui::Texture& Текстура карты
+ */
+const tgui::Texture&
+Cards::getTexture() const
+{
+    if (std::holds_alternative<CardTheme>(data)) {
+        return std::get<CardTheme>(data).getTexture();
+    } else if (std::holds_alternative<CardGoal>(data)) {
+        return std::get<CardGoal>(data).getTexture();
+    } else if (std::holds_alternative<CardAction>(data)) {
+        return std::get<CardAction>(data).getTexture();
+    } else {
+        return std::get<CardRule>(data).getTexture();
+    }
+}
+
+/**
+ * @brief Перегрузка оператора сравнения карты с указанным id.
+ * Необходимо для работы std::find и т.д.
+ * 
+ * @param id Id для сравнения
+ * @return true Если Id совпадают
+ * @return false Если Id не совпадают
+ */
+bool
+Cards::operator==(unsigned short int id)
+{
+    return this->getId() == id;
+}
+
+/**
+ * @brief Перегрузка оператора сравнения карты с указанным именем.
+ * Необходимо для работы std::find и т.д.
+ * 
+ * @param name Имя для сравнения
+ * @return true Если имена совпадают
+ * @return false Если имена не совпадают
+ */
+bool
+Cards::operator==(std::string name)
+{
+    return this->getName() == name;
 }

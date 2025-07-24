@@ -52,6 +52,7 @@ public:
     const std::string& getName() const;
     const unsigned short int& getId() const;
     bool operator==(unsigned short int id);
+    bool operator==(std::string name);
     virtual void play(State* state) = 0;
 };
 
@@ -116,35 +117,27 @@ public:
     const RulesParams getParams() const;
 };
 
-/** Использование слово Cards вместо объемного типа */
-using Cards = std::variant<CardAction, CardGoal, CardRule, CardTheme>;
-
-struct CardPlay
+/**
+ * @brief Структура для унифицирования интерфейса взаимодействия с картами.
+ * Собирает в себе все необходимые функции для связки классов карт с ядром и
+ * фронтом
+ *
+ */
+struct Cards
 {
-    State* state;
-    CardPlay(State* state) { this->state = state; }
-    void operator()(CardTheme& card) { card.play(state); }
-    void operator()(CardGoal& card) { card.play(state); }
-    void operator()(CardAction& card) { card.play(state); }
-    void operator()(CardRule& card) { card.play(state); }
-};
+    std::variant<CardTheme, CardGoal, CardAction, CardRule> data;
 
-struct CardTexture
-{
-    tgui::Texture operator()(CardTheme& card) { return card.getTexture(); }
-    tgui::Texture operator()(CardGoal& card) { return card.getTexture(); }
-    tgui::Texture operator()(CardAction& card) { return card.getTexture(); }
-    tgui::Texture operator()(CardRule& card) { return card.getTexture(); }
-    tgui::Texture operator()(const CardTheme& card) { return card.getTexture(); }
-    tgui::Texture operator()(const CardGoal& card) { return card.getTexture(); }
-    tgui::Texture operator()(const CardAction& card) { return card.getTexture(); }
-    tgui::Texture operator()(const CardRule& card) { return card.getTexture(); }
-};
+    Cards(CardTheme card);
+    Cards(CardGoal card);
+    Cards(CardAction card);
+    Cards(CardRule card);
 
-struct CardId
-{
-    unsigned short int operator()(CardTheme& card) { return card.getId(); }
-    unsigned short int operator()(CardGoal& card) { return card.getId(); }
-    unsigned short int operator()(CardAction& card) { return card.getId(); }
-    unsigned short int operator()(CardRule& card) { return card.getId(); }
+    const unsigned short int getId() const;
+    void play(State* state);
+    const std::string getName() const;
+    const std::vector<unsigned short int> getThemes() const;
+    const RulesParams getParams() const;
+    const tgui::Texture& getTexture() const;
+    bool operator==(unsigned short int id);
+    bool operator==(std::string name);
 };

@@ -6,7 +6,6 @@
 #include <nlohmann/json.hpp>
 #include <random>
 #include <string>
-#include <variant>
 #include <vector>
 
 using json = nlohmann::json;
@@ -37,6 +36,7 @@ loadCards(State* state)
             // Проходимся по картам-целям
             for (const auto& c : e["cards"]) {
                 isNumOfThemes = false, isNumOfCards = false;
+                auto deck = state->getDeck();
                 // Проходимся по названиям тем каждой цели из конфига
                 for (const std::string& theme : c["themes"]) {
                     if (theme == "В десяточку!") {
@@ -45,22 +45,12 @@ loadCards(State* state)
                     } else if (theme == "5 тем") {
                         isNumOfThemes = true;
                         break;
-                    } else
-                        // Проходимся по картам из колоды
-                        for (const Cards& card : state->getDeck()) {
-                            // Если карта - это карта-тема, то...
-                            if (std::holds_alternative<CardTheme>(card)) {
-                                // ...cравниваем ее имя с темой, указанной в
-                                // цели
-                                CardTheme currentCard =
-                                  std::get<CardTheme>(card);
-                                if (currentCard.getName() == theme) {
-                                    // При соответствии добавляем Id найденной
-                                    // карты во временный массив
-                                    themes.push_back(currentCard.getId());
-                                }
-                            }
-                        }
+                    } else {
+                        std::vector<Cards>::iterator needed_theme =
+                          std::find(deck.begin(), deck.end(), theme);
+                        if (needed_theme != deck.end())
+                            themes.push_back(needed_theme->getId());
+                    }
                 }
                 state->addCardGoal(id,
                                    c["name"],
@@ -68,6 +58,7 @@ loadCards(State* state)
                                    themes,
                                    isNumOfThemes,
                                    isNumOfCards);
+                themes.clear();
                 id++;
             }
         } else if (e["category"] == "action") {
@@ -101,7 +92,7 @@ loadCards(State* state)
                 else if (c["rulesParams"].contains("random"))
                     temp.random = c["rulesParams"]["random"];
                 else if (c["rulesParams"].contains("poverty"))
-                    temp.poverty = c["rulesParams"]["povetry"];
+                    temp.poverty = c["rulesParams"]["poverty"];
                 else if (c["rulesParams"].contains("utilize"))
                     temp.utilize = c["rulesParams"]["utilize"];
                 else if (c["rulesParams"].contains("dance"))
@@ -140,9 +131,9 @@ State::State(unsigned short int numOfPlayers)
     loadCards(this);
 
     // Перемешиваем колоду после загрузки
-    // std::random_device rd;
-    // std::mt19937 g(rd());
-    // std::shuffle(deck.begin(), deck.end(), g);
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(deck.begin(), deck.end(), g);
 }
 
 /**
@@ -163,17 +154,7 @@ State::~State()
 unsigned short int
 State::getCardFromTop()
 {
-    Cards t = deck[currentCardID++];
-    if (std::holds_alternative<CardTheme>(t)) {
-        return std::get<CardTheme>(t).getId();
-    } else if (std::holds_alternative<CardGoal>(t)) {
-        return std::get<CardGoal>(t).getId();
-    } else if (std::holds_alternative<CardAction>(t)) {
-        return std::get<CardAction>(t).getId();
-    } else if (std::holds_alternative<CardRule>(t)) {
-        return std::get<CardRule>(t).getId();
-    }
-    return 0;
+    return deck[currentCardID++].getId();
 }
 
 /**
@@ -284,14 +265,14 @@ State::setGoal(unsigned short int goalId)
  * @brief Возвращает указатель на победителя, иначе nullptr
  *
  * @return Player* Указатель на победителя
+ * @warning Добавить обработку цели "Выключи ТВ..."
  */
 Player*
 State::checkWinner()
 {
     unsigned short int count = 0;
     for (unsigned short int& goal : goals) {
-        std::vector<unsigned short int> temp =
-          std::get<CardGoal>(*getCardById(goal)).getThemes();
+        std::vector<unsigned short int> temp = getCardById(goal)->getThemes();
         for (Player* p : players) {
             if (isNumOfCards && p->numOfCardsInHands() >= 10)
                 return p;
@@ -406,44 +387,36 @@ State::howManyPlay() const
 void
 State::addRule(unsigned short int ruleId)
 {
-    if (std::get<CardRule>(*getCardById(ruleId)).getName().find("Тяни") !=
-        std::string::npos) {
+    if (getCardById(ruleId)->getName().find("Тяни") != std::string::npos) {
         for (unsigned short int& ptr : rules) {
-            if (std::get<CardRule>(*getCardById(ptr)).getName().find("Тяни") !=
+            if (getCardById(ptr)->getName().find("Тяни") != std::string::npos) {
+                ptr = ruleId;
+                break;
+            }
+        }
+    } else if (getCardById(ruleId)->getName().find("Сыграй") !=
+               std::string::npos) {
+        for (unsigned short int& ptr : rules) {
+            if (getCardById(ptr)->getName().find("Сыграй") !=
                 std::string::npos) {
                 ptr = ruleId;
                 break;
             }
         }
-    } else if (std::get<CardRule>(*getCardById(ruleId))
-                 .getName()
-                 .find("Сыграй") != std::string::npos) {
+    } else if (getCardById(ruleId)->getName().find("Предел тем") !=
+               std::string::npos) {
         for (unsigned short int& ptr : rules) {
-            if (std::get<CardRule>(*getCardById(ptr))
-                  .getName()
-                  .find("Сыграй") != std::string::npos) {
+            if (getCardById(ptr)->getName().find("Предел тем") !=
+                std::string::npos) {
                 ptr = ruleId;
                 break;
             }
         }
-    } else if (std::get<CardRule>(*getCardById(ruleId))
-                 .getName()
-                 .find("Предел тем") != std::string::npos) {
+    } else if (getCardById(ruleId)->getName().find("Предел руки") !=
+               std::string::npos) {
         for (unsigned short int& ptr : rules) {
-            if (std::get<CardRule>(*getCardById(ptr))
-                  .getName()
-                  .find("Предел тем") != std::string::npos) {
-                ptr = ruleId;
-                break;
-            }
-        }
-    } else if (std::get<CardRule>(*getCardById(ruleId))
-                 .getName()
-                 .find("Предел руки") != std::string::npos) {
-        for (unsigned short int& ptr : rules) {
-            if (std::get<CardRule>(*getCardById(ptr))
-                  .getName()
-                  .find("Предел руки") != std::string::npos) {
+            if (getCardById(ptr)->getName().find("Предел руки") !=
+                std::string::npos) {
                 ptr = ruleId;
                 break;
             }
@@ -464,8 +437,7 @@ State::updateRules()
 {
     clearRules();
     for (unsigned short int& ptr : rules) {
-        RulesParams ruleParams =
-          std::get<CardRule>(*getCardById(ptr)).getParams();
+        const RulesParams ruleParams = getCardById(ptr)->getParams();
         if (ruleParams.take > 1)
             params.take = ruleParams.take;
         else if (ruleParams.play > 1)
@@ -530,26 +502,7 @@ State::clearRules()
 Cards*
 State::getCardById(unsigned short int id)
 {
-    for (Cards& card : deck) {
-        if (std::holds_alternative<CardTheme>(card)) {
-            CardTheme t = std::get<CardTheme>(card);
-            if (t.getId() == id)
-                return &card;
-        } else if (std::holds_alternative<CardGoal>(card)) {
-            CardGoal t = std::get<CardGoal>(card);
-            if (t.getId() == id)
-                return &card;
-        } else if (std::holds_alternative<CardAction>(card)) {
-            CardAction t = std::get<CardAction>(card);
-            if (t.getId() == id)
-                return &card;
-        } else {
-            CardRule t = std::get<CardRule>(card);
-            if (t.getId() == id)
-                return &card;
-        }
-    }
-    return nullptr;
+    return &*std::find(deck.begin(), deck.end(), id);
 }
 
 /**
