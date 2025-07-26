@@ -255,9 +255,7 @@ State::setGoal(unsigned short int goalId)
 {
     unsigned short int numberOfGoals = goals.size();
     if (params.duplet && numberOfGoals == 2) {
-        // TODO: Для Савелия
-        // Реализовать метод, который возвращает указатель на выбранную тему
-        // Она будет заменена на предоставленную
+        goals[rand() % 2] = goalId;
     } else if (params.duplet && numberOfGoals < 2) {
         goals.push_back(goalId);
     } else if (numberOfGoals == 1) {
