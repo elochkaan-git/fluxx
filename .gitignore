@@ -9,3 +9,5 @@ tests
 docs
 config/settings.txt
 config/nickname.txt
+Dockerfile
+.dockerignore
