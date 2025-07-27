@@ -3,8 +3,8 @@
 #include "state.hpp"
 #include <algorithm>
 #include <cstdlib>
-#include <vector>
 #include <random>
+#include <vector>
 
 /**
  * @brief Конструктор класса Player

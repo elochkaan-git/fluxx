@@ -301,69 +301,9 @@
         "category" : "action",
         "cards" : [
             {
-                "name" : "Тяни-таскай",
-                "imgPath" : "./resources/img/pull_drag.png",
-                "action" : "makeThis"
-            },
-            {
-                "name" : "Тяни 3, сыграй 2",
-                "imgPath" : "./resources/img/take_3_play_2.png",
-                "action" : "take3play2"
-            },
-            {
-                "name" : "Руковорот",
-                "imgPath" : "./resources/img/handcycle.png",
-                "action" : "handcycle"
-            },
-            {
-                "name" : "Давай повторим!",
-                "imgPath" : "./resources/img/lets_retry.png",
-                "action" : "letsRetry"
-            },
-            {
-                "name" : "Джекпот!",
-                "imgPath" : "./resources/img/jackpot.png",
-                "action" : "jackpot"
-            },
-            {
-                "name" : "Как карта ляжет",
-                "imgPath" : "./resources/img/how_card_will_lay.png",
-                "action" : "howCardWillLay"
-            },
-            {
-                "name" : "Мешанина",
-                "imgPath" : "./resources/img/mishmash.png",
-                "action" : "mishmash"
-            },
-            {
-                "name" : "Тяни 2 и используй их",
-                "imgPath" : "./resources/img/take_2_and_use_it.png",
-                "action" : "takeTwoAndUseIt"
-            },
-            {
                 "name" : "Большая уборка",
                 "imgPath" : "./resources/img/big_cleaning.png",
                 "action" : "bigCleaning"
-            },
-            {
-                "name" : "С новых ходом!",
-                "imgPath" : "./resources/img/with_new_move.png",
-                "action" : "withNewMove"
-            },
-            {
-                "name" : "Из рук в руки",
-                "imgPath" : "./resources/img/from_hand_to_hand.png",
-                "action" : "fromHandToHand"
-            },
-            {
-                "name" : "Оброк",
-                "imgPath" : "./resources/img/quitrent.png",
-                "action" : "quitrent"
-            },
-            {
-                "name" : "Сбрось и тяни",
-                "imgPath" : "./resources/img/take_off_and_take.png",
-                "action" : "takeOffAndTake"
             },
             {
                 "name" : "Будь проще",
@@ -371,49 +311,9 @@
                 "action" : "beEasier"
             },
             {
-                "name" : "Новое правило долой!",
-                "imgPath" : "./resources/img/new_rule_off.png",
-                "action" : "newRuleOff"
-            },
-            {
-                "name" : "Обмен темами",
-                "imgPath" : "./resources/img/exchange_themes.png",
-                "action" : "exchangeThemes"
-            },
-            {
-                "name" : "Именинникам подарок",
-                "imgPath" : "./resources/img/birthday_boy_get_present.png",
-                "action" : "birthdayBoyGetPresent"
-            },
-            {
                 "name" : "Все получают 1",
                 "imgPath" : "./resources/img/all_get_1.png",
                 "action" : "allGetOne"
-            },
-            {
-                "name" : "Камень-ножницы-бумага",
-                "imgPath" : "./resources/img/rock-scissors-paper.png",
-                "action" : "rockSisscorsPaper"
-            },
-            {
-                "name" : "Схвати карту",
-                "imgPath" : "./resources/img/grab_card.png",
-                "action" : "grabCard"
-            },
-            {
-                "name" : "Беспредел",
-                "imgPath" : "./resources/img/borderless.png",
-                "action" : "borderless"
-            },
-            {
-                "name" : "Перезагрузка",
-                "imgPath" : "./resources/img/rebooting.png",
-                "action" : "rebooting"
-            },
-            {
-                "name" : "В мусорку!",
-                "imgPath" : "./resources/img/in_trash.png",
-                "action" : "inTrash"
             }
         ]
     },
@@ -421,76 +321,6 @@
     "4rules" : {
         "category" : "rule",
         "cards" : [
-            {
-                "name" : "Предел руки 0",
-                "imgPath" : "./resources/img/hand_limit_0.png",
-                "rulesParams" : {
-                    "handLimit" : 0
-                }
-            },
-            {
-                "name" : "Предел руки 1",
-                "imgPath" : "./resources/img/hand_limit_1.png",
-                "rulesParams" : {
-                    "handLimit" : 1
-                }
-            },
-            {
-                "name" : "Предел руки 2",
-                "imgPath" : "./resources/img/hand_limit_2.png",
-                "rulesParams" : {
-                    "handLimit" : 2
-                }
-            },
-            {
-                "name" : "Тяни 2",
-                "imgPath" : "./resources/img/take_2.png",
-                "rulesParams" : {
-                    "take" : 2
-                }
-            },
-            {
-                "name" : "Тяни 3",
-                "imgPath" : "./resources/img/take_3.png",
-                "rulesParams" : {
-                    "take" : 3
-                }
-            },
-            {
-                "name" : "Тяни 4",
-                "imgPath" : "./resources/img/take_4.png",
-                "rulesParams" : {
-                    "take" : 4
-                }
-            },
-            {
-                "name" : "Тяни 5",
-                "imgPath" : "./resources/img/take_5.png",
-                "rulesParams" : {
-                    "take" : 5
-                }
-            },
-            {
-                "name" : "Предел тем 2",
-                "imgPath" : "./resources/img/theme_limit_2.png",
-                "rulesParams" : {
-                    "themeLimit" : 2
-                }
-            },
-            {
-                "name" : "Предел тем 3",
-                "imgPath" : "./resources/img/theme_limit_3.png",
-                "rulesParams" : {
-                    "themeLimit" : 3
-                }
-            },
-            {
-                "name" : "Предел тем 4",
-                "imgPath" : "./resources/img/theme_limit_4.png",
-                "rulesParams" : {
-                    "themeLimit" : 4
-                }
-            },
             {
                 "name" : "Бедность не порок",
                 "imgPath" : "./resources/img/poverty_is_not_vice.png",
@@ -559,41 +389,6 @@
                 "imgPath" : "./resources/img/recycling.png",
                 "rulesParams" : {
                     "utilize" : true
-                }
-            },
-            {
-                "name" : "Сыграй всё, кроме 1",
-                "imgPath" : "./resources/img/play_all_without_1.png",
-                "rulesParams" : {
-                    "play" : 999
-                }
-            },
-            {
-                "name" : "Сыграй 2",
-                "imgPath" : "./resources/img/play_2.png",
-                "rulesParams" : {
-                    "play" : 2
-                }
-            },
-            {
-                "name" : "Сыграй 3",
-                "imgPath" : "./resources/img/play_3.png",
-                "rulesParams" : {
-                    "play" : 3
-                }
-            },
-            {
-                "name" : "Сыграй 4",
-                "imgPath" : "./resources/img/play_4.png",
-                "rulesParams" : {
-                    "play" : 4
-                }
-            },
-            {
-                "name" : "Сыграй всё",
-                "imgPath" : "./resources/img/play_all.png",
-                "rulesParams" : {
-                    "play" : 1000
                 }
             },
             {

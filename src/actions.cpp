@@ -10,7 +10,7 @@ allGetOne(State* state)
 
 void
 beEasier(State* state)
-{   
+{
     std::vector<unsigned short int> ids = state->getRulesId();
     for (unsigned short int id; id < ids.size() / 2; ++id) {
         state->dumpCard(id);
@@ -19,7 +19,7 @@ beEasier(State* state)
 
 void
 bigCleaning(State* state)
-{   
+{
     auto deck = state->getDeck();
     state->clearDump();
     state->dumpCard(std::find(deck.begin(), deck.end(), "Будь проще")->getId());
@@ -30,10 +30,9 @@ bigCleaning(State* state)
 void
 borderless(State* state)
 {
-    
 }
 
-std::map<std::string, void (*)(State*)> actions = { 
+std::map<std::string, void (*)(State*)> actions = {
     { "allGetOne", allGetOne },
     { "beEasier", beEasier },
     { "bigCleaning", bigCleaning },

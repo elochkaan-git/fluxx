@@ -218,7 +218,7 @@ CardRule::play(State* state)
 
 /**
  * @brief Конструктор для карты-темы
- * 
+ *
  * @param card Карта-тема
  */
 Cards::Cards(CardTheme card)
@@ -228,7 +228,7 @@ Cards::Cards(CardTheme card)
 
 /**
  * @brief Конструктор для карты-цели
- * 
+ *
  * @param card Карта-цель
  */
 Cards::Cards(CardGoal card)
@@ -238,7 +238,7 @@ Cards::Cards(CardGoal card)
 
 /**
  * @brief Конструктор для карты-действия
- * 
+ *
  * @param card Карта-действие
  */
 Cards::Cards(CardAction card)
@@ -248,7 +248,7 @@ Cards::Cards(CardAction card)
 
 /**
  * @brief Конструктор для карты-правила
- * 
+ *
  * @param card Карта-правило
  */
 Cards::Cards(CardRule card)
@@ -258,7 +258,7 @@ Cards::Cards(CardRule card)
 
 /**
  * @brief Возвращает Id карты
- * 
+ *
  * @return const unsigned short int Id карты
  */
 const unsigned short int
@@ -277,7 +277,7 @@ Cards::getId() const
 
 /**
  * @brief Возвращает тип данной карты
- * 
+ *
  * @return const Type Тип карты
  */
 const Type
@@ -296,7 +296,7 @@ Cards::getType() const
 
 /**
  * @brief Возвращает название карты
- * 
+ *
  * @return const std::string название карты
  */
 const std::string&
@@ -316,7 +316,7 @@ Cards::getName() const
 /**
  * @brief Возвращает параметры правил, если это карта-правило.
  * Иначе возвращается структура по умолчанию
- * 
+ *
  * @return const RulesParams Параметры правила
  * @retval {} Если это не карта-правило
  */
@@ -330,7 +330,7 @@ Cards::getParams() const
 
 /**
  * @brief Возвращает текстуру данной карты
- * 
+ *
  * @return const tgui::Texture& Текстура карты
  */
 const tgui::Texture&
@@ -350,7 +350,7 @@ Cards::getTexture() const
 /**
  * @brief Возвращает вектор Id карт-тем, которые содержатся в цели.
  * Если карта - не цель, то вернется пустой вектор
- * 
+ *
  * @return const std::vector<unsigned short int> Вектор Id карт-тем
  * @retval {} Если это не карта-цель
  */
@@ -365,7 +365,7 @@ Cards::getThemes() const
 /**
  * @brief Перегрузка оператора сравнения карты с указанным id.
  * Необходимо для работы std::find и т.д.
- * 
+ *
  * @param id Id для сравнения
  * @return true Если Id совпадают
  * @return false Если Id не совпадают
@@ -379,7 +379,7 @@ Cards::operator==(unsigned short int id)
 /**
  * @brief Перегрузка оператора сравнения карты с указанным именем.
  * Необходимо для работы std::find и т.д.
- * 
+ *
  * @param name Имя для сравнения
  * @return true Если имена совпадают
  * @return false Если имена не совпадают
@@ -392,7 +392,7 @@ Cards::operator==(std::string name)
 
 /**
  * @brief Играет данную карту
- * 
+ *
  * @param state Игровое состояние
  */
 void

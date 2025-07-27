@@ -115,8 +115,8 @@ loadCards(State* state)
  * @param numOfPlayers Количество игроков
  */
 State::State()
-    : goals(0)
-    , players(0)
+  : goals(0)
+  , players(0)
 {
     params.play = 1;
     params.take = 1;
@@ -141,8 +141,10 @@ State::initPlayers(unsigned short int numOfPlayers)
     // Инициализируем игроков и присвиваем каждому уникальный id
     unsigned short int id = 0;
     for (unsigned short int p = 0; p < numOfPlayers; ++p, ++id) {
-        if(id == 0) players.push_back(new Player(id));
-        else players.push_back(new Player(100+id));
+        if (id == 0)
+            players.push_back(new Player(id));
+        else
+            players.push_back(new Player(100 + id));
     }
 }
 
@@ -390,17 +392,17 @@ State::howManyPlay() const
  */
 void
 State::addRule(unsigned short int ruleId)
-{   
+{
     bool empty = rules.empty();
-    if(empty) { 
+    if (empty) {
         rules.push_back(ruleId);
-    } else if (getCardById(ruleId)->getName().find("Тяни") != std::string::npos) {
+    } else if (getCardById(ruleId)->getName().find("Тяни") !=
+               std::string::npos) {
         for (unsigned short int& ptr : rules) {
             if (getCardById(ptr)->getName().find("Тяни") != std::string::npos) {
                 ptr = ruleId;
                 break;
-            }
-            else {
+            } else {
                 rules.push_back(ruleId);
             }
         }
@@ -411,8 +413,7 @@ State::addRule(unsigned short int ruleId)
                 std::string::npos) {
                 ptr = ruleId;
                 break;
-            }
-            else {
+            } else {
                 rules.push_back(ruleId);
             }
         }
@@ -423,8 +424,7 @@ State::addRule(unsigned short int ruleId)
                 std::string::npos) {
                 ptr = ruleId;
                 break;
-            }
-            else {
+            } else {
                 rules.push_back(ruleId);
             }
         }
@@ -435,8 +435,7 @@ State::addRule(unsigned short int ruleId)
                 std::string::npos) {
                 ptr = ruleId;
                 break;
-            }
-            else {
+            } else {
                 rules.push_back(ruleId);
             }
         }
@@ -544,20 +543,22 @@ State::getPlayers()
 
 void
 State::dumpCard(unsigned short int id)
-{   
-    for(Player*& p : players) p->deleteCardById(id);
+{
+    for (Player*& p : players)
+        p->deleteCardById(id);
 
-    if(std::find(rules.begin(), rules.end(), id) != rules.end()) 
+    if (std::find(rules.begin(), rules.end(), id) != rules.end())
         rules.erase(std::find(rules.begin(), rules.end(), id));
 
-    if(std::find(goals.begin(), goals.end(), id) != goals.end()) 
+    if (std::find(goals.begin(), goals.end(), id) != goals.end())
         goals.erase(std::find(goals.begin(), goals.end(), id));
 
     this->dump.insert(dump.begin(), id);
 }
 
 State&
-State::getInstance() {
+State::getInstance()
+{
     static State instance; // Создается один раз, живет до завершения программы
     return instance;
 }

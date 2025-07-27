@@ -10,21 +10,23 @@ void
 loadCardsToTable(tgui::Gui& gui);
 
 void
-loadCardsToGoal(tgui::Gui&gui);
+loadCardsToGoal(tgui::Gui& gui);
 
 void
-loadCardsToRules(tgui::Gui&gui);
+loadCardsToRules(tgui::Gui& gui);
 
 void
 loadNickNames(tgui::Gui& gui);
 
 inline void
-scaleCard(tgui::Picture::Ptr card, float scale){
-    card->setSize(card->getSize().x*scale, card->getSize().y*scale);
+scaleCard(tgui::Picture::Ptr card, float scale)
+{
+    card->setSize(card->getSize().x * scale, card->getSize().y * scale);
 }
 
 void
-playerNormal(tgui::Label::Ptr nick){
+playerNormal(tgui::Label::Ptr nick)
+{
     auto glowTexture = nick->getRenderer();
     glowTexture->setBorderColor(tgui::Color::White);
     glowTexture->setTextColor(tgui::Color::White);
@@ -32,7 +34,8 @@ playerNormal(tgui::Label::Ptr nick){
 }
 
 void
-currentPlayerGlow(tgui::Label::Ptr nick){
+currentPlayerGlow(tgui::Label::Ptr nick)
+{
     auto glowTexture = nick->getRenderer();
     glowTexture->setBorderColor(tgui::Color::Green);
     glowTexture->setTextColor(tgui::Color::Green);
@@ -40,9 +43,10 @@ currentPlayerGlow(tgui::Label::Ptr nick){
 }
 
 inline unsigned
-returnSelectedId(tgui::Gui& gui){
+returnSelectedId(tgui::Gui& gui)
+{
     auto card = gui.get<tgui::Picture>("Selected");
-    if(card){
+    if (card) {
         return card->getUserData<unsigned>();
     }
     return 0;
@@ -69,7 +73,7 @@ makeNormal(tgui::Picture::Ptr card)
 void
 selectCard(tgui::Gui& gui, tgui::Picture::Ptr card)
 {
-    auto last =  gui.get<tgui::Picture>("Selected");
+    auto last = gui.get<tgui::Picture>("Selected");
     if (last) {
         last->setWidgetName(std::to_string(last->getUserData<unsigned>()));
         makeNormal(last);
@@ -113,45 +117,64 @@ showCardsButtonOnToggle(tgui::Gui& gui, bool isDown)
     }
 }
 
-void test(tgui::Gui& gui){
+void
+test(tgui::Gui& gui)
+{
     State& state = State::getInstance();
     unsigned selectedId = returnSelectedId(gui);
-    if(selectedId){
+    if (selectedId) {
         /*
             1)Play
             2)define type
             3)delete from hand
         */
-       Cards* selectedCard = state.getCardById(selectedId);
-       gui.remove(gui.get<tgui::Picture>("Selected"));
-       selectedCard->play(&state);
-       if(state.checkWinner()){
-        exit(0);
-       }
-       
-       switch (selectedCard->getType())
-       {
-       case Type::THEME:
-        loadCardsToTable(gui);
-        break;
-       case Type::GOAL:
-        loadCardsToGoal(gui);
-        break;
-       case::Type::RULE:
-        loadCardsToRules(gui);
-        break;
-       }
-       state.nextMove();
-       auto showButton = gui.get<tgui::ToggleButton>("showB");
-       showButton->setDown(false);
-       
-       loadCardsToHand(gui);
-       loadNickNames(gui);
-       state.currentPlayer()->takeCards(state);
+        Cards* selectedCard = state.getCardById(selectedId);
+        gui.remove(gui.get<tgui::Picture>("Selected"));
+        selectedCard->play(&state);
+        if (state.checkWinner()) {
+            auto background = tgui::Panel::create();
+            background->getRenderer()->setBackgroundColor(tgui::Color::Black);
+            background->getRenderer()->setOpacity(0.5f);
+            gui.add(background);
+
+            auto message = tgui::MessageBox::create();
+            message->setText("Player " + gui.get<tgui::Label>(std::to_string(state.getPlayers()[0]->getId()) + "name")->getText() + " wins!");
+            message->addButton("Back to menu");
+            message->setOrigin(0.5f, 0.5f);
+            message->setPosition({ "50%", "50%" });
+            message->getRenderer()->setTitleBarHeight(0.f);
+            message->setButtonAlignment(tgui::HorizontalAlignment::Center);
+            message->onButtonPress([background, message, &gui] {
+                message->getParent()->remove(message->shared_from_this());
+                background->getParent()->remove(background->shared_from_this());
+                loadMainMenu(gui);
+            });
+            gui.add(message);
+        }
+        switch (selectedCard->getType()) {
+            case Type::THEME:
+                loadCardsToTable(gui);
+                break;
+            case Type::GOAL:
+                loadCardsToGoal(gui);
+                break;
+            case ::Type::RULE:
+                loadCardsToRules(gui);
+                break;
+        }
+        state.nextMove();
+        auto showButton = gui.get<tgui::ToggleButton>("showB");
+        showButton->setDown(false);
+
+        loadCardsToHand(gui);
+        loadNickNames(gui);
+        state.currentPlayer()->takeCards(state);
     }
 }
 
-void startGame(tgui::Gui& gui){
+void
+startGame(tgui::Gui& gui)
+{
     State& state = State::getInstance();
     for (Player*& p : state.getPlayers())
         p->takeCards(state);
@@ -163,7 +186,6 @@ void startGame(tgui::Gui& gui){
     loadCardsToRules(gui);
     loadCardsToTable(gui);
     loadNickNames(gui);
-    
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -296,7 +318,8 @@ initRulePanel(tgui::Gui& gui)
     rulePanel->getRenderer()->setBackgroundColor(tgui::Color::Black);
     // rulePanel->getRenderer()->setPadding(
     //   { 5 }); // Keep 5px on all sides as empty space
-    rulePanel->getHorizontalScrollbar()->setPolicy(tgui::Scrollbar::Policy::Never);
+    rulePanel->getHorizontalScrollbar()->setPolicy(
+      tgui::Scrollbar::Policy::Never);
     gui.add(rulePanel);
 }
 
@@ -332,8 +355,9 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers)
         Adding NickNamePlaceHolders
     */
     State& state = State::getInstance();
-    auto firstPlayerNick = tgui::Label::create("PlaceHolder1");
-    firstPlayerNick->setWidgetName(std::to_string(state.getPlayers()[0]->getId()) + "name");
+    auto firstPlayerNick = tgui::Label::create("Player1");
+    firstPlayerNick->setWidgetName(
+      std::to_string(state.getPlayers()[0]->getId()) + "name");
     firstPlayerNick->getRenderer()->setTextSize(
       static_cast<unsigned>(gui.getView().getRect().height * 0.03f));
     firstPlayerNick->setHorizontalAlignment(tgui::HorizontalAlignment::Center);
@@ -344,8 +368,9 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers)
     firstPlayerNick->setPosition({ "57.5%", "splitBottom.top" });
 
     auto nickRender = firstPlayerNick->getSharedRenderer();
-    auto secondPlayerNick = tgui::Label::create("PlaceHolder2");
-    secondPlayerNick->setWidgetName(std::to_string(state.getPlayers()[1]->getId()) + "name");
+    auto secondPlayerNick = tgui::Label::create("Player2");
+    secondPlayerNick->setWidgetName(
+      std::to_string(state.getPlayers()[1]->getId()) + "name");
     secondPlayerNick->setRenderer(nickRender->getData());
     firstPlayerNick->setRenderer(nickRender->getData());
     secondPlayerNick->setOrigin(0.5f, 0.f);
@@ -353,13 +378,14 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers)
     gui.add(firstPlayerNick);
     gui.add(secondPlayerNick);
 
-    auto fourthPlayerNick = tgui::Label::create("PlaceHolder4");
-    
-    auto thirdPlayerNick = tgui::Label::create("PlaceHolder3");
-    
+    auto fourthPlayerNick = tgui::Label::create("Player4");
+
+    auto thirdPlayerNick = tgui::Label::create("Player3");
+
     switch (numberOfPlayers) {
         case 4:
-            fourthPlayerNick->setWidgetName(std::to_string(state.getPlayers()[3]->getId()) + "name");
+            fourthPlayerNick->setWidgetName(
+              std::to_string(state.getPlayers()[3]->getId()) + "name");
             firstPlayerNick->setPosition({ "36.25%", "splitBottom.top" });
             fourthPlayerNick->setRenderer(nickRender->getData());
             fourthPlayerNick->setOrigin(0.5f, 1.f);
@@ -367,7 +393,8 @@ initNicknames(tgui::Gui& gui, int numberOfPlayers)
             gui.add(fourthPlayerNick);
         case 3:
             secondPlayerNick->setPosition({ "36.25%", "splitTop.bottom" });
-            thirdPlayerNick->setWidgetName(std::to_string(state.getPlayers()[2]->getId()) + "name");
+            thirdPlayerNick->setWidgetName(
+              std::to_string(state.getPlayers()[2]->getId()) + "name");
             thirdPlayerNick->setRenderer(nickRender->getData());
             thirdPlayerNick->setOrigin(0.5f, 0.f);
             thirdPlayerNick->setPosition({ "82.25%", "splitTop.bottom" });
@@ -399,20 +426,20 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     /*
         Initialization state
     */
-   //TODO: Для Сани
-   //Надо чтобы при запуске этой функции происходил сброс состояния игры
-   //Т.е. откат до состояния когда мы только в первый раз запускаем приложение
-   
+    // TODO: Для Сани
+    // Надо чтобы при запуске этой функции происходил сброс состояния игры
+    // Т.е. откат до состояния когда мы только в первый раз запускаем приложение
+
     State& state = State::getInstance();
     state.initPlayers(numberOfPlayers);
-    
+
     /*
     Initialization main panels for main game window
     */
-    initPlayersBoardCards(gui, numberOfPlayers); 
+    initPlayersBoardCards(gui, numberOfPlayers);
     initPlayerHand(gui);
     loadCardsToHand(gui);
-    
+
     initGoalPanel(gui);
     initRulePanel(gui);
     initCentralPanel(gui);
@@ -420,117 +447,124 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
 
     initfunctionalPanel(gui);
     gui.moveWidgetToFront(gui.get<tgui::ScrollablePanel>("Hand"));
-
 }
 
 void
-loadCardsToHand(tgui::Gui& gui){
+loadCardsToHand(tgui::Gui& gui)
+{
     auto hand = gui.get<tgui::ScrollablePanel>("Hand");
     hand->removeAllWidgets();
     unsigned howManyCards = 0;
     float scale = 3.f;
     State& state = State::getInstance();
     auto handId = state.currentPlayer()->getHand();
-    for(const auto cardId: handId){
+    for (const auto cardId : handId) {
         Cards* card = state.getCardById(cardId);
         auto CardWidget = createCard(card, gui);
         hand->add(CardWidget);
         scaleCard(CardWidget, scale);
-        CardWidget->setPosition(howManyCards*(CardWidget->getSize().x+10)+4, 4);
+        CardWidget->setPosition(
+          howManyCards * (CardWidget->getSize().x + 10) + 4, 4);
         howManyCards++;
     }
     hand->setUserData(howManyCards);
 }
 
 void
-loadCardsToTable(tgui::Gui& gui){
+loadCardsToTable(tgui::Gui& gui)
+{
     State& state = State::getInstance();
     unsigned howManyPlayers = state.getPlayers().size();
 
-    for(int i = 0; i<howManyPlayers; i++){
+    for (int i = 0; i < howManyPlayers; i++) {
         tgui::String nameOfCards;
-        if(i == 0){
-            nameOfCards="firstPlayerCards";
-        }else
-        if(i == 1){
-            nameOfCards="secondPlayerCards";
-        }else
-        if(i == 2){
-            nameOfCards="thirdPlayerCards";
-        }else{
-            nameOfCards="fourthPlayerCards";
+        if (i == 0) {
+            nameOfCards = "firstPlayerCards";
+        } else if (i == 1) {
+            nameOfCards = "secondPlayerCards";
+        } else if (i == 2) {
+            nameOfCards = "thirdPlayerCards";
+        } else {
+            nameOfCards = "fourthPlayerCards";
         }
         auto cardsTable = gui.get<tgui::ScrollablePanel>(nameOfCards);
 
-        if(cardsTable){
+        if (cardsTable) {
             cardsTable->removeAllWidgets();
             unsigned howManyCards = 0;
             float scale = 1.3f;
             auto handId = state.getPlayers()[i]->getThemes();
-            for(const auto cardId: handId){
+            for (const auto cardId : handId) {
                 Cards* card = state.getCardById(cardId);
                 auto CardWidget = createCard(card, gui);
                 cardsTable->add(CardWidget);
                 scaleCard(CardWidget, scale);
-                CardWidget->setPosition(howManyCards*(CardWidget->getSize().x+5)+4, 4);
+                CardWidget->setPosition(
+                  howManyCards * (CardWidget->getSize().x + 5) + 4, 4);
                 howManyCards++;
             }
             cardsTable->setUserData(howManyCards);
-        }else{
+        } else {
             std::cout << "Cards on table widget not found!\n";
         }
     }
 }
 
 void
-loadCardsToGoal(tgui::Gui&gui){
+loadCardsToGoal(tgui::Gui& gui)
+{
     auto goals = gui.get<tgui::HorizontalWrap>("Goals");
     goals->removeAllWidgets();
     unsigned howManyCards = 0;
     float scale = 2.f;
     State& state = State::getInstance();
     auto handId = state.getGoalsId();
-    for(const auto cardId: handId){
+    for (const auto cardId : handId) {
         Cards* card = state.getCardById(cardId);
         auto CardWidget = createCard(card, gui);
         goals->add(CardWidget);
         CardWidget->setScale(scale);
-        CardWidget->setPosition(scale*howManyCards*(CardWidget->getSize().x+5)+4, 4);
+        CardWidget->setPosition(
+          scale * howManyCards * (CardWidget->getSize().x + 5) + 4, 4);
         howManyCards++;
     }
     goals->setUserData(howManyCards);
 }
 
 void
-loadCardsToRules(tgui::Gui&gui){
+loadCardsToRules(tgui::Gui& gui)
+{
     auto rules = gui.get<tgui::ScrollablePanel>("Rules");
     rules->removeAllWidgets();
     unsigned howManyCards = 0;
     float scale = 2.5f;
     State& state = State::getInstance();
     auto handId = state.getRulesId();
-    for(const auto cardId: handId){
+    for (const auto cardId : handId) {
         Cards* card = state.getCardById(cardId);
         auto CardWidget = createCard(card, gui);
         rules->add(CardWidget);
-        
+
         scaleCard(CardWidget, scale);
-        CardWidget->setPosition(4, howManyCards*(CardWidget->getSize().y+10)+4);
+        CardWidget->setPosition(
+          4, howManyCards * (CardWidget->getSize().y + 10) + 4);
         howManyCards++;
     }
     rules->setUserData(howManyCards);
 }
 
-void loadNickNames(tgui::Gui& gui){
+void
+loadNickNames(tgui::Gui& gui)
+{
     State& state = State::getInstance();
-    for (Player*& p : state.getPlayers()){
+    for (Player*& p : state.getPlayers()) {
         unsigned playerID = p->getId();
-        auto nickLable = gui.get<tgui::Label>(std::to_string(playerID) + "name");
-        if(state.currentPlayer()->getId() == playerID){
+        auto nickLable =
+          gui.get<tgui::Label>(std::to_string(playerID) + "name");
+        if (state.currentPlayer()->getId() == playerID) {
             currentPlayerGlow(nickLable);
-        }else{
+        } else {
             playerNormal(nickLable);
         }
     }
-        
 }
