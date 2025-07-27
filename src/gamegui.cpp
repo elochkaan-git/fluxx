@@ -426,10 +426,7 @@ loadGame(tgui::Gui& gui, int numberOfPlayers)
     /*
         Initialization state
     */
-    // TODO: Для Сани
-    // Надо чтобы при запуске этой функции происходил сброс состояния игры
-    // Т.е. откат до состояния когда мы только в первый раз запускаем приложение
-
+    State::getInstance().cleanState();
     State& state = State::getInstance();
     state.initPlayers(numberOfPlayers);
 

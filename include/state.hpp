@@ -70,6 +70,7 @@ public:
     void clearDump();
     void shuffleDeck();
     void setCurrentCardId(unsigned char currentCardID);
+    void cleanState();
 
 
     ~State();

@@ -589,3 +589,19 @@ State::getGoalsId() const
 {
     return goals;
 }
+
+void
+State::cleanState()
+{
+    this->shuffleDeck();
+    for(int i = 0; i < players.size(); ++i) delete players.at(i);
+    players.clear();
+    goals.clear();
+    rules.clear();
+    dump.clear();
+    this->clearRules();
+    currentCardID = 0;
+    currentPlayerID = 0;
+    isNumOfCards = false;
+    isNumOfThemes = false;
+}
