@@ -50,4 +50,5 @@ cmake -S . -B ./build && cmake --build ./build
 ## Авторы
 
 Савелий Бурковский (Smahhunter) - фронтенд
+
 Александр Елышкин (Elochkaan) - бэкэнд
