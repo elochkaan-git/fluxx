@@ -1,7 +1,7 @@
-name: 'C++ programming. Laboratory work 3'
+name: 'Fluxx'
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   build:
