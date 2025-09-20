@@ -1,0 +1,59 @@
+name: 'C++ programming. Laboratory work 3'
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    strategy:
+      max-parallel: 1
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+    permissions: write-all
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download deps
+        run: |
+          sudo apt update -y
+          sudo apt install -y \
+              libxrandr-dev \
+              libxcursor-dev \
+              libxi-dev \
+              libudev-dev \
+              libflac-dev \
+              libvorbis-dev \
+              libgl1-mesa-dev \
+              libegl1-mesa-dev \
+              libfreetype6-dev
+
+      - name: Configure Cmake
+        env:
+          flags: ${{
+            matrix.os == 'ubuntu-latest' && '-G Unix Makefiles'}}
+        run: cmake -B build -S . "$flags"
+
+      - name: Build project
+        run: cmake --build build
+      
+      # - name: Test project
+      #   run: cmake --build build --target test
+
+      - name: Build package
+        run: cmake --build build --target package --config Release
+          
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ext: ${{
+            matrix.os == 'ubuntu-latest' && 'Linux.deb' ||
+            matrix.os == 'windows-latest' && 'win64.zip'}}
+        shell: bash
+        run: |
+          TAG=$(git describe --abbrev=0 --tags)
+          gh release create "${TAG}" bin/custom_container-${TAG}-${ext};
