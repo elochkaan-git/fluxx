@@ -28,13 +28,6 @@ FetchContent_Declare(
   GIT_TAG v1.10.0  # Change this to wanted version
 )
 FetchContent_MakeAvailable(TGUI)
-
-# FetchContent_Declare(
-#   googletest
-#   URL https://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz
-# )
-# FetchContent_MakeAvailable(googletest)
-
     
 include_directories(include)
 
@@ -45,9 +38,31 @@ add_executable(main ${SOURCES})
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics TGUI::TGUI nlohmann_json::nlohmann_json)
 
-# enable_testing()
-# add_executable(testing ${TEST_SOURCES})
-# set_target_properties(testing PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/tests)
-# target_link_libraries(testing GTest::gtest_main SFML::Graphics nlohmann_json::nlohmann_json)
-# include(GoogleTest)
-# gtest_discover_tests(testing)
+execute_process(
+  COMMAND git describe --abbrev=0 --tags
+  OUTPUT_VARIABLE tag
+)
+
+string(LENGTH ${tag} tag_len)
+math(EXPR new_tag_len "${tag_len} - 1")
+string(SUBSTRING "${tag}" 0 ${new_tag_len} clear_tag)
+string(REPLACE "." ";" list_tag "${clear_tag}")
+list(GET list_tag 0 MAJOR_VERSION)
+list(GET list_tag 1 MINOR_VERSION)
+list(GET list_tag 2 PATCH_VERSION)
+
+set(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
+set(CPACK_PACKAGE_VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_CONTACT elochkaan@gmail.com)
+set(CPACK_PACKAGE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+if (MSVC)
+    set(CPACK_GENERATOR ZIP)
+else ()
+    set(CPACK_GENERATOR DEB)
+endif()
+
+include(CPack)

@@ -56,4 +56,7 @@ jobs:
         shell: bash
         run: |
           TAG=$(git describe --abbrev=0 --tags)
-          gh release create "${TAG}" bin/custom_container-${TAG}-${ext};
+          if gh release view "${TAG}" > /dev/null 2>&1; 
+          then gh release upload "${TAG}" bin/custom_container-${TAG}-${ext};
+          else gh release create "${TAG}" bin/custom_container-${TAG}-${ext};
+          fi
